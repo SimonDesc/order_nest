@@ -1,0 +1,16 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+django = "*"
+django-environ = "*"
+django-tailwind = "*"
+psycopg2 = "*"
+django-phonenumber-field = "*"
+phonenumbers = "*"
+
+[dev-packages]
+mypy = "*"
+mypy-extensions = "*"
