@@ -1,3 +1,30 @@
 from django.shortcuts import render
+from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView, TemplateView
 
-# Create your views here.
+
+class WebappLogin(TemplateView):
+    template_name = 'webapp/login.html'
+
+
+class WebappHome(TemplateView):
+    template_name = 'webapp/home.html'
+
+
+class CreateOrder(TemplateView):
+    template_name = 'webapp/create.html'
+
+
+class EditOrder(TemplateView):
+    template_name = 'webapp/edit.html'
+
+
+class DeleteOrder(TemplateView):
+    template_name = 'webapp/delete.html'
+
+
+class Search(TemplateView):
+    template_name = 'webapp/search.html'
+
+
+class Dashboard(TemplateView):
+    template_name = 'webapp/dashboard.html'
