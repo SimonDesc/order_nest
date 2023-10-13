@@ -48,7 +48,7 @@ class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     estimated_delivery_date = models.DateField(blank=True, null=True, verbose_name="date_livraison")
     invoice_date = models.DateField(blank=True, null=True, verbose_name="date_facturation")
-    label = models.CharField(max_length=45, blank=False)
+    label = models.CharField(max_length=45, blank=False, default='')
     comments = models.TextField(max_length=2000, blank=True)
     draw_url = models.CharField(max_length=200, blank=True)
     status = models.ForeignKey(Status, on_delete=models.SET_NULL, null=True, blank=True)
