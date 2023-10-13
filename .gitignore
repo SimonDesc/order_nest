@@ -134,6 +134,7 @@ celerybeat.pid
 
 # Environments
 .env
+src/order_nest/.env
 .venv
 env/
 venv/
