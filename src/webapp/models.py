@@ -11,7 +11,10 @@ class Customer(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     comments = models.TextField(max_length=2000, blank=True)
-    active = models.BooleanField(default=False)
+    active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f'{self.first_name} {self.last_name} {self.phone_number}'
 
 
 class Status(models.Model):
@@ -19,7 +22,10 @@ class Status(models.Model):
     comments = models.TextField(max_length=200, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    active = models.BooleanField(default=False)
+    active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f'{self.label}'
 
 
 class Product(models.Model):
@@ -32,18 +38,26 @@ class Product(models.Model):
     quantity = models.PositiveIntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f'{self.reference} {self.label}'
 
 
 class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
-    estimated_delivery_date = models.DateTimeField(blank=True, null=True, verbose_name="date_livraison")
-    invoice_date = models.DateTimeField(blank=True, null=True, verbose_name="date_facturation")
+    estimated_delivery_date = models.DateField(blank=True, null=True, verbose_name="date_livraison")
+    invoice_date = models.DateField(blank=True, null=True, verbose_name="date_facturation")
+    label = models.CharField(max_length=45, blank=False)
     comments = models.TextField(max_length=2000, blank=True)
     draw_url = models.CharField(max_length=200, blank=True)
     status = models.ForeignKey(Status, on_delete=models.SET_NULL, null=True, blank=True)
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True)
     products = models.ManyToManyField(Product, through='OrderHasProduct')
-    active = models.BooleanField(default=False)
+    active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f'{self.label} {self.status}'
 
 
 class OrderHasProduct(models.Model):
@@ -51,4 +65,7 @@ class OrderHasProduct(models.Model):
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, verbose_name="produit")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    active = models.BooleanField(default=False)
+    active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f'{self.order} {self.product.label}'
