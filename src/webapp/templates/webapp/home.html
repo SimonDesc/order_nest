@@ -5,5 +5,24 @@
 {% endblock %}
 
 {% block content %}
-  <h1>HOME, les cartes et autre informations rapides</h1>
+{% for commande in commandes %}
+    <p>{{ commande.pk }}</p>
+    <p>{{ commande.customer.first_name }}</p>
+    <p>{{ commande.customer.last_name }}</p>
+    <p>{{ commande.customer.phone_number }}</p>
+    <p>{{ commande.comments }}</p>
+    <p>{{ commande.created_at }}</p>
+    <p>{{ commande.estimated_delivery_date }}</p>
+    <p>{{ commande.invoice_date }}</p>
+    <ul>
+        {% for product in commande.products.all %}
+            <li>{{ product.label }}</li>
+            <li>{{ product.selling_price_unit }}</li>
+        {% endfor %}
+    </ul>
+    <p>Total de la commande: {{ total_price }}</p>
+
+{% endfor %}
+
+
 {% endblock %}
