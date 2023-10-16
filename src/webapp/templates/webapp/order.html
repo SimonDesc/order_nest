@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>Vue détaillée</title>
+{% endblock %}
+
+{% block content %}
+  <h1>Vue détaillée de la commande {{ commandes.pk }}:</h1>
+    <p>Nom: {{ commandes.customer.first_name }}</p>
+    <p>Prénom: {{ commandes.customer.first_name }}</p>
+    <p>Statut de la commande: {{ commandes.status }}</p>
+    <p>Crée le {{ commandes.created_at|date:"SHORT_DATE_FORMAT" }}</p>
+    <p>Date de livraison estimée: {{ commandes.estimated_delivery_date|date:"SHORT_DATE_FORMAT" }}</p>
+    <p>Date de facturation: {{ commandes.invoice_date }}</p>
+    <p>Libellé: {{ commandes.label }}</p>
+    <p>Commentaire: {{ commandes.comments }}</p>
+    <p>Croquis: {{ commandes.draw_url }}</p>
+
+{% endblock %}
