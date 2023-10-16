@@ -12,17 +12,6 @@ class WebappHome(ListView):
     template_name = 'webapp/home.html'
     context_object_name = "commandes"
 
-    @property
-    def total_price(self):
-        total = 0
-        for relation in self.orderhasproduct_set.all():
-            total += relation.product.selling_price_unit
-            return total
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        return context
 
 class CreateOrder(TemplateView):
     template_name = 'webapp/create.html'

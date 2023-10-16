@@ -56,6 +56,13 @@ class Order(models.Model):
     products = models.ManyToManyField(Product, through='OrderHasProduct')
     active = models.BooleanField(default=True)
 
+    @property
+    def total_price(self):
+        total = 0
+        for relation in self.orderhasproduct_set.all():
+            total += relation.product.selling_price_unit * relation.product.quantity
+        return total
+
     def __str__(self):
         return f'{self.label} {self.status}'
 
