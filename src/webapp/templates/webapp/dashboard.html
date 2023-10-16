@@ -5,7 +5,28 @@
 {% endblock %}
 
 {% block content %}
-  <h1>Tableau de bord</h1>
+    <h1>Tableau de bord</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Libellé</th>
+                <th>Status</th>
+                <th>Date de création</th>
+                <th>ID</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for commande in commandes %}
+                <tr>
+                    <td>{{ commande.customer.last_name }}</td>
+                    <td>{{ commande.label }}</td>
+                    <td>{{ commande.status }}</td>
+                    <td>{{ commande.created_at|date:"SHORT_DATE_FORMAT" }}</td>
+                    <td>{{ commande.pk }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}
-
-

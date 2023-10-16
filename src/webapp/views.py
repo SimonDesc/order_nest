@@ -29,5 +29,7 @@ class Search(TemplateView):
     template_name = 'webapp/search.html'
 
 
-class Dashboard(TemplateView):
+class Dashboard(ListView):
+    model = Order
     template_name = 'webapp/dashboard.html'
+    context_object_name = "commandes"
