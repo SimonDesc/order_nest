@@ -68,6 +68,12 @@ class Search(TemplateView):
     template_name = 'webapp/search.html'
 
 
+class DetailOrder(DetailView):
+    model = Order
+    context_object_name = "commandes"
+    template_name = 'webapp/order.html'
+
+
 class Dashboard(ListView):
     model = Order
     template_name = 'webapp/dashboard.html'
