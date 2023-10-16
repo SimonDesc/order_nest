@@ -12,7 +12,7 @@
     <p>last_name : {{ commande.customer.last_name }}</p>
     <p>phone number : {{ commande.customer.phone_number }}</p>
     <p>comments : {{ commande.comments }}</p>
-    <p>created at : {{ commande.created_at }}</p>
+    <p>created at : {{ commande.created_at|date:"SHORT_DATE_FORMAT" }}</p>
     <p>delivery date : {{ commande.estimated_delivery_date }}</p>
     <p>invoice date : {{ commande.invoice_date }}</p>
     <ul>
