@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView, TemplateView
 from .models import Customer, Order, OrderHasProduct, Status, Product
 from .forms import NewOrderForm, NewCustomerForm
@@ -12,7 +13,6 @@ class WebappHome(ListView):
     model = Order
     template_name = 'webapp/home.html'
     context_object_name = "commandes"
-
 
 
 class CreateOrder(CreateView):
@@ -41,6 +41,7 @@ class CreateOrder(CreateView):
         else:
             return self.render_to_response(self.get_context_data(form=form, customer_form=customer_form))
 
+
 def simple_customer_view(request):
     if request.method == 'POST':
         form = SimpleCustomerForm(request.POST)
@@ -51,12 +52,16 @@ def simple_customer_view(request):
         form = SimpleCustomerForm()
     return render(request, 'simple_template.html', {'form': form})
 
+
 class EditOrder(TemplateView):
     template_name = 'webapp/edit.html'
 
 
-class DeleteOrder(TemplateView):
+class DeleteOrder(DeleteView):
+    model = Order
+    context_object_name = "commandes"
     template_name = 'webapp/delete.html'
+    success_url = reverse_lazy("webapp:dashboard")
 
 
 class Search(TemplateView):
