@@ -5,6 +5,9 @@
 {% endblock %}
 
 {% block content %}
+<a href="{% url 'webapp:create' %}">Nouvelle commande</a>
+<!-- RAJOUTER LA VUE <a href="{% url 'webapp:create' %}>">Nouveau client</a>-->
+<a href="{% url 'webapp:dashboard' %}">Tableau de bord</a>
 {% for commande in commandes %}
     <p><h1> libelle : {{ commande.label }} </h1></p>
     <p>id : {{ commande.pk }}</p>
