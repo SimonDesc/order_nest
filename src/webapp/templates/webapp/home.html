@@ -27,6 +27,7 @@
         {% endfor %}
     </ul>
     <p>Total de la commande: {{ commande.total_price }}</p>
+    <button><a href="{% url 'webapp:order' pk=commande.pk %}">Voir détail</a></button>
 
 {% endfor %}
 
