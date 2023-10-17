@@ -29,4 +29,11 @@
     <button type="submit" class="btn btn-submit" value="Update">Enregistrer</button>
 </form>
 
+    {% if order_form.name.errors %}
+    <div class="error">
+        {% for error in order_form.name.errors %}
+            <p>{{ error }}</p>
+        {% endfor %}
+    </div>
+{% endif %}
 {% endblock %}

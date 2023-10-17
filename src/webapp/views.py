@@ -3,6 +3,7 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView, TemplateView
 from .models import Customer, Order, OrderHasProduct, Status, Product
 from .forms import NewOrderForm, NewCustomerForm, AddProductForm, AddProductOrderForm
+from django.contrib import messages
 
 
 class WebappLogin(TemplateView):
@@ -31,6 +32,7 @@ class CreateOrder(CreateView):
         return render(request, self.template_name, self.get_context_data())
 
     def post(self, request, *args, **kwargs):
+        print(request)
         order_form = NewOrderForm(request.POST)
         customer_form = NewCustomerForm(request.POST)
 
@@ -40,8 +42,11 @@ class CreateOrder(CreateView):
             order.customer = customer  # Établir la relation
             order.save()  # Maintenant, sauvegarder la commande
             return redirect('/dashboard')
+        else:
+            print('toto')
+            messages.error(request, 'Il y a eu une erreur avec votre soumission. Veuillez vérifier les champs.')
+            return render(request, self.template_name, self.get_context_data())
 
-        return render(request, self.template_name, self.get_context_data())
 
 
 class EditOrder(UpdateView):
