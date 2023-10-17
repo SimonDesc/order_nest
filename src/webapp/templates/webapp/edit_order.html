@@ -1,14 +1,11 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    <title>Nouvelle commande</title>
+    <title>Modifier commande</title>
 {% endblock %}
 
 {% block content %}
-  <h1>Page de saisie d'une nouvelle commande</h1>
-
-
-
+  <h1>Page de modification d'une nouvelle commande</h1>
 
 <form method="POST">
     {% csrf_token %}
@@ -26,7 +23,7 @@
     {{ customer_form.address.label_tag }} {{ customer_form.address }}
     {{ customer_form.mail.label_tag }} {{ customer_form.mail }}
 
-    <button type="submit" class="btn btn-submit" value="Update">Enregistrer</button>
+    <button type="submit" class="btn btn-submit">Enregistrer</button>
 </form>
 
 {% endblock %}
