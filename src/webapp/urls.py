@@ -1,21 +1,27 @@
 from django.urls import path
-from .views import WebappLogin, WebappHome, CreateOrder, EditOrder, DeleteOrder, Search, Dashboard, DetailOrder, Products, AddProduct, DeleteProduct, EditProduct
+from .views import WebappLogin, WebappHome, CreateOrder, EditOrder, DeleteOrder, Search, Dashboard, DetailOrder, \
+    Products, AddProduct, DeleteProduct, EditProduct, AddProductsToOrder
 
 app_name = 'webapp'
 
 urlpatterns = [
+    # Primary Routes
     path('', WebappLogin.as_view(), name='login'),
     path('home/', WebappHome.as_view(), name='home'),
     path('dashboard/', Dashboard.as_view(), name='dashboard'),
-    path('create/', CreateOrder.as_view(), name='create'),
-    path('order/<int:pk>/', DetailOrder.as_view(), name='order'),
-    path('edit_order/<int:pk>/', EditOrder.as_view(), name='edit_order'),
-    path('delete/<int:pk>/', DeleteOrder.as_view(), name='delete'),
-    path('edit_product/<int:pk>/', EditProduct.as_view(), name='edit_product'),
     path('search/', Search.as_view(), name='search'),
-    path('delete_product/<int:pk>/', DeleteProduct.as_view(), name='delete_product'),
-    path('products/', Products.as_view(), name='products'),
-    path('create_product/', AddProduct.as_view(), name='create_product'),
+
+    # Order Routes
+    path('orders/create/', CreateOrder.as_view(), name='order-create'),
+    path('orders/<int:pk>/', DetailOrder.as_view(), name='order-detail'),
+    path('orders/<int:pk>/edit/', EditOrder.as_view(), name='order-edit'),
+    path('orders/<int:pk>/delete/', DeleteOrder.as_view(), name='order-delete'),
+    path('orders/<int:pk>/add-products/', AddProductsToOrder.as_view(), name='order-add-products'),
 
 
+    # Products Routes
+    path('products/', Products.as_view(), name='product-list'),
+    path('products/create/', AddProduct.as_view(), name='product-create'),
+    path('products/<int:pk>/edit/', EditProduct.as_view(), name='product-edit'),
+    path('products/<int:pk>/delete/', DeleteProduct.as_view(), name='product-delete'),
 ]
