@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import WebappLogin, WebappHome, CreateOrder, EditOrder, DeleteOrder, Search, Dashboard, DetailOrder
+from .views import WebappLogin, WebappHome, CreateOrder, EditOrder, DeleteOrder, Search, Dashboard, DetailOrder, Products, AddProduct, DeleteProduct
 
 app_name = 'webapp'
 
@@ -12,6 +12,9 @@ urlpatterns = [
     path('edit/', EditOrder.as_view(), name='edit'),
     path('delete/<int:pk>/', DeleteOrder.as_view(), name='delete'),
     path('search/', Search.as_view(), name='search'),
+    path('delete_product/<int:pk>/', DeleteProduct.as_view(), name='delete_product'),
+    path('products/', Products.as_view(), name='products'),
+    path('create_product/', AddProduct.as_view(), name='create_product'),
 
 
 ]

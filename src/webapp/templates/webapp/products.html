@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>Liste des produits</title>
+{% endblock %}
+
+{% block content %}
+
+    <a href="{% url 'webapp:create_product' %}">Ajouter produit</a>
+
+    <h1>Liste des produits:</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Référence</th>
+                <th>Libellé</th>
+                <th>Marque</th>
+                <th>Fournisseur</th>
+                <th>Prix d'achat</th>
+                <th>Prix de vente</th>
+                <th>Créé le</th>
+                <th>Modifié le</th>
+                <th>Supprimer</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+                <tr>
+                    <td>{{ product.reference }}</td>
+                    <td>{{ product.label }}</td>
+                    <td>{{ product.brand }}</td>
+                    <td>{{ product.supplier }}</td>
+                    <td>{{ product.purchase_price_unit }}</td>
+                    <td>{{ product.selling_price_unit }}</td>
+                    <td>{{ product.created_at }}</td>
+                    <td>{{ product.updated_at }}</td>
+                    <td><a href="{% url 'webapp:delete_product' pk=product.pk %}">{{ product.pk }}</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

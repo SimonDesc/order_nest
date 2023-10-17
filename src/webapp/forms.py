@@ -14,3 +14,8 @@ class NewCustomerForm(ModelForm):
         model = Customer
         fields = ("first_name", "last_name", "phone_number", "address", "mail",)
 
+
+class AddProductForm(ModelForm):
+    class Meta:
+        model = Product
+        fields = "__all__"

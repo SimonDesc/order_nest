@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView, TemplateView
 from .models import Customer, Order, OrderHasProduct, Status, Product
-from .forms import NewOrderForm, NewCustomerForm
+from .forms import NewOrderForm, NewCustomerForm, AddProductForm
 
 
 class WebappLogin(TemplateView):
@@ -78,3 +78,22 @@ class Dashboard(ListView):
     model = Order
     template_name = 'webapp/dashboard.html'
     context_object_name = "commandes"
+
+
+class Products(ListView):
+    model = Product
+    template_name = 'webapp/products.html'
+    context_object_name = "products"
+
+
+class AddProduct(CreateView):
+    form_class = AddProductForm
+    template_name = 'webapp/new_product.html'
+    success_url = reverse_lazy("webapp:products")
+
+
+class DeleteProduct(DeleteView):
+    model = Product
+    context_object_name = 'product'
+    template_name = 'webapp/delete_product.html'
+    success_url = reverse_lazy("webapp:products")
