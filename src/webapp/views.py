@@ -1,8 +1,8 @@
-from django.shortcuts import render
-from django.urls import reverse_lazy
+from django.shortcuts import render, redirect
+from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView, TemplateView
 from .models import Customer, Order, OrderHasProduct, Status, Product
-from .forms import NewOrderForm, NewCustomerForm, AddProductForm
+from .forms import NewOrderForm, NewCustomerForm, AddProductForm, AddProductOrderForm
 
 
 class WebappLogin(TemplateView):
@@ -21,40 +21,56 @@ class CreateOrder(CreateView):
     success_url = '/dashboard'
 
     def get_context_data(self, **kwargs):
+        context = {
+            'order_form': NewOrderForm(),
+            'customer_form': NewCustomerForm(),
+        }
+        return context
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, self.get_context_data())
+
+    def post(self, request, *args, **kwargs):
+        order_form = NewOrderForm(request.POST)
+        customer_form = NewCustomerForm(request.POST)
+
+        if order_form.is_valid() and customer_form.is_valid():
+            customer = customer_form.save()  # Sauvegarder le client d'abord
+            order = order_form.save(commit=False)  # Ne pas encore sauvegarder la commande
+            order.customer = customer  # Établir la relation
+            order.save()  # Maintenant, sauvegarder la commande
+            return redirect('/dashboard')
+
+        return render(request, self.template_name, self.get_context_data())
+
+
+class EditOrder(UpdateView):
+    model = Order
+
+    form_class = NewOrderForm
+    template_name = 'webapp/edit_order.html'
+    success_url = reverse_lazy('webapp:dashboard')
+
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        if 'customer_form' not in context:
-            context['customer_form'] = NewCustomerForm(self.request.POST or None)
+        order = self.get_object()
+
+        context['order_form'] = NewOrderForm(instance=order)
+        customer_instance = order.customer
+        context['customer_form'] = NewCustomerForm(instance=customer_instance)
+
         return context
 
     def form_valid(self, form):
-        customer_form = NewCustomerForm(self.request.POST)
+        customer_form = NewCustomerForm(self.request.POST, instance=self.object.customer)
+
         if customer_form.is_valid():
-            # Sauvegarde le Customer, mais ne le commit pas encore en base de données
-            customer = customer_form.save(commit=False)
-            customer.save()  # Maintenant, le customer est sauvegardé en BDD
-
-            order = form.save(commit=False)  # Récupère l'Order à partir du formulaire sans le sauvegarder en BDD
-            order.customer = customer  # Associe le Customer à l'Order
-            order.save()  # Sauvegarde maintenant l'Order avec le Customer associé
-
+            self.object = form.save()
+            customer_form.save()
             return super().form_valid(form)
         else:
-            return self.render_to_response(self.get_context_data(form=form, customer_form=customer_form))
+            return self.form_invalid(form)
 
-
-def simple_customer_view(request):
-    if request.method == 'POST':
-        form = SimpleCustomerForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('some_success_url')
-    else:
-        form = SimpleCustomerForm()
-    return render(request, 'simple_template.html', {'form': form})
-
-
-class EditOrder(TemplateView):
-    template_name = 'webapp/edit.html'
 
 
 class DeleteOrder(DeleteView):
@@ -97,3 +113,4 @@ class DeleteProduct(DeleteView):
     context_object_name = 'product'
     template_name = 'webapp/delete_product.html'
     success_url = reverse_lazy("webapp:products")
+
