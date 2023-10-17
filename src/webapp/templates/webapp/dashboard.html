@@ -5,6 +5,9 @@
 {% endblock %}
 
 {% block content %}
+<a href="{% url 'webapp:create' %}">Nouvelle commande</a>
+<a href="{% url 'webapp:products' %}">Produits</a>
+<a href="{% url 'webapp:create_product' %}">Ajouter un produit</a>
     <h1>Tableau de bord</h1>
 
     <table>
