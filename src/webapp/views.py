@@ -114,3 +114,10 @@ class DeleteProduct(DeleteView):
     template_name = 'webapp/delete_product.html'
     success_url = reverse_lazy("webapp:products")
 
+    
+class EditProduct(UpdateView):
+    model = Product
+    fields = "__all__"
+    template_name = 'webapp/edit_product.html'
+    success_url = reverse_lazy("webapp:products")
+
