@@ -20,6 +20,7 @@
                 <th>Prix de vente</th>
                 <th>Créé le</th>
                 <th>Modifié le</th>
+                <th>Editer</th>
                 <th>Supprimer</th>
             </tr>
         </thead>
@@ -34,7 +35,8 @@
                     <td>{{ product.selling_price_unit }}</td>
                     <td>{{ product.created_at }}</td>
                     <td>{{ product.updated_at }}</td>
-                    <td><a href="{% url 'webapp:delete_product' pk=product.pk %}">{{ product.pk }}</a></td>
+                    <td><a href="{% url 'webapp:edit_product' pk=product.pk %}">Editer</a></td>
+                    <td><a href="{% url 'webapp:delete_product' pk=product.pk %}">X</a></td>
                 </tr>
             {% endfor %}
         </tbody>
