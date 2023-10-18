@@ -103,18 +103,6 @@ class Dashboard(ListView):
     context_object_name = "commandes"
 
 
-class Products(ListView):
-    model = Product
-    template_name = 'webapp/products/product-list.html'
-    context_object_name = "products"
-
-
-class AddProduct(CreateView):
-    form_class = AddProductForm
-    template_name = 'webapp/products/product-create.html'
-    success_url = reverse_lazy("webapp:product-list")
-
-
 class DeleteProduct(DeleteView):
     model = Product
     context_object_name = 'product'
@@ -129,5 +117,25 @@ class EditProduct(UpdateView):
     success_url = reverse_lazy("webapp:product-list")
 
 
-class AddProductsToOrder(TemplateView):
-    pass
+class AddProductsToOrder(CreateView):
+    model = Product
+    fields = '__all__'
+    template_name = 'webapp/orders/order-product.html'
+    success_url = '/dashboard'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        order_id = self.kwargs['pk']
+        all_product_filtered = OrderHasProduct.objects.all().filter(order_id=order_id)
+        order_infos = Order.objects.get(pk=order_id)
+        context['product_list'] = all_product_filtered
+        context['order_id'] = order_id
+        context['order_infos'] = order_infos
+        return context
+
+    def form_valid(self, form):
+        order_id = self.kwargs['pk']
+        order_object = Order.objects.get(pk=order_id)
+        order_product = form.save()
+        OrderHasProduct.objects.create(order=order_object, product=order_product)
+        return super().form_valid(form)

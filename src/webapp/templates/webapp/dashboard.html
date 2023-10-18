@@ -17,6 +17,7 @@
                 <th>Libellé</th>
                 <th>Status</th>
                 <th>Date de création</th>
+                <th>Ajouter produit</th>
                 <th>Modifier commande</th>
                 <th>Supprimer commande</th>
             </tr>
@@ -30,6 +31,7 @@
                     <td>{{ commande.label }}</td>
                     <td>{{ commande.status }}</td>
                     <td>{{ commande.created_at|date:"SHORT_DATE_FORMAT" }}</td>
+                    <td><a href="{% url 'webapp:order-add-products' pk=commande.pk %}">Ajouter produit</a></td>
                     <td><a href="{% url 'webapp:order-edit' pk=commande.pk %}">Modifer commande</a></td>
                     <td><a href="{% url 'webapp:order-delete' pk=commande.pk %}">Supprimer commande</a></td>
                 </tr>
