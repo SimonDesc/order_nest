@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -6,13 +8,19 @@
   {% block title %}
     <title>Login</title>
   {% endblock %}
-
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
+
+
 <body>
-<nav>
-  <a href="{% url 'webapp:home' %}">Accueil</a>
-  <p>Deconnexion</p>
-</nav>
+<div class="menu-horizontal">
+    <a href="{% url 'webapp:home' %}">Home</a>
+    <a href="{% url 'webapp:login' %}">Login</a>
+    <a href="{% url 'webapp:order-create' %}">Nouvelle commande</a>
+    <a href="{% url 'webapp:dashboard' %}">Tableau de bord</a>
+    <a href="{% url 'webapp:product-list' %}">Produits</a>
+    <a href="{% url 'webapp:product-create' %}">Ajouter un produit</a>
+</div>
 
 <section id="webapp">
 

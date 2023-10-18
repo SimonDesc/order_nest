@@ -5,9 +5,7 @@
 {% endblock %}
 
 {% block content %}
-<a href="{% url 'webapp:create' %}">Nouvelle commande</a>
-<a href="{% url 'webapp:dashboard' %}">Tableau de bord</a>
-<a href="{% url 'webapp:products' %}">Produits</a>
+
 {% for commande in commandes %}
     <p><h1> libelle : {{ commande.label }} </h1></p>
     <p>id : {{ commande.pk }}</p>
@@ -26,7 +24,7 @@
         {% endfor %}
     </ul>
     <p>Total de la commande: {{ commande.total_price }}</p>
-    <button><a href="{% url 'webapp:order' pk=commande.pk %}">Voir détail</a></button>
+    <button><a href="{% url 'webapp:order-detail' pk=commande.pk %}">Voir détail</a></button>
 
 {% endfor %}
 

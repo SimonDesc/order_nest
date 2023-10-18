@@ -15,10 +15,11 @@ class NewCustomerForm(ModelForm):
         fields = ("first_name", "last_name", "phone_number", "address", "mail",)
 
 
-class AddProductOrderForm(ModelForm):
+class AddProductsToOrder(ModelForm):
     class Meta:
         model = Product
         fields = ("reference", "label", "brand", "supplier", "purchase_price_unit", "selling_price_unit", "quantity")
+
 
 class AddProductForm(ModelForm):
     class Meta:

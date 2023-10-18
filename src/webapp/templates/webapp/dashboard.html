@@ -5,9 +5,7 @@
 {% endblock %}
 
 {% block content %}
-<a href="{% url 'webapp:create' %}">Nouvelle commande</a>
-<a href="{% url 'webapp:products' %}">Produits</a>
-<a href="{% url 'webapp:create_product' %}">Ajouter un produit</a>
+
     <h1>Tableau de bord</h1>
 
     <table>
@@ -26,14 +24,14 @@
         <tbody>
             {% for commande in commandes %}
                 <tr>
-                    <td><a href="{% url 'webapp:order' pk=commande.pk %}">{{ commande.pk }}</a></td>
+                    <td><a href="{% url 'webapp:order-detail' pk=commande.pk %}">{{ commande.pk }}</a></td>
                     <td>{{ commande.customer.last_name }}</td>
                     <td>{{ commande.customer.first_name }}</td>
                     <td>{{ commande.label }}</td>
                     <td>{{ commande.status }}</td>
                     <td>{{ commande.created_at|date:"SHORT_DATE_FORMAT" }}</td>
-                    <td><a href="{% url 'webapp:edit_order' pk=commande.pk %}">Modifer commande</a></td>
-                    <td><a href="{% url 'webapp:delete' pk=commande.pk %}">Supprimer commande</a></td>
+                    <td><a href="{% url 'webapp:order-edit' pk=commande.pk %}">Modifer commande</a></td>
+                    <td><a href="{% url 'webapp:order-delete' pk=commande.pk %}">Supprimer commande</a></td>
                 </tr>
             {% endfor %}
         </tbody>
