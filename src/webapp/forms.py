@@ -1,6 +1,5 @@
 from django.forms import ModelForm, RegexField
 from .models import *
-from django_select2 import forms as s2forms
 
 
 class NewOrderForm(ModelForm):
@@ -10,9 +9,11 @@ class NewOrderForm(ModelForm):
 
 
 class NewCustomerForm(ModelForm):
+    phone_number = PhoneNumberField(region='FR')
+
     class Meta:
         model = Customer
-        fields = ("first_name", "last_name", "phone_number", "address", "mail",)
+        fields = ("id", "first_name", "last_name", "phone_number", "address", "mail", "comments",)
 
 
 class AddProductsToOrder(ModelForm):

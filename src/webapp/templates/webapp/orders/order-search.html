@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>Recherche</title>
+{% endblock %}
+
+{% block content %}
+  <h1>Page de recherche</h1>
+
+
+{% if order_list %}
+  <table border="1">
+    <thead>
+        <tr>
+            <th>Order Label</th>
+            <th>Order Comments</th>
+            <th>Customer First Name</th>
+            <th>Customer Last Name</th>
+            <th>Customer Phone Number</th>
+            <th>Customer Address</th>
+            <th>Customer Mail</th>
+            <th>Customer Comments</th>
+            <th>Ajouter produit</th>
+            <th>Modifier commande</th>
+            <th>Supprimer commande</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for order in order_list %}
+            <tr>
+                <td>{{ order.label }}</td>
+                <td>{{ order.comments }}</td>
+                <td>{{ order.customer.first_name }}</td>
+                <td>{{ order.customer.last_name }}</td>
+                <td>{{ order.customer.phone_number }}</td>
+                <td>{{ order.customer.address }}</td>
+                <td>{{ order.customer.mail }}</td>
+                <td>{{ order.customer.comments }}</td>
+                <td><a href="{% url 'webapp:order-add-products' pk=order.pk %}">Ajouter produit</a></td>
+                <td><a href="{% url 'webapp:order-edit' pk=order.pk %}">Modifer commande</a></td>
+                <td><a href="{% url 'webapp:order-delete' pk=order.pk %}">Supprimer commande</a></td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<p>50 premiers enregistrements chargés.</p>
+{% else %}
+<h3>Pas de résultat</h3>
+{% endif %}
+
+
+{% endblock %}

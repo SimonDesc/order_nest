@@ -1,7 +1,10 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block title %}
     <title>Nouvelle commande</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+<script src="{% static 'js/autocomplete.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -38,6 +41,12 @@
 
     <br>
     <!-- Champs du formulaire NewCustomerForm -->
+    {% if customer_id %}
+        <input type="hidden" name="id" value="{{ customer_id }}">
+    {% else %}
+        <input type="hidden" name="id" id="id_customer" value="{{ customer_form.instance.id }}" />
+    {% endif %}
+
     {{ customer_form.first_name.label_tag }} {{ customer_form.first_name }}
     {% if customer_form.first_name.errors %}
         <div class="errors">{{ customer_form.first_name.errors }}</div>
