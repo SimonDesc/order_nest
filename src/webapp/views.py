@@ -3,7 +3,6 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView, TemplateView
 from .models import Customer, Order, OrderHasProduct, Status, Product
 from .forms import NewOrderForm, NewCustomerForm, AddProductForm
-from django.contrib import messages
 
 
 class WebappLogin(TemplateView):
@@ -28,10 +27,8 @@ class CreateOrder(CreateView):
         }
         return context
 
-    def get(self, request, *args, **kwargs):
-        return render(request, self.template_name, self.get_context_data())
-
     def post(self, request, *args, **kwargs):
+
         order_form = NewOrderForm(request.POST)
         customer_form = NewCustomerForm(request.POST)
 
@@ -40,10 +37,14 @@ class CreateOrder(CreateView):
             order = order_form.save(commit=False)
             order.customer = customer
             order.save()
-            return redirect('/dashboard')
 
-        messages.error(request, 'Il y a eu une erreur avec votre soumission. Veuillez vérifier les champs.')
-        return render(request, self.template_name, self.get_context_data())
+            return redirect('/dashboard')
+        else:
+            context = {
+                'order_form': order_form,
+                'customer_form': customer_form,
+            }
+            return render(request, self.template_name, context)
 
 
 class EditOrder(UpdateView):
@@ -58,17 +59,25 @@ class EditOrder(UpdateView):
         context['order_form'] = NewOrderForm(instance=order)
         customer_instance = order.customer
         context['customer_form'] = NewCustomerForm(instance=customer_instance)
-
         return context
 
+    # Check la validité de form (order)
     def form_valid(self, form):
         customer_form = NewCustomerForm(self.request.POST, instance=self.object.customer)
+
+        # Check la validité de customer
         if customer_form.is_valid():
-            self.object = form.save()
+            form.save()
             customer_form.save()
             return super().form_valid(form)
         else:
             return self.form_invalid(form)
+
+    def form_invalid(self, form):
+        customer_form = NewCustomerForm(self.request.POST, instance=self.object.customer)
+        context = self.get_context_data()
+        context['customer_form'] = customer_form
+        return self.render_to_response(context)
 
 
 class DeleteOrder(DeleteView):

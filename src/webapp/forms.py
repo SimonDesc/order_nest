@@ -1,4 +1,4 @@
-from django.forms import ModelForm
+from django.forms import ModelForm, RegexField
 from .models import *
 from django_select2 import forms as s2forms
 
