@@ -11,19 +11,58 @@
     {% csrf_token %}
     <!-- Champs du formulaire NewOrderForm -->
     {{ order_form.label.label_tag }} {{ order_form.label }}
+    {% if order_form.label.errors %}
+        <div class="errors">{{ order_form.label.errors }}</div>
+    {% endif %}
+
     {{ order_form.comments.label_tag }} {{ order_form.comments }}
+    {% if order_form.comments.errors %}
+        <div class="errors">{{ order_form.comments.errors }}</div>
+    {% endif %}
+
     {{ order_form.status.label_tag }} {{ order_form.status }}
+    {% if order_form.status.errors %}
+        <div class="errors">{{ order_form.status.errors }}</div>
+    {% endif %}
+
     {{ order_form.estimated_delivery_date.label_tag }} {{ order_form.estimated_delivery_date }}
+    {% if order_form.estimated_delivery_date.errors %}
+        <div class="errors">{{ order_form.estimated_delivery_date.errors }}</div>
+    {% endif %}
+
     {{ order_form.invoice_date.label_tag }} {{ order_form.invoice_date }}
+    {% if order_form.invoice_date.errors %}
+        <div class="errors">{{ order_form.invoice_date.errors }}</div>
+    {% endif %}
+
     <br>
     <!-- Champs du formulaire NewCustomerForm -->
     {{ customer_form.first_name.label_tag }} {{ customer_form.first_name }}
-    {{ customer_form.last_name.label_tag }} {{ customer_form.last_name }}
-    {{ customer_form.phone_number.label_tag }} {{ customer_form.phone_number }}
-    {{ customer_form.address.label_tag }} {{ customer_form.address }}
-    {{ customer_form.mail.label_tag }} {{ customer_form.mail }}
+    {% if customer_form.first_name.errors %}
+        <div class="errors">{{ customer_form.first_name.errors }}</div>
+    {% endif %}
 
-    <button type="submit" class="btn btn-submit">Enregistrer</button>
+    {{ customer_form.last_name.label_tag }} {{ customer_form.last_name }}
+    {% if customer_form.last_name.errors %}
+        <div class="errors">{{ customer_form.last_name.errors }}</div>
+    {% endif %}
+
+    {{ customer_form.phone_number.label_tag }} {{ customer_form.phone_number }}
+    {% if customer_form.phone_number.errors %}
+        <div class="errors">{{ customer_form.phone_number.errors }}</div>
+    {% endif %}
+
+    {{ customer_form.address.label_tag }} {{ customer_form.address }}
+    {% if customer_form.address.errors %}
+        <div class="errors">{{ customer_form.address.errors }}</div>
+    {% endif %}
+
+    {{ customer_form.mail.label_tag }} {{ customer_form.mail }}
+    {% if customer_form.mail.errors %}
+        <div class="errors">{{ customer_form.mail.errors }}</div>
+    {% endif %}
+
+    <button type="submit" class="btn btn-submit" value="Update">Enregistrer</button>
 </form>
 
 {% endblock %}

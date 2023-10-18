@@ -14,3 +14,7 @@
 .menu-horizontal a:hover {
     background-color: #555;
 }
+
+.errors {
+    color: red;
+}
