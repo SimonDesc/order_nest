@@ -1,10 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-</body>
-</html>
+{% block title %}
+    <title>Ajouter un nouveau produit</title>
+{% endblock %}
+
+{% block content %}
+  <h1>Page de saisie d'un nouveau produit pour la commande {{ order_infos.label }} (id: {{ order_id }})</h1>
+
+    <p>Commande de Mr/Mme {{ order_infos.customer.last_name }} {{ order_infos.customer.first_name }}</p>
+
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-submit">Enregistrer</button>
+    </form>
+
+    <h2>Liste des produits de la commande n°{{ order_id }}</h2>
+    <ul>
+        {% for product in product_list %}
+            <li>{{ product }}</li>
+        <p>supprimer</p>
+        {% endfor %}
+    </ul>
+{% endblock %}

@@ -33,8 +33,8 @@ class Product(models.Model):
     label = models.CharField(max_length=45, verbose_name="libelle")
     brand = models.CharField(max_length=45, blank=True, verbose_name="marque")
     supplier = models.CharField(max_length=45, blank=True, verbose_name="fournisseur")
-    purchase_price_unit = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    selling_price_unit = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    purchase_price_unit = models.DecimalField(default=0, max_digits=10, decimal_places=2)
+    selling_price_unit = models.DecimalField(default=0, max_digits=10, decimal_places=2)
     quantity = models.PositiveIntegerField(default=0, blank=False, null=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -69,7 +69,7 @@ class Order(models.Model):
 
 class OrderHasProduct(models.Model):
     order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True)
-    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, verbose_name="produit")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, verbose_name="produit")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
