@@ -28,35 +28,54 @@ class CreateOrder(CreateView):
             'order_form': NewOrderForm(),
             'customer_form': NewCustomerForm(),
         }
-
         return context
+
+    def get_or_create_customer(self, customer_id, customer_form):
+        is_existing_customer = False
+        customer = None
+        # On test l'id
+        try:
+            customer_id = int(customer_id)
+        except ValueError:
+            customer_id = None
+        # Si on a un id valide
+        if customer_id:
+            try:
+                # on essaye de le récupérer (s'il existe)
+                customer = Customer.objects.get(id=customer_id)
+                is_existing_customer = True
+            except Customer.DoesNotExist:
+                customer = None
+        # Si on a pas d'id valide, on créer un nouveau client
+        if not customer:
+            customer = customer_form.save()
+        return customer, is_existing_customer
 
     def post(self, request, *args, **kwargs):
         order_form = NewOrderForm(request.POST)
         customer_form = NewCustomerForm(request.POST)
 
         if order_form.is_valid() and customer_form.is_valid():
-            customer_id = request.POST.get('id', None)  # Récupérer l'ID du champ caché
+            # On récupère l'id du champ caché
+            customer_id = request.POST.get('id', None)
 
+            # On récupère le client (existant ou nouveau)
+            customer, is_existing_customer = self.get_or_create_customer(customer_id, customer_form)
+            # Si c'est un nouveau client
+            if is_existing_customer:
+                # On boucle sur les données du formulaire pour mettre à jour l'existant
+                for field, value in customer_form.cleaned_data.items():
+                    setattr(customer, field, value)
+                customer.save()
 
-            if customer_id and customer_id is not None:
-                print(customer_id)
-                try:
-
-                    customer = Customer.objects.get(id=customer_id)  # Vérifier si le client existe déjà
-                except Customer.DoesNotExist:
-                    customer = None
-
-            if not customer:
-                customer = customer_form.save()  # Créer un nouveau client si nécessaire
-                print(customer)
-
+            # On rattache le client à l'order
             order = order_form.save(commit=False)
-            order.customer = customer  # Utiliser le client existant ou le nouveau client
+            order.customer = customer
             order.save()
-
             return redirect('/dashboard')
         else:
+            # Si le formulaire n'est pas valide
+            # On renvoi le context + l'id du client
             customer_id = request.POST.get('id', None)
             context = {
                 'order_form': order_form,
@@ -82,9 +101,8 @@ class EditOrder(UpdateView):
 
     # Check la validité de form (order)
     def form_valid(self, form):
-        customer_form = NewCustomerForm(self.request.POST, instance=self.object.customer)
-
         # Check la validité de customer
+        customer_form = NewCustomerForm(self.request.POST, instance=self.object.customer)
         if customer_form.is_valid():
             form.save()
             customer_form.save()
@@ -141,7 +159,7 @@ class SearchOrder(ListView):
                 | Q(customer__comments__icontains=query)
             )[:50]
         )
-        print(order_list)
+
         return order_list
 
 
@@ -204,7 +222,7 @@ def get_clients(request):
              'phone_number', 'address', 'mail',
              'comments'
              )[:10]
-    print("client : ", clients)
+
     results = []
     for client in clients:
         client_dict = {
@@ -218,6 +236,6 @@ def get_clients(request):
             'label': f"{client['first_name']} {client['last_name']}",
         }
         results.append(client_dict)
-        print("result : ", results)
+
     return JsonResponse(results, safe=False)
 

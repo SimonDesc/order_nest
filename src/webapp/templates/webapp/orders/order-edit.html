@@ -37,6 +37,11 @@
 
     <br>
     <!-- Champs du formulaire NewCustomerForm -->
+
+    <label>id</label>
+    <input type="number" name="id" value="{{ customer_form.instance.id }}" readonly>
+
+
     {{ customer_form.first_name.label_tag }} {{ customer_form.first_name }}
     {% if customer_form.first_name.errors %}
         <div class="errors">{{ customer_form.first_name.errors }}</div>

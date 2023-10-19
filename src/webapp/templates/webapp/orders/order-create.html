@@ -42,9 +42,9 @@
     <br>
     <!-- Champs du formulaire NewCustomerForm -->
     {% if customer_id %}
-        <input type="hidden" name="id" value="{{ customer_id }}">
+        <input name="id" value="{{ customer_id }}" readonly>
     {% else %}
-        <input type="hidden" name="id" id="id_customer" value="{{ customer_form.instance.id }}" />
+        <input name="id" id="id_customer" value="{{ customer_form.instance.id }}" readonly />
     {% endif %}
 
     {{ customer_form.first_name.label_tag }} {{ customer_form.first_name }}
