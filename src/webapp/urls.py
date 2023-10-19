@@ -16,12 +16,12 @@ urlpatterns = [
     path('orders/<int:pk>/edit/', EditOrder.as_view(), name='order-edit'),
     path('orders/<int:pk>/delete/', DeleteOrder.as_view(), name='order-delete'),
     path('orders/<int:pk>/add-products/', AddProductsToOrder.as_view(), name='order-add-products'),
-    path('search/order/', SearchOrder.as_view(), name='order-search'),
+    path('orders/search', SearchOrder.as_view(), name='order-search'),
 
     # Products Routes
     path('products/<int:pk>/edit/', EditProduct.as_view(), name='product-edit'),
     path('products/<int:pk>/delete/', DeleteProduct.as_view(), name='product-delete'),
 
-    # Miscellaneous Routes
+    # API Routes
     path('get_clients/', get_clients, name='get_clients'),
 ]

@@ -1,4 +1,5 @@
-from django.db.models import Q, Prefetch
+from django.db.models import Q, Prefetch, CharField
+from django.db.models.functions import Cast
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
@@ -37,14 +38,18 @@ class CreateOrder(CreateView):
         if order_form.is_valid() and customer_form.is_valid():
             customer_id = request.POST.get('id', None)  # Récupérer l'ID du champ caché
 
-            if customer_id:
+
+            if customer_id and customer_id is not None:
+                print(customer_id)
                 try:
+
                     customer = Customer.objects.get(id=customer_id)  # Vérifier si le client existe déjà
                 except Customer.DoesNotExist:
                     customer = None
 
             if not customer:
                 customer = customer_form.save()  # Créer un nouveau client si nécessaire
+                print(customer)
 
             order = order_form.save(commit=False)
             order.customer = customer  # Utiliser le client existant ou le nouveau client
@@ -59,6 +64,7 @@ class CreateOrder(CreateView):
                 'customer_id': customer_id,
             }
             return render(request, self.template_name, context)
+
 
 class EditOrder(UpdateView):
     model = Order
@@ -102,31 +108,42 @@ class DeleteOrder(DeleteView):
 
 class SearchOrder(ListView):
     model = Order
-    template_name = 'webapp/orders/order-search.html'
+    template_name = "webapp/orders/order-search.html"
 
     def get_queryset(self):
         query = self.request.GET.get("q")
-        order_list = Order.objects.prefetch_related(
-            Prefetch('customer', queryset=Customer.objects.filter(
-                Q(first_name__icontains=query) |
-                Q(last_name__icontains=query) |
-                Q(phone_number__icontains=query) |
-                Q(address__icontains=query) |
-                Q(mail__icontains=query) |
-                Q(comments__icontains=query)
-            ))
-        ).filter(
-            Q(label__icontains=query) |
-            Q(comments__icontains=query) |
-            Q(customer__first_name__icontains=query) |
-            Q(customer__last_name__icontains=query) |
-            Q(customer__phone_number__icontains=query) |
-            Q(customer__address__icontains=query) |
-            Q(customer__mail__icontains=query) |
-            Q(customer__comments__icontains=query)
-        )[:50]
-
+        order_list = (
+            # Création d'une nouvelle colonne avec Cast
+            # Afin de faire une recherche sur l'id de la commande
+            Order.objects.annotate(str_id=Cast("pk", CharField()))
+            .prefetch_related(
+                Prefetch(
+                    "customer",
+                    queryset=Customer.objects.filter(
+                        Q(first_name__icontains=query)
+                        | Q(last_name__icontains=query)
+                        | Q(phone_number__icontains=query)
+                        | Q(address__icontains=query)
+                        | Q(mail__icontains=query)
+                        | Q(comments__icontains=query)
+                    ),
+                )
+            )
+            .filter(
+                Q(str_id__iexact=query) # Recherche Exacte
+                | Q(label__icontains=query)
+                | Q(comments__icontains=query)
+                | Q(customer__first_name__icontains=query)
+                | Q(customer__last_name__icontains=query)
+                | Q(customer__phone_number__icontains=query)
+                | Q(customer__address__icontains=query)
+                | Q(customer__mail__icontains=query)
+                | Q(customer__comments__icontains=query)
+            )[:50]
+        )
+        print(order_list)
         return order_list
+
 
 class DetailOrder(DetailView):
     model = Order
@@ -187,7 +204,7 @@ def get_clients(request):
              'phone_number', 'address', 'mail',
              'comments'
              )[:10]
-
+    print("client : ", clients)
     results = []
     for client in clients:
         client_dict = {
@@ -201,6 +218,6 @@ def get_clients(request):
             'label': f"{client['first_name']} {client['last_name']}",
         }
         results.append(client_dict)
-        print(results)
+        print("result : ", results)
     return JsonResponse(results, safe=False)
 

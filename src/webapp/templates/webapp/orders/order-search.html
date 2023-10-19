@@ -12,6 +12,7 @@
   <table border="1">
     <thead>
         <tr>
+            <th>Order n°</th>
             <th>Order Label</th>
             <th>Order Comments</th>
             <th>Customer First Name</th>
@@ -28,6 +29,7 @@
     <tbody>
         {% for order in order_list %}
             <tr>
+                <td>{{ order.id }}</td>
                 <td>{{ order.label }}</td>
                 <td>{{ order.comments }}</td>
                 <td>{{ order.customer.first_name }}</td>
