@@ -24,4 +24,5 @@ urlpatterns = [
 
     # API Routes
     path('get_clients/', get_clients, name='get_clients'),
+
 ]
