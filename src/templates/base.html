@@ -18,7 +18,16 @@
     <a href="{% url 'webapp:login' %}">Login</a>
     <a href="{% url 'webapp:order-create' %}">Nouvelle commande</a>
     <a href="{% url 'webapp:dashboard' %}">Tableau de bord</a>
+    <form action="{% url 'webapp:order-search' %}" method="get">
+    <input
+            name="q"
+            type="text"
+            placeholder="🔎">
+    </form>
 </div>
+
+
+
 
 <section id="webapp">
 
