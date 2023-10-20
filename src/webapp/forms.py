@@ -3,6 +3,15 @@ from .models import *
 
 
 class NewOrderForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(NewOrderForm, self).__init__(*args, **kwargs)
+        try:
+            default_status = Status.objects.first()
+        except Status.DoesNotExist:
+            default_status = None
+
+        self.fields['status'].initial = default_status
+
     class Meta:
         model = Order
         fields = ("label", "comments", "status", "estimated_delivery_date", "invoice_date",)
