@@ -6,43 +6,34 @@
 
 {% block content %}
 
-<div class="flex justify-between my-3 h-full">
+<div class="flex justify-evenly my-3 mx-h-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
 
 {% for commande in commandes %}
 
-    <div class="w-full overflow-y-hidden mx-4 text-red-700 block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+    <div class="w-full h-full overflow-y-hidden mx-auto block max-w-sm p-6 bg-slate-50 border-solid border-slate-950 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
 
-        <div class="libellé flex justify-between ">
+        <div class="libellé_id flex justify-between mx-h-full">
             <div>
-                <h1>{{ commande.label }}</h1>
-            </div>
-            <div>
-                ID: {{ commande.pk }}
+                <h1 class="font-bold">{{ commande.label }}</h1>
             </div>
         </div>
-
-        <div class="customer border-t my-3 ">
-            <p class="font-normal text-gray-700 dark:text-gray-400">{{ commande.customer.first_name }}</p>
-            <p class="font-normal text-gray-700 dark:text-gray-400">{{ commande.customer.last_name }}</p>
-            <p class="font-normal text-gray-700 dark:text-gray-400">Tél : {{ commande.customer.phone_number }}</p>
-        </div>
-
         <div class="dates border-t my-3 ">
-            <p class="font-normal text-gray-700 dark:text-gray-400">Date de création : {{ commande.created_at|date:"SHORT_DATE_FORMAT" }}</p>
-            <p class="font-normal text-gray-700 dark:text-gray-400">Date de livraison : {{ commande.estimated_delivery_date }}</p>
-            <p class="font-normal text-gray-700 dark:text-gray-400">Date de facturation : {{ commande.invoice_date }}</p>
-        </div>
+            <div class="flex justify-between font-normal text-gray-700 dark:text-gray-400">
+                <div>Date de création</div>
+                <div>{{ commande.created_at|date:"SHORT_DATE_FORMAT" }}</div>
+            </div>
 
-        <div class="total_price border-t my-3 ">
-            <p>Total de la commande: {{ commande.total_price }}</p>
         </div>
+            <div class="customer border-t my-3 ">
+                <p class="font-normal text-gray-700 dark:text-gray-400">{{ commande.customer.first_name }} {{ commande.customer.last_name }}</p>
+                <p class="font-normal text-gray-700 dark:text-gray-400">Tél: {{ commande.customer.phone_number }}</p>
+            </div>
 
-        <div class="bouton border-t">
-            <button><a href="{% url 'webapp:order-detail' pk=commande.pk %}">Voir détail</a></button>
-        </div>
-
-        <div class="description border-t my-3 whitespace-normal">
-            <p class="font-normal text-gray-700 dark:text-gray-400 break-words whitespace-pre-line">Description: {{ commande.comments|truncatechars:120 }}</p>
+        <div class="status border-t my-3">{{ commande.status }}</div>
+        <div class="flex justify-end">
+            <a href="{% url 'webapp:order-detail' pk=commande.pk %}">
+            <button type="button" class="py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-full border border-gray-200 hover:bg-gray-100 hover:text-yellow-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Détails</button>
+        </a>
         </div>
 
     </div>
