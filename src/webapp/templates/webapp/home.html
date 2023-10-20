@@ -5,30 +5,49 @@
 {% endblock %}
 
 {% block content %}
-<div class="flex flex-wrap -m-4">
-    {% for commande in commandes %}
-        <div class="p-4 lg:w-1/3 md:w-1/2">
-            <div class="h-full max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
-                <p class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"> libelle : {{ commande.label }} </p>
-                <p class="font-normal text-gray-700 dark:text-gray-400">id : {{ commande.pk }}</p>
-                <p class="font-normal text-gray-700 dark:text-gray-400">first name : {{ commande.customer.first_name }}</p>
-                <p class="font-normal text-gray-700 dark:text-gray-400">last_name : {{ commande.customer.last_name }}</p>
-                <p class="font-normal text-gray-700 dark:text-gray-400">phone number : {{ commande.customer.phone_number }}</p>
-                <p class="font-normal text-gray-700 dark:text-gray-400">comments : {{ commande.comments }}</p>
-                <p class="font-normal text-gray-700 dark:text-gray-400">created at : {{ commande.created_at|date:"SHORT_DATE_FORMAT" }}</p>
-                <p class="font-normal text-gray-700 dark:text-gray-400">delivery date : {{ commande.estimated_delivery_date }}</p>
-                <p class="font-normal text-gray-700 dark:text-gray-400">invoice date : {{ commande.invoice_date }}</p>
-                <ul class="font-normal text-gray-700 dark:text-gray-400">
-                    {% for product in commande.products.all %}
-                        <li>libellé : {{ product.label }}</li>
-                        <li>prix unitaire de vente : {{ product.selling_price_unit }}</li>
-                        <li>quantité : {{ product.quantity }} </li>
-                    {% endfor %}
-                </ul>
-                <p>Total de la commande: {{ commande.total_price }}</p>
-                <button><a href="{% url 'webapp:order-detail' pk=commande.pk %}">Voir détail</a></button>
+
+<div class="flex justify-between my-3 h-full">
+
+{% for commande in commandes %}
+
+    <div class="w-full overflow-y-hidden mx-4 text-red-700 block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+
+        <div class="libellé flex justify-between ">
+            <div>
+                <h1>{{ commande.label }}</h1>
+            </div>
+            <div>
+                ID: {{ commande.pk }}
             </div>
         </div>
-    {% endfor %}
+
+        <div class="customer border-t my-3 ">
+            <p class="font-normal text-gray-700 dark:text-gray-400">{{ commande.customer.first_name }}</p>
+            <p class="font-normal text-gray-700 dark:text-gray-400">{{ commande.customer.last_name }}</p>
+            <p class="font-normal text-gray-700 dark:text-gray-400">Tél : {{ commande.customer.phone_number }}</p>
+        </div>
+
+        <div class="dates border-t my-3 ">
+            <p class="font-normal text-gray-700 dark:text-gray-400">Date de création : {{ commande.created_at|date:"SHORT_DATE_FORMAT" }}</p>
+            <p class="font-normal text-gray-700 dark:text-gray-400">Date de livraison : {{ commande.estimated_delivery_date }}</p>
+            <p class="font-normal text-gray-700 dark:text-gray-400">Date de facturation : {{ commande.invoice_date }}</p>
+        </div>
+
+        <div class="total_price border-t my-3 ">
+            <p>Total de la commande: {{ commande.total_price }}</p>
+        </div>
+
+        <div class="bouton border-t">
+            <button><a href="{% url 'webapp:order-detail' pk=commande.pk %}">Voir détail</a></button>
+        </div>
+
+        <div class="description border-t my-3 whitespace-normal">
+            <p class="font-normal text-gray-700 dark:text-gray-400 break-words whitespace-pre-line">Description: {{ commande.comments|truncatechars:120 }}</p>
+        </div>
+
+    </div>
+
+{% endfor %}
 </div>
+
 {% endblock %}
