@@ -17,6 +17,9 @@ class WebappHome(ListView):
     template_name = 'webapp/home.html'
     context_object_name = "commandes"
 
+    def get_queryset(self):
+        return Order.objects.all().order_by('-created_at')[:3]
+
 
 class CreateOrder(CreateView):
     form_class = NewOrderForm
@@ -24,10 +27,12 @@ class CreateOrder(CreateView):
     success_url = '/dashboard'
 
     def get_context_data(self, **kwargs):
+
         context = {
             'order_form': NewOrderForm(),
             'customer_form': NewCustomerForm(),
         }
+
         return context
 
     def get_or_create_customer(self, customer_id, customer_form):
@@ -97,6 +102,7 @@ class EditOrder(UpdateView):
         context['order_form'] = NewOrderForm(instance=order)
         customer_instance = order.customer
         context['customer_form'] = NewCustomerForm(instance=customer_instance)
+        context['product_order'] = OrderHasProduct.objects.filter(order=order.id)
         return context
 
     # Check la validité de form (order)
@@ -179,21 +185,39 @@ class DeleteProduct(DeleteView):
     model = Product
     context_object_name = 'product'
     template_name = 'webapp/products/product-delete.html'
-    success_url = reverse_lazy("webapp:product-list")
 
-    
+    def get(self, request, *args, **kwargs):
+        request.session['previous_url'] = request.META.get('HTTP_REFERER', '/')
+        return super().get(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return self.request.session.get('previous_url', '/')
+
+
 class EditProduct(UpdateView):
     model = Product
     fields = "__all__"
     template_name = 'webapp/products/product-edit.html'
-    success_url = reverse_lazy("webapp:product-list")
+
+    def get(self, request, *args, **kwargs):
+        request.session['previous_url'] = request.META.get('HTTP_REFERER', '/')
+        return super().get(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return self.request.session.get('previous_url', '/')
 
 
 class AddProductsToOrder(CreateView):
     model = Product
     fields = '__all__'
     template_name = 'webapp/orders/order-product.html'
-    success_url = '/dashboard'
+
+    def get(self, request, *args, **kwargs):
+        request.session['previous_url'] = request.META.get('HTTP_REFERER', '/')
+        return super().get(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return self.request.session.get('previous_url', '/')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
