@@ -1,3 +1,5 @@
+fr om django.core import paginator
+from django.core.paginator import Paginator
 from django.db.models import Q, Prefetch, CharField
 from django.db.models.functions import Cast
 from django.http import JsonResponse
@@ -137,35 +139,24 @@ class SearchOrder(ListView):
     def get_queryset(self):
         query = self.request.GET.get("q")
         order_list = (
-            # Création d'une nouvelle colonne avec Cast
-            # Afin de faire une recherche sur l'id de la commande
-            Order.objects.annotate(str_id=Cast("pk", CharField()))
-            .prefetch_related(
-                Prefetch(
-                    "customer",
-                    queryset=Customer.objects.filter(
-                        Q(first_name__icontains=query)
-                        | Q(last_name__icontains=query)
-                        | Q(phone_number__icontains=query)
-                        | Q(address__icontains=query)
-                        | Q(mail__icontains=query)
-                        | Q(comments__icontains=query)
-                    ),
-                )
-            )
-            .filter(
-                Q(str_id__iexact=query) # Recherche Exacte
-                | Q(label__icontains=query)
-                | Q(comments__icontains=query)
-                | Q(customer__first_name__icontains=query)
-                | Q(customer__last_name__icontains=query)
-                | Q(customer__phone_number__icontains=query)
-                | Q(customer__address__icontains=query)
-                | Q(customer__mail__icontains=query)
-                | Q(customer__comments__icontains=query)
-            )[:50]
+            Order.objects.filter(
+                        Q(label__icontains=query) # libellé
+                        |
+                        Q(status__label__icontains=query) # status
+                        |
+                        Q(pk__icontains=query) # id
+                        |
+                        Q(customer__first_name__icontains=query)
+                        |
+                        Q(customer__last_name__icontains=query)
+                        |
+                        Q(customer__mail__icontains=query)
+                        |
+                        Q(customer__address__icontains=query)
+                        |
+                        Q(customer__phone_number__icontains=query)
+                )[:50]
         )
-
         return order_list
 
 
@@ -176,9 +167,25 @@ class DetailOrder(DetailView):
 
 
 class Dashboard(ListView):
+    paginate_by = 10
     model = Order
     template_name = 'webapp/dashboard.html'
-    context_object_name = "commandes"
+    context_object_name = "orders"
+    ordering = ['-id']
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        page_number = context['page_obj'].number
+        element_by_page = self.paginate_by
+        all_objects = Order.objects.all()
+
+        count_all = Paginator(all_objects, element_by_page)
+        context['total_obj'] = count_all.count
+
+        accumulated_objects = (page_number - 1) * element_by_page + len(context['page_obj'])
+        context['accumulated_objects'] = accumulated_objects
+
+        return context
 
 
 class DeleteProduct(DeleteView):
