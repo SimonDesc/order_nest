@@ -7,4 +7,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("select2/", include("django_select2.urls")),
     path('', include('webapp.urls')),
+    path("__reload__/", include("django_browser_reload.urls")),
 ]
