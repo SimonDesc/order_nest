@@ -18,7 +18,7 @@ class WebappHome(ListView):
     context_object_name = "commandes"
 
     def get_queryset(self):
-        return Order.objects.all().order_by('-created_at')[:3]
+        return Order.objects.all().order_by('-created_at')[:20]
 
 
 class CreateOrder(CreateView):
