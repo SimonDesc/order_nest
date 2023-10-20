@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-  <h1>Page de modification d'une nouvelle commande</h1>
+  <h1>Page de modification d'une nouvelle commande {{ order_form.instance.id }} </h1>
 
 <form method="POST">
     {% csrf_token %}
@@ -69,5 +69,77 @@
 
     <button type="submit" class="btn btn-submit" value="Update">Enregistrer</button>
 </form>
+
+
+
+{% if product_order %}
+<div class="min-w-full bg-white">
+  <div class="py-2 align-middle inline-block min-w-full">
+    <div class="overflow-hidden">
+      <table class="min-w-full">
+        <thead>
+          <tr>
+            <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              ID du produit
+            </th>
+            <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Référence
+            </th>
+            <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Libellé
+            </th>
+            <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Prix unitaire de vente
+            </th>
+            <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Quantité
+            </th>
+              <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Modifier
+            </th>
+              <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Supprimer
+            </th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          {% for product in product_order %}
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap">
+                {{ product.product.pk }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                {{ product.product.reference }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                {{ product.product.label }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                {{ product.product.selling_price_unit }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                {{ product.product.quantity }}
+              </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                <a href="{% url 'webapp:product-edit' pk=product.product.id %}">
+                Modifier
+                </a>
+               </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                <a href="{% url 'webapp:product-delete' pk=product.product.id %}">
+                Supprimer
+                </a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<a href="{% url 'webapp:order-add-products' pk=order_form.instance.id %}">Ajouter Produit</a>
+
 
 {% endblock %}
