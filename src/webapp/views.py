@@ -1,4 +1,4 @@
-fr om django.core import paginator
+from django.core import paginator
 from django.core.paginator import Paginator
 from django.db.models import Q, Prefetch, CharField
 from django.db.models.functions import Cast
