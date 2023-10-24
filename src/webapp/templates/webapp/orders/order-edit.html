@@ -5,71 +5,112 @@
 {% endblock %}
 
 {% block content %}
-  <h1>Page de modification d'une nouvelle commande {{ order_form.instance.id }} </h1>
+<div class="titre flex justify-center text-3xl font-bold mt-5 mb-9">
+    <h1 class="text-slate-500">Modification de la commande {{ order_form.instance.id }} créée le {{ order.created_at|date:"SHORT_DATE_FORMAT"}}</h1>
+</div>
 
-<form method="POST">
-    {% csrf_token %}
-    <!-- Champs du formulaire NewOrderForm -->
-    {{ order_form.label.label_tag }} {{ order_form.label }}
-    {% if order_form.label.errors %}
-        <div class="errors">{{ order_form.label.errors }}</div>
-    {% endif %}
+<div class="flex justify-center">
+    <form method="POST" class="">
+        {% csrf_token %}
 
-    {{ order_form.comments.label_tag }} {{ order_form.comments }}
-    {% if order_form.comments.errors %}
-        <div class="errors">{{ order_form.comments.errors }}</div>
-    {% endif %}
+        <div class="infos flex justify-between px-3">
+            <div class="label mb-6 md:mb-4 ">
+                {{ order_form.label.label_tag }}
+                {{ order_form.label }}
+                {% if order_form.label.errors %}
+                <div class="errors">{{ order_form.label.errors }}</div>
+                {% endif %}
+            </div>
 
-    {{ order_form.status.label_tag }} {{ order_form.status }}
-    {% if order_form.status.errors %}
-        <div class="errors">{{ order_form.status.errors }}</div>
-    {% endif %}
+            <div class="status mb-6 md:mb-0">
+                    {{ order_form.status.label_tag }}
+                    <div>{{ order_form.status }}</div>
+                    {% if order_form.status.errors %}
+                    <div class="errors">{{ order_form.status.errors }}</div>
+                    {% endif %}
+            </div>
+        </div>
 
-    {{ order_form.estimated_delivery_date.label_tag }} {{ order_form.estimated_delivery_date }}
-    {% if order_form.estimated_delivery_date.errors %}
-        <div class="errors">{{ order_form.estimated_delivery_date.errors }}</div>
-    {% endif %}
+        <div class="client flex flex-nowrap px-3 mb-2">
 
-    {{ order_form.invoice_date.label_tag }} {{ order_form.invoice_date }}
-    {% if order_form.invoice_date.errors %}
-        <div class="errors">{{ order_form.invoice_date.errors }}</div>
-    {% endif %}
+            <div class="nom mb-6 md:mb-0">
+                {{ customer_form.last_name.label_tag }}
+                <div>{{ customer_form.last_name }}</div>
+                {% if customer_form.last_name.errors %}
+                <div class="errors">{{ customer_form.last_name.errors }}</div>
+                {% endif %}
+            </div>
 
-    <br>
-    <!-- Champs du formulaire NewCustomerForm -->
+            <div class="prenom px-3 mb-6 md:mb-0">
+                {{ customer_form.first_name.label_tag }}
+                {{ customer_form.first_name }}
+                {% if customer_form.first_name.errors %}
+                <div class="errors">{{ customer_form.first_name.errors }}</div>
+                {% endif %}
+            </div>
 
-    <label>id</label>
-    <input type="number" name="id" value="{{ customer_form.instance.id }}" readonly>
+            <div class="tel md:mb-0">
+                {{ customer_form.phone_number.label_tag }}
+                {{ customer_form.phone_number }}
+                {% if customer_form.phone_number.errors %}
+                <div class="errors">{{ customer_form.phone_number.errors }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="mailadress flex flex-wrap mt-4 mb-6">
+            <div class="adress px-3 mb-6 md:mb-0">
+                {{ customer_form.address.label_tag }}
+                <div>{{ customer_form.address }}</div>
+                {% if customer_form.address.errors %}
+                <div class="errors">{{ customer_form.address.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mail mb-6 md:mb-0">
+                {{ customer_form.mail.label_tag }}
+                <div>{{ customer_form.mail }}</div>
+                {% if customer_form.mail.errors %}
+                <div class="errors">{{ customer_form.mail.errors }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="dates flex flex-nowrap px-3 mb-6">
+
+            <div class="">
+                {{ order_form.estimated_delivery_date.label_tag }}
+                <div>{{ order_form.estimated_delivery_date }}</div>
+                {% if order_form.estimated_delivery_date.errors %}
+                <div class="errors">{{ order_form.estimated_delivery_date.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="facturation px-3">
+                {{ order_form.invoice_date.label_tag }}
+                <div>{{ order_form.invoice_date }}</div>
+                {% if order_form.invoice_date.errors %}
+                <div class="errors">{{ order_form.invoice_date.errors }}</div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="comment px-3">
+            {{ order_form.comments.label_tag }}
+            {{ order_form.comments }}
+            {% if order_form.comments.errors %}
+            <div class="errors">{{ order_form.comments.errors }}</div>
+        {% endif %}
+        </div>
 
 
-    {{ customer_form.first_name.label_tag }} {{ customer_form.first_name }}
-    {% if customer_form.first_name.errors %}
-        <div class="errors">{{ customer_form.first_name.errors }}</div>
-    {% endif %}
+        <input type="hidden" name="id" value="{{ customer_form.instance.id }}" readonly>
 
-    {{ customer_form.last_name.label_tag }} {{ customer_form.last_name }}
-    {% if customer_form.last_name.errors %}
-        <div class="errors">{{ customer_form.last_name.errors }}</div>
-    {% endif %}
 
-    {{ customer_form.phone_number.label_tag }} {{ customer_form.phone_number }}
-    {% if customer_form.phone_number.errors %}
-        <div class="errors">{{ customer_form.phone_number.errors }}</div>
-    {% endif %}
+        <button type="submit" class="btn btn-submit" value="Update">Enregistrer</button>
 
-    {{ customer_form.address.label_tag }} {{ customer_form.address }}
-    {% if customer_form.address.errors %}
-        <div class="errors">{{ customer_form.address.errors }}</div>
-    {% endif %}
 
-    {{ customer_form.mail.label_tag }} {{ customer_form.mail }}
-    {% if customer_form.mail.errors %}
-        <div class="errors">{{ customer_form.mail.errors }}</div>
-    {% endif %}
-
-    <button type="submit" class="btn btn-submit" value="Update">Enregistrer</button>
-</form>
-
+    </form>
+</div>
 
 
 {% if product_order %}
