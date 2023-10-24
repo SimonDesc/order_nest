@@ -1,13 +1,18 @@
-fr om django.core import paginator
+import base64
+import datetime
+import json
+import os.path
+
+from django.conf import settings
+from django.core.files.base import ContentFile
 from django.core.paginator import Paginator
-from django.db.models import Q, Prefetch, CharField
-from django.db.models.functions import Cast
-from django.http import JsonResponse
+from django.db.models import Q
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView, TemplateView
-from .models import Customer, Order, OrderHasProduct, Status, Product
-from .forms import NewOrderForm, NewCustomerForm, AddProductForm
+from .models import Customer, Order, OrderHasProduct, Product, OrderAttachment
+from .forms import NewOrderForm, NewCustomerForm
 
 
 class WebappLogin(TemplateView):
@@ -105,6 +110,7 @@ class EditOrder(UpdateView):
         customer_instance = order.customer
         context['customer_form'] = NewCustomerForm(instance=customer_instance)
         context['product_order'] = OrderHasProduct.objects.filter(order=order.id)
+        context['attachments'] = OrderAttachment.objects.filter(order=order.id)
         return context
 
     # Check la validité de form (order)
@@ -244,6 +250,18 @@ class AddProductsToOrder(CreateView):
         return super().form_valid(form)
 
 
+def get_canvas(request):
+    query = request.GET.get('term', '')
+    files = OrderAttachment.objects.get(pk=query)
+    results = []
+    for file in files:
+        file_dict = {
+            'url': file['file'],
+        }
+        results.append(file_dict)
+    return JsonResponse(results, safe=False)
+
+
 def get_clients(request):
     query = request.GET.get('term', '')
     clients = Customer.objects.filter(
@@ -270,3 +288,49 @@ def get_clients(request):
 
     return JsonResponse(results, safe=False)
 
+
+def save_canvas(request):
+    if request.method == "POST":
+        current_time = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+
+        data = json.loads(request.body.decode("utf-8"))
+        data_url = data.get('img')
+        order_id = data.get('order_id')
+
+        # Decode image
+        format, imgstr = data_url.split(';base64,')
+        ext = format.split('/')[-1]
+
+        file_name = f"image_{current_time}.{ext}"
+        data = ContentFile(base64.b64decode(imgstr), name=file_name)
+
+        # On créer l'objet OrderAttachment
+        attachment = OrderAttachment()
+
+        # On récupère l'id de la cde
+        order = Order.objects.get(pk=order_id)
+
+        # Ajout de l'image
+        attachment.order = order
+        attachment.file = data
+        attachment.save()
+
+        return HttpResponse(str(file_name))
+
+
+class DeleteCanvas(DeleteView):
+    model = OrderAttachment
+
+    def get_success_url(self):
+        order_id = self.object.pk
+        return reverse('webapp:order-edit', args=[order_id])
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
+        if self.object.file:
+            file_path = os.path.join(settings.MEDIA_ROOT, self.object.file.path)
+            if os.path.exists(file_path):
+                os.remove(file_path)
+        self.object.delete()
+        return JsonResponse({'status': 'success'})

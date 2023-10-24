@@ -1,3 +1,5 @@
+import os
+
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 
@@ -50,7 +52,6 @@ class Order(models.Model):
     invoice_date = models.DateField(blank=True, null=True, verbose_name="date_facturation")
     label = models.CharField(max_length=45, blank=False, default='')
     comments = models.TextField(max_length=2000, blank=True)
-    draw_url = models.CharField(max_length=200, blank=True)
     status = models.ForeignKey(Status, on_delete=models.SET_NULL, null=True, blank=True)
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True)
     products = models.ManyToManyField(Product, through='OrderHasProduct')
@@ -76,3 +77,14 @@ class OrderHasProduct(models.Model):
 
     def __str__(self):
         return f'{self.order} {self.product.label}'
+
+
+class OrderAttachment(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="attachments")
+    file = models.FileField(upload_to='order_attachments/')
+
+    @property
+    def file_name(self):
+        if self.file:
+            return os.path.basename(self.file.name)
+        return None

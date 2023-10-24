@@ -144,3 +144,7 @@ INTERNAL_IPS = [
 # Détecter le système d'exploitation
 if os.name == 'nt':  # Pour Windows
     NPM_BIN_PATH = "npm.cmd"
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
+MEDIA_URL = '/media/'

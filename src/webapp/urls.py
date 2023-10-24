@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import WebappLogin, WebappHome, CreateOrder, EditOrder, DeleteOrder, SearchOrder, Dashboard, DetailOrder, \
-    DeleteProduct, EditProduct, AddProductsToOrder, get_clients
+    DeleteProduct, EditProduct, AddProductsToOrder, get_clients, save_canvas, DeleteCanvas
 
 app_name = 'webapp'
 
@@ -22,8 +22,12 @@ urlpatterns = [
     path('products/<int:pk>/edit/', EditProduct.as_view(), name='product-edit'),
     path('products/<int:pk>/delete/', DeleteProduct.as_view(), name='product-delete'),
 
+    # Attachment Routes
+    path('delete_canvas/<int:pk>', DeleteCanvas.as_view(), name='delete_canvas'),
+
     # API Routes
     path('get_clients/', get_clients, name='get_clients'),
+    path('save_canvas/', save_canvas, name='save_canvas'),
 
 
 

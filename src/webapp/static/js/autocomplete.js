@@ -9,7 +9,6 @@ $(function() {
             $('#id_address').val(ui.item.address);
             $('#id_mail').val(ui.item.mail);
             $('#id_customer').val(ui.item.id);
-            console.log("Client sélectionné: ", ui.item);
             return false;
         }
     });
