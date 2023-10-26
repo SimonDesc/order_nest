@@ -168,7 +168,7 @@ class SearchOrder(ListView):
 
 
 class Dashboard(ListView):
-    paginate_by = 10
+    paginate_by = 20
     model = Order
     template_name = 'webapp/dashboard.html'
     context_object_name = "orders"
@@ -291,6 +291,7 @@ def save_canvas(request):
         data = json.loads(request.body.decode("utf-8"))
         data_url = data.get('img')
         order_id = data.get('order_id')
+        drawing_data = data.get('drawingData')
 
         # Decode image
         format, imgstr = data_url.split(';base64,')
@@ -308,6 +309,7 @@ def save_canvas(request):
         # Ajout de l'image
         attachment.order = order
         attachment.file = data
+        attachment.canvas_json = drawing_data
         attachment.save()
 
         return HttpResponse(str(file_name))

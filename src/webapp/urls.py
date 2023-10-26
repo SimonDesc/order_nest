@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.conf.urls.static import static
 from django.urls import path
 from .views import WebappLogin, WebappHome, CreateOrder, EditOrder, DeleteOrder, SearchOrder, Dashboard, \
     DeleteProduct, EditProduct, AddProductsToOrder, get_clients, save_canvas, DeleteCanvas
@@ -31,3 +33,6 @@ urlpatterns = [
 
 
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

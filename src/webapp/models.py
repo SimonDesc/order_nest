@@ -82,9 +82,16 @@ class OrderHasProduct(models.Model):
 class OrderAttachment(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="attachments")
     file = models.FileField(upload_to='order_attachments/')
+    canvas_json = models.JSONField()
 
     @property
     def file_name(self):
         if self.file:
             return os.path.basename(self.file.name)
+        return None
+
+    @property
+    def file_url(self):
+        if self.file:
+            return self.file.url
         return None
