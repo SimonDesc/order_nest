@@ -122,7 +122,7 @@
         <input type="hidden" name="id" value="{{ customer_form.instance.id }}" readonly>
 
 
-        <button type="submit" class="w-full mb-4 mt-4 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" value="Update">Enregistrer modification</button>
+        <button type="submit" class="w-full mb-4 mt-4 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded" value="Update">Enregistrer modification</button>
 
 
     </form>
@@ -130,32 +130,32 @@
 
 
 {% if product_order %}
-<div class="min-w-full bg-white">
-  <div class="py-2 align-middle inline-block min-w-full">
+<div class="px-3">
+  <div class="flex justify-center py-2 align-middle inline-block min-w-full">
     <div class="overflow-hidden">
       <table class="min-w-full">
         <thead>
           <tr>
             <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              ID du produit
+              ID
             </th>
             <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Référence
+              Réf.
             </th>
             <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Libellé
             </th>
             <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Prix unitaire de vente
+              PU
             </th>
             <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Quantité
+              QT
             </th>
               <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Modifier
+
             </th>
               <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Supprimer
+
             </th>
           </tr>
         </thead>
@@ -179,12 +179,12 @@
               </td>
                 <td class="px-6 py-4 whitespace-nowrap">
                 <a href="{% url 'webapp:product-edit' pk=product.product.id %}">
-                Modifier
+                    <img width="25" height="20" src="{% static '/img/edit.svg' %}"></a>
                 </a>
                </td>
                 <td class="px-6 py-4 whitespace-nowrap">
                 <a href="{% url 'webapp:product-delete' pk=product.product.id %}">
-                Supprimer
+                <img width="25" height="20" src="{% static '/img/delete.svg' %}">
                 </a>
               </td>
             </tr>
@@ -195,23 +195,28 @@
   </div>
 </div>
 {% endif %}
-        <div class="flex justify-center">
-            <canvas id="drawZone" class="w-full px-3 mt-3 rounded-lg border-2 border-gray-600"></canvas>
-        </div>
-        <div class="flex justify-end">
-            <button id="bt_eraseDrawing" class="mt-3 bg-transparent hover:bg-red-500 text-red-500 font-semibold hover:text-red py-2 px-4 border border-red-500 hover:border-transparent rounded">Effacer</button>
-            <button id="bt_saveDrawing" class="ml-1 mt-3 bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">Sauvegarder</button>
+
+<div class="flex justify-center">
+    <a href="{% url 'webapp:order-add-products' pk=order_form.instance.id %}"><button class="mb-4 bg-yellow-500 hover:bg-yellow-300 text-slate-700 py-2 px-4 rounded"> Ajouter Produit</button></a>
+</div>
+
+        <div class=" flex justify-center">
+            <canvas id="drawZone" width="700" height="500" class=" px-3 mt-3 rounded-lg border-2 border-gray-600"></canvas>
+
         </div>
 
+        <div class="flex justify-center">
+            <button id="bt_eraseDrawing" class="mt-3 bg-transparent hover:bg-red-500 text-red-500 hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded">Effacer</button>
+            <button id="bt_saveDrawing" class="ml-1 mt-3 bg-transparent hover:bg-blue-500 text-blue-700 hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">Sauvegarder</button>
+        </div>
+<div class="flex justify-center">
         <ul id="canvasList" class="list-disc">
             {% if attachments %}
             {% for attachment in attachments %}
-                <li><span class="attachment_pk" data-pk="{{ attachment.pk }}">[{{ attachment.pk }}]</span> - {{ attachment.file_name }} <button class="delete_canvas ml-1 mt-3 bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-0 px-1 border border-blue-500 hover:border-transparent rounded" data-pk="{{ attachment.pk }}">  Supprimer</button></li>
+                <li><span class="attachment_pk" data-pk="{{ attachment.pk }}">[{{ attachment.pk }}]</span> - {{ attachment.file_name }} <button class="delete_canvas ml-1 mt-3 bg-transparent hover:bg-blue-500 text-blue-700 hover:text-white py-0 px-1 border border-blue-500 hover:border-transparent rounded" data-pk="{{ attachment.pk }}">  Supprimer</button></li>
             {% endfor %}
             {% endif %}
 
         </ul>
-<a href="{% url 'webapp:order-add-products' pk=order_form.instance.id %}">Ajouter Produit</a>
-
-
+</div>
 {% endblock %}

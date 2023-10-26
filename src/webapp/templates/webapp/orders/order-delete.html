@@ -7,7 +7,10 @@
 {% block content %}
   <form method="POST">
       {% csrf_token %}
-      <p>Êtes vous sûr de vouloir supprimer la commande du client {{ commandes.customer.last_name }} (id: {{ commandes.pk }}) ?</p>
+      <h1 class="text-red-500">
+          Êtes vous sûr de vouloir supprimer la commande du client {{ commandes.customer.last_name }} (id: {{ commandes.pk }}) ?
+      </h1>
+
       <input type="submit" value="Oui, supprimer">
   </form>
 {% endblock %}

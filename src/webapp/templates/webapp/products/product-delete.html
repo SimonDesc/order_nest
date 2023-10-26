@@ -7,8 +7,10 @@
 {% block content %}
   <form method="POST">
       {% csrf_token %}
-      <p>Êtes vous sûr de vouloir supprimer le produit {{ product.label }} ?</p>
-      <input type="submit" value="Oui, supprimer">
+      <div class="text-slate-500 flex justify-center mt-4">Êtes vous sûr de vouloir supprimer le produit {{ product.label }} ?</div>
+      <div class="flex justify-center">
+          <button type="submit" class=" mb-4 mt-4 bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded">Oui, supprimer</button>
+      </div>
   </form>
 {% endblock %}
 
