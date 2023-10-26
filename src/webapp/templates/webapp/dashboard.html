@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}
     <title>Tableau de bord</title>
@@ -20,38 +21,36 @@
                 <th class="py-3 px-6 text-left">Prénom</th>
                 <th class="py-3 px-6 text-left">Libellé</th>
                 <th class="py-3 px-6 text-left">Status</th>
-                <th class="py-3 px-6 text-left">Date de création</th>
-                <th class="py-3 px-6 text-left">Ajouter produit</th>
-                <th class="py-3 px-6 text-left">Modifier order</th>
-                <th class="py-3 px-6 text-left">Supprimer order</th>
+                <th class="py-3 px-6 text-left">Création</th>
+                <th class="py-3 px-6 text-left"></th>
+                <th class="py-3 px-6 text-left"></th>
+                <th class="py-3 px-6 text-left"></th>
             </tr>
         </thead>
         <tbody class="text-gray-600 text-sm font-light">
             {% for order in orders %}
                 <tr class="border-b border-gray-200 hover:bg-gray-100">
                     <td class="py-3 px-6 text-left">
-                        <a href="{% url 'webapp:order-detail' pk=order.pk %}" class="text-blue-500">
                             {{ order.pk }}
-                        </a>
                     </td>
                     <td class="py-3 px-6 text-left">{{ order.customer.last_name }}</td>
                     <td class="py-3 px-6 text-left">{{ order.customer.first_name }}</td>
                     <td class="py-3 px-6 text-left">{{ order.label }}</td>
                     <td class="py-3 px-6 text-left">{{ order.status }}</td>
                     <td class="py-3 px-6 text-left">{{ order.created_at|date:"SHORT_DATE_FORMAT" }}</td>
-                    <td class="py-3 px-6 text-left">
-                        <a href="{% url 'webapp:order-add-products' pk=order.pk %}" class="text-blue-500">
-                            Ajouter produit
+                    <td class="px-6 py-4 flex justify-center">
+                        <a href="{% url 'webapp:order-add-products' pk=order.pk %}">
+                            <img width="25" height="20" src="{% static '/img/add.png' %}">
                         </a>
                     </td>
-                    <td class="py-3 px-6 text-left">
+                    <td class="py-3 px-6">
                         <a href="{% url 'webapp:order-edit' pk=order.pk %}" class="text-blue-500">
-                            Modifier order
+                            <img width="25" height="20" src="{% static '/img/edit.svg' %}">
                         </a>
                     </td>
-                    <td class="py-3 px-6 text-left">
+                    <td class="py-3 px-6">
                         <a href="{% url 'webapp:order-delete' pk=order.pk %}" class="text-red-500">
-                            Supprimer order
+                            <img width="25" height="20" src="{% static '/img/delete.svg' %}">
                         </a>
                     </td>
                 </tr>
