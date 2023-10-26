@@ -167,12 +167,6 @@ class SearchOrder(ListView):
         return order_list
 
 
-class DetailOrder(DetailView):
-    model = Order
-    context_object_name = "commandes"
-    template_name = 'webapp/orders/order-detail.html'
-
-
 class Dashboard(ListView):
     paginate_by = 20
     model = Order

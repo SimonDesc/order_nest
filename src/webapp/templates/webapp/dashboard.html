@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}
     <title>Tableau de bord</title>
@@ -12,7 +13,6 @@
     <div class="flex items-center justify-center my-2"><h1 class="text-3xl font-bold mb-4">Tableau de bord</h1></div>
 <p> {{ accumulated_objects }} / {{ total_obj }} </p>
 </div>
-
 
 <section class=" dark:bg-gray-900 p-3 sm:p-5">
     <div class="max-w-[900px] mx-auto">
