@@ -5,14 +5,14 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 
 class Customer(models.Model):
-    first_name = models.CharField(max_length=45, null=False, blank=False, verbose_name="prenom")
+    first_name = models.CharField(max_length=45, null=False, blank=False, verbose_name="prénom")
     last_name = models.CharField(max_length=45, null=False, blank=False, verbose_name="nom")
-    phone_number = PhoneNumberField(null=False, blank=False, region="FR")
-    address = models.CharField(max_length=200, blank=True)
+    phone_number = PhoneNumberField(null=False, blank=False, region="FR", verbose_name="téléphone")
+    address = models.CharField(max_length=200, blank=True, verbose_name="adresse")
     mail = models.EmailField(max_length=45, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    comments = models.TextField(max_length=2000, blank=True)
+    comments = models.TextField(max_length=2000, blank=True, verbose_name="commentaire")
     active = models.BooleanField(default=True)
 
     def __str__(self):
@@ -31,13 +31,13 @@ class Status(models.Model):
 
 
 class Product(models.Model):
-    reference = models.CharField(max_length=45, blank=True)
-    label = models.CharField(max_length=45, verbose_name="libelle")
+    reference = models.CharField(max_length=45, blank=True, verbose_name="référence")
+    label = models.CharField(max_length=45, verbose_name="libellé")
     brand = models.CharField(max_length=45, blank=True, verbose_name="marque")
     supplier = models.CharField(max_length=45, blank=True, verbose_name="fournisseur")
-    purchase_price_unit = models.DecimalField(default=0, max_digits=10, decimal_places=2)
-    selling_price_unit = models.DecimalField(default=0, max_digits=10, decimal_places=2)
-    quantity = models.PositiveIntegerField(default=0, blank=False, null=False)
+    purchase_price_unit = models.DecimalField(default=0, max_digits=10, decimal_places=2, verbose_name="prix d'achat")
+    selling_price_unit = models.DecimalField(default=0, max_digits=10, decimal_places=2, verbose_name="prix de vente")
+    quantity = models.PositiveIntegerField(default=0, blank=False, null=False, verbose_name="quantité")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
@@ -48,10 +48,10 @@ class Product(models.Model):
 
 class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
-    estimated_delivery_date = models.DateField(blank=True, null=True, verbose_name="date_livraison")
-    invoice_date = models.DateField(blank=True, null=True, verbose_name="date_facturation")
-    label = models.CharField(max_length=45, blank=False, default='')
-    comments = models.TextField(max_length=2000, blank=True)
+    estimated_delivery_date = models.DateField(blank=True, null=True, verbose_name="date de livraison")
+    invoice_date = models.DateField(blank=True, null=True, verbose_name="date de facturation")
+    label = models.CharField(max_length=45, blank=False, default='', verbose_name="libellé")
+    comments = models.TextField(max_length=2000, blank=True, verbose_name="commentaire")
     status = models.ForeignKey(Status, on_delete=models.SET_NULL, null=True, blank=True)
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True)
     products = models.ManyToManyField(Product, through='OrderHasProduct')

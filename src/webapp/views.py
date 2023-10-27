@@ -13,7 +13,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView, TemplateView
 from .models import Customer, Order, OrderHasProduct, Product, OrderAttachment
-from .forms import NewOrderForm, NewCustomerForm
+from .forms import NewOrderForm, NewCustomerForm, AddProductsToOrder
 
 
 class WebappLogin(TemplateView):
@@ -204,7 +204,7 @@ class DeleteProduct(DeleteView):
 
 class EditProduct(UpdateView):
     model = Product
-    fields = "__all__"
+    form_class = AddProductsToOrder
     template_name = 'webapp/products/product-edit.html'
 
     def get(self, request, *args, **kwargs):
