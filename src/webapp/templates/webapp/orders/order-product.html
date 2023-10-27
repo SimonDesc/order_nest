@@ -5,14 +5,20 @@
 {% endblock %}
 
 {% block content %}
-  <h1>Page de saisie d'un nouveau produit pour la commande {{ order_infos.label }} (id: {{ order_id }})</h1>
+<div class="titre flex justify-center text-3xl font-bold mt-5 mb-4">
+    <h1 class="text-slate-500">Nouveau produit pour la commande {{ order_infos.label }} (id: {{ order_id }})</h1>
+</div>
 
-    <p>Commande de Mr/Mme {{ order_infos.customer.last_name }} {{ order_infos.customer.first_name }}</p>
+<div class="infoclient flex justify-center text-2xl font-bold mt-0 mb-9">
+    <p class="text-slate-500">Commande de Mr/Mme {{ order_infos.customer.last_name }} {{ order_infos.customer.first_name }}</p>
+</div>
 
+<div class="form flex justify-center">
     <form method="POST">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit" class="btn btn-submit">Enregistrer</button>
     </form>
+</div>
 
 {% endblock %}
