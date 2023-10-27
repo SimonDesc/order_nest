@@ -22,7 +22,44 @@ $(document).ready(function() {
     // Ecouteur bouton Supprimer
     $(".delete_canvas").click(deleteCanvas);
 
+    // Ecouteur bouton Modifier
+    $(".edit_canvas").click(editCanvas);
+
 });
+
+function loadCanvas(jsonData) {
+    paper.project.clear(); // Efface le dessin actuel
+    paper.project.importJSON(jsonData); // Charge le dessin depuis le JSON
+}
+
+// Function qui permet de modifier le dessin
+async function editCanvas() {
+    const idOrder = $("#orderPk").val();
+    let canvasId = $(this).data("pk");
+    const canvas = await getCanvas(idOrder);
+    let parsedCanvas = JSON.parse(canvas);
+    let json_file = parsedCanvas["json_file"]
+
+    console.log(parsedCanvas["json_file"])
+
+    loadCanvas(json_file);
+    deleteCanvas(canvasId);
+
+}
+
+// Function qui permet de récupére les dessins de la commande
+function getCanvas(idOrder) {
+    return fetch(`/get_canvas/${idOrder}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erreur réseau ou réponse avec statut échoué.');
+            }
+            return response.text();
+        })
+        .catch(error => {
+            console.error("Il y a eu un problème avec l'opération fetch:", error);
+        });
+}
 
 // Function qui nettoie la zone de dessin
 function eraseDrawing() {
@@ -32,10 +69,15 @@ function eraseDrawing() {
     paper.project.clear();
 }
 
-// function qui supprime le dessin
-function deleteCanvas() {
+// Function qui supprime le dessin
+function deleteCanvas(idOrder) {
         const csrfToken = $("[name=csrfmiddlewaretoken]").val();
-        const canvasId = $(this).data("pk");
+        let canvasId = $(this).data("pk");
+
+        if (!canvasId) {
+            canvasId = idOrder;
+        }
+
         fetch(`/delete_canvas/${canvasId}`, {
                 method: 'DELETE',
                 headers: {
@@ -64,9 +106,12 @@ function deleteCanvas() {
             })
 };
 
+// Function qui sauvegarde le dessin
+async function saveCanvas() {
+        const idOrder = $("#orderPk").val();
+        confirm_attachement = await getCanvas(idOrder)
 
-function saveCanvas() {
-        if ($(".attachment_pk").length > 0) {
+        if (confirm_attachement !== 'False') {
             $('#drawError').text("Une seule image autorisée.");
             $('#drawError').addClass('text-red-700 bg-red-100 border border-red-600 p-2 rounded inline-block');
         }
@@ -75,7 +120,7 @@ function saveCanvas() {
             const canvas = $('#drawZone')[0];
             const dataURL = canvas.toDataURL();
             const csrfToken = $("[name=csrfmiddlewaretoken]").val();
-            const idOrder = $("#orderPk").val();
+
             const canvasName = $("#canvasList");
             const drawingData = paper.project.exportJSON();
 
