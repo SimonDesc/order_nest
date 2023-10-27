@@ -206,6 +206,7 @@ class EditProduct(UpdateView):
     model = Product
     form_class = AddProductsToOrder
     template_name = 'webapp/products/product-edit.html'
+    context_object_name = "product"
 
     def get(self, request, *args, **kwargs):
         request.session['previous_url'] = request.META.get('HTTP_REFERER', '/')

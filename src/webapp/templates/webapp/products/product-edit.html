@@ -5,12 +5,53 @@
 {% endblock %}
 
 {% block content %}
+<div class="titre flex justify-center text-slate-500 mt-4 text-3xl font-bold mb-4">
   <h1>Page de modification d'un produit</h1>
+</div>
 
+<div class="form flex justify-center">
   <form method="POST">
     {% csrf_token %}
-    {{ form.reference.label_tag }}
-    {{ form.reference }}
-    <button type="submit" class="btn btn-submit">Enregistrer</button>
-</form>
+
+      <div class="ref">
+        {{ form.reference.label_tag }}
+        {{ form.reference }}
+      </div>
+
+      <div class="label">
+        {{ form.label.label_tag }}
+        {{ form.label }}
+      </div>
+
+      <div class="brand">
+        {{ form.brand.label_tag }}
+        {{ form.brand }}
+      </div>
+
+      <div class="supplier">
+        {{ form.supplier.label_tag }}
+        {{ form.supplier }}
+      </div>
+
+      <div class="prix">
+        {{ form.purchase_price_unit.label_tag }}
+        {{ form.purchase_price_unit }}
+      </div>
+
+      <div class="vente">
+        {{ form.selling_price_unit.label_tag }}
+        {{ form.selling_price_unit }}
+      </div>
+
+      <div class="quantity">
+        {{ form.quantity.label_tag }}
+        {{ form.quantity }}
+      </div>
+
+      <div class="enregistrer">
+        <button type="submit" class="w-full mb-4 mt-4 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded">Enregistrer</button>
+      </div>
+
+  </form>
+</div>
 {% endblock %}
