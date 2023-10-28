@@ -246,16 +246,18 @@ class AddProductsToOrder(CreateView):
         return super().form_valid(form)
 
 
-def get_canvas(request):
-    query = request.GET.get('term', '')
-    files = OrderAttachment.objects.get(pk=query)
-    results = []
-    for file in files:
-        file_dict = {
-            'url': file['file'],
-        }
-        results.append(file_dict)
-    return JsonResponse(results, safe=False)
+def get_canvas(request, pk):
+    order = OrderAttachment.objects.filter(order_id=pk)
+
+    for e in order.all():
+        file_json = e.canvas_json
+
+    if order:
+        return JsonResponse(
+            {'exit': True,
+             'json_file': file_json
+             })
+    return HttpResponse(False)
 
 
 def get_clients(request):

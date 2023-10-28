@@ -2,7 +2,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
 from .views import WebappLogin, WebappHome, CreateOrder, EditOrder, DeleteOrder, SearchOrder, Dashboard, \
-    DeleteProduct, EditProduct, AddProductsToOrder, get_clients, save_canvas, DeleteCanvas
+    DeleteProduct, EditProduct, AddProductsToOrder, get_clients, save_canvas, DeleteCanvas, get_canvas
 
 app_name = 'webapp'
 
@@ -29,7 +29,7 @@ urlpatterns = [
     # API Routes
     path('get_clients/', get_clients, name='get_clients'),
     path('save_canvas/', save_canvas, name='save_canvas'),
-
+    path('get_canvas/<int:pk>', get_canvas, name='get_canvas'),
 
 
 ]
