@@ -2,16 +2,37 @@ $(document).ready(function() {
     paper.setup($('#drawZone')[0]);
     let tool = new paper.Tool();
     let path;
+    let eraserMode = false;
+    let eraserWidth = 20;
+    let pencilWidth = 2;
+    const eraserImg = document.getElementById('eraserImg');
+    const eraserImgUrl = eraserImg.src;
+    const eraserActiveImgUrl = eraserImg.getAttribute('data-active-src');
 
     tool.onMouseDown = function(event) {
         path = new paper.Path();
-        path.strokeColor = 'black';
+        path.strokeColor = eraserMode ? 'white' : 'black';
+        path.strokeWidth = eraserMode ? eraserWidth : pencilWidth;
         path.add(event.point);
     }
 
     tool.onMouseDrag = function(event) {
         path.add(event.point);
     }
+
+
+    // Ecouteur bouton Gomme
+    $("#bt_whitePaint").click(
+        function toggleEraser() {
+            eraserMode = !eraserMode;
+            if (eraserMode) {
+                $('#drawZone').css('cursor', `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40'><circle cx='20' cy='20' r='10' stroke='red' stroke-width='2' fill='none' /></svg>") 20 20, auto`);
+                $("#bt_whitePaint img").attr("src", eraserActiveImgUrl);
+            } else {
+                $('#drawZone').css('cursor', 'auto');
+                    $("#bt_whitePaint img").attr("src", eraserImgUrl);
+            }
+        });
 
     // Ecouteur bouton Effacer
     $("#bt_eraseDrawing").click(eraseDrawing);
@@ -27,6 +48,10 @@ $(document).ready(function() {
 
 });
 
+
+
+
+
 function loadCanvas(jsonData) {
     paper.project.clear(); // Efface le dessin actuel
     paper.project.importJSON(jsonData); // Charge le dessin depuis le JSON
@@ -39,8 +64,6 @@ async function editCanvas() {
     const canvas = await getCanvas(idOrder);
     let parsedCanvas = JSON.parse(canvas);
     let json_file = parsedCanvas["json_file"]
-
-    console.log(parsedCanvas["json_file"])
 
     loadCanvas(json_file);
     deleteCanvas(canvasId);
@@ -152,3 +175,4 @@ async function saveCanvas() {
                 });
             }
 };
+
