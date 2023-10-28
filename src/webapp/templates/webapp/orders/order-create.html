@@ -18,13 +18,23 @@
         {% csrf_token %}
 
          <!-- Champs du formulaire NewCustomerForm -->
-        {% if customer_id %}
-            <input name="id" value="{{ customer_id }}" readonly>
-        {% else %}
-            <input name="id" id="id_customer" value="{{ customer_form.instance.id }}" readonly />
-        {% endif %}
+        <div class="id">
+            {% if customer_id %}
+                ID : <input name="id" value="{{ customer_id }}" readonly>
+            {% else %}
+                ID : <input name="id" id="id_customer" value="{{ customer_form.instance.id }}" readonly />
+            {% endif %}
+        </div>
 
         <div class="infos flex flex-no-wrap gap-3">
+             <div class="nom">
+                {{ customer_form.last_name.label_tag }} {{ customer_form.last_name }}
+                {% if customer_form.last_name.errors %}
+                <div class="errors">
+                    {{ customer_form.last_name.errors }}
+                </div>
+                {% endif %}
+            </div>
 
             <div class="prenom">
                 {{ customer_form.first_name.label_tag }} {{ customer_form.first_name }}
@@ -35,14 +45,7 @@
                 {% endif %}
             </div>
 
-            <div class="nom">
-                {{ customer_form.last_name.label_tag }} {{ customer_form.last_name }}
-                {% if customer_form.last_name.errors %}
-                <div class="errors">
-                    {{ customer_form.last_name.errors }}
-                </div>
-                {% endif %}
-            </div>
+
         </div>
 
         <div class="coordonnees flex flex-no-wrap gap-3">
