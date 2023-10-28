@@ -37,7 +37,7 @@ class Product(models.Model):
     supplier = models.CharField(max_length=45, blank=True, verbose_name="fournisseur")
     purchase_price_unit = models.DecimalField(default=0, max_digits=10, decimal_places=2, verbose_name="prix d'achat")
     selling_price_unit = models.DecimalField(default=0, max_digits=10, decimal_places=2, verbose_name="prix de vente")
-    quantity = models.PositiveIntegerField(default=0, blank=False, null=False, verbose_name="quantité")
+    quantity = models.PositiveIntegerField(default=1, blank=False, null=False, verbose_name="quantité")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)

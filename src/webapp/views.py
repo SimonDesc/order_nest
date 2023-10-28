@@ -126,10 +126,12 @@ class EditOrder(UpdateView):
             return self.form_invalid(form)
 
     def form_invalid(self, form):
+        print("Form Errors:", form.errors)
         customer_form = NewCustomerForm(self.request.POST, instance=self.object.customer)
         context = self.get_context_data()
         context['customer_form'] = customer_form
         return self.render_to_response(context)
+
 
 
 class DeleteOrder(DeleteView):

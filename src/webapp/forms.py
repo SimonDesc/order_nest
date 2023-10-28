@@ -1,8 +1,10 @@
-from django.forms import ModelForm, CharField, Textarea, TextInput
+from django.forms import ModelForm, CharField, Textarea, TextInput, DateField, DateInput
 from .models import *
 
 
 class NewOrderForm(ModelForm):
+    estimated_delivery_date = DateField(widget=DateInput(attrs={'type': 'date'}), required=False)
+    invoice_date = DateField(widget=DateInput(attrs={'type': 'date'}), required=False)
 
     def __init__(self, *args, **kwargs):
         super(NewOrderForm, self).__init__(*args, **kwargs)
@@ -18,6 +20,7 @@ class NewOrderForm(ModelForm):
     class Meta:
         model = Order
         fields = ("label", "comments", "status", "estimated_delivery_date", "invoice_date",)
+
 
 
 class NewCustomerForm(ModelForm):
