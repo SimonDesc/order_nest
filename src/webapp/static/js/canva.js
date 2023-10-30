@@ -1,5 +1,14 @@
 $(document).ready(function() {
     paper.setup($('#drawZone')[0]);
+
+    let background = new paper.Path.Rectangle({
+    point: [0, 0],
+    size: [paper.view.size.width, paper.view.size.height],
+    fillColor: 'white'
+    });
+    background.sendToBack();
+
+
     let tool = new paper.Tool();
     let path;
     let eraserMode = false;
