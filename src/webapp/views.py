@@ -7,6 +7,7 @@ from django.conf import settings
 from django.core.files.base import ContentFile
 
 from django.core.paginator import Paginator
+from django.core.serializers import serialize
 from django.db.models import Q
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
@@ -318,6 +319,26 @@ def save_canvas(request):
         attachment.save()
 
         return HttpResponse(str(file_name))
+
+
+def get_orders(request):
+    orders = Order.objects.all().order_by('-created_at')
+
+    order_list = []
+    for order in orders:
+        order_dict = {
+            'IDorder': str(order.pk),
+            'customer': order.customer.last_name,
+            'label': order.label,
+            'status': str(order.status),
+            'created': order.created_at.strftime('%d/%m/%Y'),
+            'url': str(reverse('webapp:order-edit', kwargs={'pk': order.pk}))
+        }
+        order_list.append(order_dict)
+
+    print(order_list)
+    data = {'results': order_list}
+    return JsonResponse(data)
 
 
 class DeleteCanvas(DeleteView):
