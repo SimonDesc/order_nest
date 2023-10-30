@@ -11,8 +11,6 @@
     <!-- Load the specific script -->
     <script src="{% static 'js/canva.js' %}"></script>
     <script src="{% static 'js/autocomplete.js' %}"></script>
-    <script src="{% static 'js/helpers.js' %}"></script>
-
 {% endblock %}
 
 {% block content %}
@@ -209,20 +207,28 @@
     <a href="{% url 'webapp:order-add-products' pk=order_form.instance.id %}"><button class="mb-4 bg-yellow-500 hover:bg-yellow-300 text-slate-700 py-2 px-4 rounded"> Ajouter Produit</button></a>
 </div>
 
-        <div class=" flex justify-center">
-            <canvas id="drawZone" width="700" height="500" class=" px-3 mt-3 rounded-lg border-2 border-gray-600"></canvas>
+<div class="flex justify-center">
+    <div class="relative">  <!-- Ce div sert de référence pour le positionnement absolu -->
+        <canvas id="drawZone" width="700" height="500" class="px-3 mt-3 rounded-lg border-2 border-gray-600 bg-white"></canvas>
 
+        <div class="absolute top-3 right-0 flex space-x-2">  <!-- Boutons en haut à droite du div relatif -->
+            <button id="bt_whitePaint">
+                <img id="eraserImg" width="35" height="40" src="{% static 'img/eraser.svg' %}" data-active-src="{% static 'img/eraser_active.svg' %}">
+            </button>
+            <button id="bt_eraseDrawing">
+                <img width="35" height="40" src="{% static '/img/delete.svg' %}">
+            </button>
         </div>
+    </div>
+</div>
+
+
 
         <div class="error flex justify-center">
             <span id="drawError"></span>
         </div>
 
         <div class="flex justify-center">
-
-            <button id="bt_eraseDrawing">
-                <img width="35" height="40" src="{% static '/img/erase.svg' %}">
-            </button>
             <button id="bt_saveDrawing" class="ml-1 mt-3 bg-transparent hover:bg-blue-500 text-blue-700 hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">Sauvegarder</button>
         </div>
 
@@ -234,14 +240,14 @@
 
             {% endif %}
                 <div class="flex ">
-                    <li class="border-2 border-gray-600 mt-3">
+                    <li class="border-2 border-gray-600 mt-3 bg-white">
                         <div class="flex justify-end gap-3">
                             <button class="edit_canvas" data-pk="{{ attachment.pk }}">
                                 <img width="35" height="40" src="{% static '/img/edit.svg' %}">
                             </button>
 
                             <button class="delete_canvas" data-pk="{{ attachment.pk }}">
-                                <img width="40" height="40" src="{% static '/img/delete.svg' %}">
+                                <img width="35" height="40" src="{% static '/img/delete.svg' %}">
                             </button>
 
                         </div>
