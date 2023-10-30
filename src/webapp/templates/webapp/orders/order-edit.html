@@ -11,6 +11,7 @@
     <!-- Load the specific script -->
     <script src="{% static 'js/canva.js' %}"></script>
     <script src="{% static 'js/autocomplete.js' %}"></script>
+    <script src="{% static 'js/helpers.js' %}"></script>
 
 {% endblock %}
 
@@ -90,23 +91,22 @@
         </div>
 
         <div class="dates flex flex-nowrap px-3 mb-6">
-
             <div class="">
-                {{ order_form.estimated_delivery_date.label_tag }}
-                <div>{{ order_form.estimated_delivery_date }}</div>
-                {% if order_form.estimated_delivery_date.errors %}
-                <div class="errors">{{ order_form.estimated_delivery_date.errors }}</div>
-                {% endif %}
+                    <label for="{{ order_form.estimated_delivery_date.id_for_label }}">Date de livraison :</label>
+                <div>
+                    <input type="date" id="{{ order_form.estimated_delivery_date.id_for_label }}" name="{{ order_form.estimated_delivery_date.name }}" value="{{ order_form.estimated_delivery_date.value|date:'Y-m-d' }}">
+                </div>
             </div>
 
             <div class="facturation px-3">
-                {{ order_form.invoice_date.label_tag }}
-                <div>{{ order_form.invoice_date }}</div>
-                {% if order_form.invoice_date.errors %}
-                <div class="errors">{{ order_form.invoice_date.errors }}</div>
-                {% endif %}
+                    <label for="{{ order_form.invoice_date.id_for_label }}">Date de facturation :</label>
+                <div>
+                    <input type="date" id="{{ order_form.invoice_date.id_for_label }}" name="{{ order_form.invoice_date.name }}" value="{{ order_form.invoice_date.value|date:'Y-m-d' }}">
+                </div>
             </div>
         </div>
+
+
         <div class="comment px-3">
             {{ order_form.comments.label_tag }}
             {{ order_form.comments }}
@@ -120,7 +120,17 @@
 
         <input type="hidden" name="id" value="{{ customer_form.instance.id }}" readonly>
 
-
+        {% if form.errors %}
+        <div class="alert alert-danger">
+            <ul>
+            {% for field, errors in form.errors.items %}
+                {% for error in errors %}
+                    <li>{{ field }}: {{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
         <button type="submit" class="w-full mb-4 mt-4 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded" value="Update">Enregistrer modification</button>
 
 
