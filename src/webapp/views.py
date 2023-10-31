@@ -134,7 +134,6 @@ class EditOrder(UpdateView):
         return self.render_to_response(context)
 
 
-
 class DeleteOrder(DeleteView):
     model = Order
     context_object_name = "commandes"
