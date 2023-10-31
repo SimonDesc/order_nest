@@ -130,7 +130,9 @@
         </div>
         {% endif %}
         <button type="submit" class="w-full mb-4 mt-4 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded" value="Update">Enregistrer modification</button>
-
+        <a href="{% url 'webapp:order-delete' pk=order_form.instance.id %}">
+            <button type="button" class="w-full mb-6 mt-0 bg-red-500 hover:bg-red-700 text-white py-2 px-4 rounded" value="Delete">Supprimer commande</button>
+        </a>
 
     </form>
 </div>
@@ -204,7 +206,7 @@
 {% endif %}
 
 <div class="flex justify-center">
-    <a href="{% url 'webapp:order-add-products' pk=order_form.instance.id %}"><button class="mb-4 bg-yellow-500 hover:bg-yellow-300 text-slate-700 py-2 px-4 rounded"> Ajouter Produit</button></a>
+    <a href="{% url 'webapp:order-add-products' pk=order_form.instance.id %}"><button class="mb-4 bg-yellow-400 hover:bg-yellow-500 text-slate-700 py-2 px-4 rounded"> Ajouter Produit</button></a>
 </div>
 
 <div class="flex justify-center">
