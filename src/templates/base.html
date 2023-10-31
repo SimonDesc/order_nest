@@ -13,6 +13,7 @@
 
 <body class="bg-slate-200">
 <div class="flex items-center bg-slate-500 text-slate-200 justify-around">
+
     <div>
         {% if user.is_authenticated %}
             Bienvenue, {{ user.username }}!
@@ -23,16 +24,23 @@
 
         {% endif %}
     </div>
-    <div class="font-sans"><a href="{% url 'webapp:home' %}">Home</a></div>
-    <div><a href="{% url 'webapp:login' %}">Login</a></div>
-    <div><a href="{% url 'webapp:order-create' %}">Nouvelle commande</a></div>
-    <div><a href="{% url 'webapp:dashboard' %}">Tableau de bord</a></div>
-    <div><form action="{% url 'webapp:order-search' %}" method="get">
-    <input class="rounded-full my-1"
-            name="q"
-            type="text"
-            placeholder="🔎">
-    </form></div>
+   
+    <div class="font-sans">
+        <a href="{% url 'webapp:home' %}"><img src="/static/img/home.svg" alt="Accueil" width="35" height="35"></a>
+    </div>
+
+    <div>
+        <a href="{% url 'webapp:login' %}">Login</a>
+    </div>
+
+    <div>
+        <a href="{% url 'webapp:order-create' %}"><img src="/static/img/neworder.svg" alt="Accueil" width="35" height="35"></a>
+    </div>
+
+    <div>
+        <a href="{% url 'webapp:dashboard' %}"><img src="/static/img/dashboard.svg" alt="Accueil" width="35" height="35"></a>
+    </div>
+
 </div>
 
 
