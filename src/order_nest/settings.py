@@ -56,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "django_browser_reload.middleware.BrowserReloadMiddleware",
+    "webapp.middleware.AuthRequiredMiddleware"
 ]
 
 ROOT_URLCONF = 'order_nest.urls'
@@ -148,3 +149,5 @@ if os.name == 'nt':  # Pour Windows
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 MEDIA_URL = '/media/'
+
+LOGIN_REDIRECT_URL = 'webapp:home'
