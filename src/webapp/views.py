@@ -4,10 +4,10 @@ import json
 import os.path
 
 from django.conf import settings
+from django.contrib.auth.forms import UserCreationForm
 from django.core.files.base import ContentFile
 
 from django.core.paginator import Paginator
-from django.core.serializers import serialize
 from django.db.models import Q
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
@@ -15,10 +15,6 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView, TemplateView
 from .models import Customer, Order, OrderHasProduct, Product, OrderAttachment
 from .forms import NewOrderForm, NewCustomerForm, AddProductsToOrder
-
-
-class WebappLogin(TemplateView):
-    template_name = 'webapp/login.html'
 
 
 class WebappHome(ListView):
@@ -328,15 +324,14 @@ def get_orders(request):
     for order in orders:
         order_dict = {
             'IDorder': str(order.pk),
-            'customer': order.customer.last_name,
-            'label': order.label,
+            'customer': str(order.customer.last_name + ' ' + order.customer.first_name)[0:20] + "..." if len(str(order.customer.last_name + ' ' + order.customer.first_name)) > 19 else str(order.customer.last_name + ' ' + order.customer.first_name)[0:20],
+            'label': str(order.label)[0:20] + "..." if len(str(order.label)) > 14 else str(order.label)[0:20],
             'status': str(order.status),
             'created': order.created_at.strftime('%d/%m/%Y'),
             'url': str(reverse('webapp:order-edit', kwargs={'pk': order.pk}))
         }
         order_list.append(order_dict)
 
-    print(order_list)
     data = {'results': order_list}
     return JsonResponse(data)
 
@@ -357,3 +352,5 @@ class DeleteCanvas(DeleteView):
                 os.remove(file_path)
         self.object.delete()
         return JsonResponse({'status': 'success'})
+
+

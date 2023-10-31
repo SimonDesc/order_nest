@@ -13,6 +13,16 @@
 
 <body class="bg-slate-200">
 <div class="flex items-center bg-slate-500 text-slate-200 justify-around">
+    <div>
+        {% if user.is_authenticated %}
+            Bienvenue, {{ user.username }}!
+        <form method="post" action="{% url 'webapp:logout' %}">
+            {% csrf_token %}
+            <button type="submit">Se déconnecter</button>
+        </form>
+
+        {% endif %}
+    </div>
     <div class="font-sans"><a href="{% url 'webapp:home' %}">Home</a></div>
     <div><a href="{% url 'webapp:login' %}">Login</a></div>
     <div><a href="{% url 'webapp:order-create' %}">Nouvelle commande</a></div>
