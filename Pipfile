@@ -10,7 +10,6 @@ django-tailwind = "*"
 psycopg2 = "*"
 django-phonenumber-field = "*"
 phonenumbers = "*"
-npm = "*"
 django-browser-reload = "*"
 
 [dev-packages]
