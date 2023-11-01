@@ -1,19 +1,65 @@
-{% extends 'base.html' %}
+{% load static tailwind_tags %}
+{% load static %}
 
-    {% block title %}
-    <title>Authentification</title>
-    {% endblock %}
+<!DOCTYPE html>
 
-    {% block content %}
+<html lang="fr">
 
-<form method="POST">
-    {% csrf_token %}
+<head>
+	<meta charset="UTF-8">
+	<title>Login</title>
+	{% tailwind_css %}
+</head>
 
-    {{ form.as_p }}
-    <input type="submit" value="Connexion">
-
-</form>
-
-    {% endblock %}
-
-
+<body class="bg-slate-200">
+	<section id="webapp">
+		<form method="POST">
+			{% csrf_token %}
+			<div class="flex flex-col items-center px-6 py-8 mx-auto">
+				<div
+					class="bg-white rounded-lg shadow dark:border md:mt-10 dark:bg-gray-800 dark:border-gray-700 space-y-4 md:space-y-10 sm:p-8">
+					<h1
+						class="text-4xl font-extrabold leading-tight tracking-tight text-gray-900 md:text-5xl dark:text-white">
+						Se connecter sur OrderNest
+					</h1>
+					<form class="space-y-4 md:space-y-6" action="#">
+						<div>
+							<label for="{{ form.username.id_for_label }}"
+								class="block mb-2 text-xl font-medium text-gray-900 dark:text-white">Nom
+								d'utilisateur</label>
+							<input type="text" name="{{ form.username.name }}" id="{{ form.username.id_for_label }}"
+								class="text-xl bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 placeholder-xl dark:placeholder-xl"
+								placeholder="Votre nom d'utilisateur" required="">
+						</div>
+						<div>
+							<label for="password"
+								class="block mb-2 text-xl font-medium text-gray-900 dark:text-white">Mot de
+								passe</label>
+							<input type="password" name="password" id="password" placeholder="••••••••"
+								class="text-xl bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 placeholder-xl dark:placeholder-xl"
+								required="">
+						</div>
+						<div class="text-red-500 text-sm mt-4 whitespace-normal">
+							{% if form.errors %}
+							<h4>Erreurs :</h4>
+							<ul>
+								{% for field, errors in form.errors.items %}
+									{% for error in errors %}
+								<li>{{ error|truncatechars:60 }}</li>
+									{% endfor %}
+								{% endfor %}
+							</ul>
+							{% endif %}
+						</div>
+						<button type="submit"
+							class="w-full mb-4 mt-4 text-xl bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded">Connexion</button>
+						<div class="flex flex-col items-center mb-40">
+							<img src="{% static '/img/logo.png' %}" alt="logo"></a>
+						</div>
+					</form>
+				</div>
+			</div>
+		</form>
+	</section>
+</body>
+</html>
