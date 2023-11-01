@@ -10,7 +10,8 @@
 
 {% for commande in commandes %}
 
-    <div class="w-full h-full overflow-y-hidden mx-auto block max-w-sm p-6 bg-slate-50 border-solid border-slate-950 rounded-lg shadow bg-white dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+
+    <div id="card" class="bg-slate-50 w-full h-full overflow-y-hidden mx-auto block max-w-sm p-6 border-solid border-slate-950 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
 
         <div class="libellé_id flex justify-between mx-h-full">
             <div>
@@ -29,7 +30,20 @@
                 <p class="font-normal text-gray-700 dark:text-gray-400">Tél: {{ commande.customer.phone_number }}</p>
             </div>
 
-        <div class="status border-t my-3">{{ commande.status }}</div>
+        <div class="status border-t my-3">
+            {% if commande.status == 'Terminée' %}
+                <span class="status-Terminée">{{ commande.status }}</span>
+            {% elif commande.status == 'En attente' %}
+                <span class="status-En-attente">{{ commande.status }}</span>
+            {% elif commande.status == 'En cours' %}
+                <span class="status-En-cours">{{ commande.status }}</span>
+            {% elif commande.status == 'Facturée' %}
+                <span class="status-Facturée">{{ commande.status }}</span>
+            {% elif commande.status == 'Annulée' %}
+                <span class="status-Annulée">{{ commande.status }}</span>
+            {% endif %}
+
+        </div>
         <div class="flex justify-end">
             <a href="{% url 'webapp:order-edit' pk=commande.pk %}">
             <button type="button" class="py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-full border border-gray-200 hover:bg-gray-100 hover:text-green-400 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Modifier</button>

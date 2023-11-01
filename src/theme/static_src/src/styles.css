@@ -3,3 +3,23 @@
 @tailwind components;
 @tailwind utilities;
 
+.status-En-attente {
+    color: darkorange;
+}
+
+.status-En-cours {
+    color: dodgerblue;
+}
+
+.status-Terminée {
+    color: limegreen;
+}
+
+.status-Facturée {
+    color: green;
+}
+
+.status-Annulée {
+    color: red;
+}
+

@@ -19,17 +19,6 @@ class Customer(models.Model):
         return f'{self.first_name} {self.last_name} {self.phone_number}'
 
 
-class Status(models.Model):
-    label = models.CharField(max_length=45)
-    comments = models.TextField(max_length=200, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    active = models.BooleanField(default=True)
-
-    def __str__(self):
-        return f'{self.label}'
-
-
 class Product(models.Model):
     reference = models.CharField(max_length=45, blank=True, verbose_name="référence")
     label = models.CharField(max_length=45, verbose_name="libellé")
@@ -47,12 +36,20 @@ class Product(models.Model):
 
 
 class Order(models.Model):
+    STATUS = (
+        ('En attente', 'En attente'),
+        ('En cours', 'En cours'),
+        ('Terminée', 'Terminée'),
+        ('Facturée', 'Facturée'),
+        ('Annulée', 'Annulée'),
+    )
+
     created_at = models.DateTimeField(auto_now_add=True)
     estimated_delivery_date = models.DateField(blank=True, null=True, verbose_name="date de livraison")
     invoice_date = models.DateField(blank=True, null=True, verbose_name="date de facturation")
     label = models.CharField(max_length=45, blank=False, default='', verbose_name="libellé")
     comments = models.TextField(max_length=2000, blank=True, verbose_name="commentaire")
-    status = models.ForeignKey(Status, on_delete=models.SET_NULL, null=True, blank=True)
+    status = models.CharField(max_length=32, choices=STATUS, default='En attente')
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True)
     products = models.ManyToManyField(Product, through='OrderHasProduct')
     active = models.BooleanField(default=True)
