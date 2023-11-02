@@ -30,18 +30,20 @@
                     <p class="font-normal text-gray-700 dark:text-gray-400">Tél: {{ commande.customer.phone_number }}</p>
                 </div>
 
-            <div class="status border-t my-3">
-                {% if commande.status == 'Terminée' %}
-                    <span class="status-Terminée">{{ commande.status }}</span>
-                {% elif commande.status == 'En attente' %}
-                    <span class="status-En-attente">{{ commande.status }}</span>
-                {% elif commande.status == 'En cours' %}
-                    <span class="status-En-cours">{{ commande.status }}</span>
-                {% elif commande.status == 'Facturée' %}
-                    <span class="status-Facturée">{{ commande.status }}</span>
-                {% elif commande.status == 'Annulée' %}
-                    <span class="status-Annulée">{{ commande.status }}</span>
-                {% endif %}
+        <div class="status border-t my-3">
+            {% if commande.status == 'Terminée' %}
+                <span class="status-Terminée">{{ commande.status }}</span>
+            {% elif commande.status == 'En attente' %}
+                <span class="status-En-attente">{{ commande.status }}</span>
+            {% elif commande.status == 'En cours' %}
+                <span class="status-En-cours">{{ commande.status }}</span>
+            {% elif commande.status == 'Facturée' %}
+                <span class="status-Facturée">{{ commande.status }}</span>
+            {% elif commande.status == 'Annulée' %}
+                <span class="status-Annulée">{{ commande.status }}</span>
+			{% elif commande.status == 'Urgent' %}
+                <span class="status-Urgent">{{ commande.status }}</span>
+            {% endif %}
 
             </div>
             <div class="flex justify-end">
@@ -49,6 +51,7 @@
                 <button type="button" class="py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-full border border-gray-200 hover:bg-gray-100 hover:text-green-400 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Modifier</button>
             </a>
             </div>
+
 
         </div>
 

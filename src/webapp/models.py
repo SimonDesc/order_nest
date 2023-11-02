@@ -5,7 +5,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 
 class Customer(models.Model):
-    first_name = models.CharField(max_length=45, null=False, blank=False, verbose_name="prénom")
+    first_name = models.CharField(max_length=45, null=False, blank=True, verbose_name="prénom")
     last_name = models.CharField(max_length=45, null=False, blank=False, verbose_name="nom")
     phone_number = PhoneNumberField(null=False, blank=False, region="FR", verbose_name="téléphone")
     address = models.CharField(max_length=200, blank=True, verbose_name="adresse")
@@ -42,6 +42,7 @@ class Order(models.Model):
         ('Terminée', 'Terminée'),
         ('Facturée', 'Facturée'),
         ('Annulée', 'Annulée'),
+        ('Urgent', 'Urgent'),
     )
 
     created_at = models.DateTimeField(auto_now_add=True)
