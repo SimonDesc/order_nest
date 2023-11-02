@@ -108,7 +108,7 @@ class EditOrder(UpdateView):
         customer_instance = order.customer
         context['customer_form'] = NewCustomerForm(instance=customer_instance)
         context['product_order'] = OrderHasProduct.objects.filter(order=order.id)
-        context['attachments'] = OrderAttachment.objects.filter(order=order.id)
+        context['attachments'] = OrderAttachment.objects.filter(order=order.id, type="canvas")[:50]
         return context
 
     # Check la validité de form (order)
@@ -243,20 +243,6 @@ class AddProductsToOrder(CreateView):
         return super().form_valid(form)
 
 
-def get_canvas(request, pk):
-    order = OrderAttachment.objects.filter(order_id=pk)
-
-    for e in order.all():
-        file_json = e.canvas_json
-
-    if order:
-        return JsonResponse(
-            {'exit': True,
-             'json_file': file_json
-             })
-    return HttpResponse(False)
-
-
 def get_clients(request):
     query = request.GET.get('term', '')
     clients = Customer.objects.filter(
@@ -284,37 +270,6 @@ def get_clients(request):
     return JsonResponse(results, safe=False)
 
 
-def save_canvas(request):
-    if request.method == "POST":
-        current_time = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-
-        data = json.loads(request.body.decode("utf-8"))
-        data_url = data.get('img')
-        order_id = data.get('order_id')
-        drawing_data = data.get('drawingData')
-
-        # Decode image
-        format, imgstr = data_url.split(';base64,')
-        ext = format.split('/')[-1]
-
-        file_name = f"image_{current_time}.{ext}"
-        data = ContentFile(base64.b64decode(imgstr), name=file_name)
-
-        # On créer l'objet OrderAttachment
-        attachment = OrderAttachment()
-
-        # On récupère l'id de la cde
-        order = Order.objects.get(pk=order_id)
-
-        # Ajout de l'image
-        attachment.order = order
-        attachment.file = data
-        attachment.canvas_json = drawing_data
-        attachment.save()
-
-        return HttpResponse(str(file_name))
-
-
 def get_orders(request):
     orders = Order.objects.all().order_by('-created_at')
 
@@ -332,6 +287,55 @@ def get_orders(request):
 
     data = {'results': order_list}
     return JsonResponse(data)
+
+
+def save_canvas(request):
+    if request.method == "POST":
+        current_time = datetime.datetime.now().strftime("%H-%M-%S")
+
+        data = json.loads(request.body.decode("utf-8"))
+        data_url = data.get('img')
+        order_id = data.get('order_id')
+        drawing_data = data.get('drawingData')
+
+        # Decode image
+        format, imgstr = data_url.split(';base64,')
+        ext = format.split('/')[-1]
+
+        file_name = f"canvas_{current_time}.{ext}"
+        data = ContentFile(base64.b64decode(imgstr), name=file_name)
+
+        # On créer l'objet OrderAttachment
+        attachment = OrderAttachment()
+
+        # On récupère l'id de la cde
+        order = Order.objects.get(pk=order_id)
+
+        # Ajout de l'image
+        attachment.order = order
+        attachment.file = data
+        attachment.canvas_json = drawing_data
+        attachment.type = "canvas"
+        attachment.save()
+
+        return HttpResponse(str(file_name))
+
+
+def get_canvas(request, pk):
+    order = OrderAttachment.objects.filter(
+        order_id=pk,
+        type="canvas"
+        )[:50]
+
+    for e in order.all():
+        file_json = e.canvas_json
+
+    if order:
+        return JsonResponse(
+            {'exit': True,
+             'json_file': file_json
+             })
+    return HttpResponse(False)
 
 
 class DeleteCanvas(DeleteView):
@@ -352,3 +356,26 @@ class DeleteCanvas(DeleteView):
         return JsonResponse({'status': 'success'})
 
 
+def save_pictures(request):
+    if request.method == "POST":
+        current_time = datetime.datetime.now().strftime("%H-%M-%S")
+        file = request.FILES['img']
+        order_id = request.POST['orderId']
+        
+        file.name = current_time + '_' + file.name
+        print(file.name)
+        print(order_id)
+        
+        # On créer l'objet OrderAttachment
+        attachment = OrderAttachment()
+        
+        # On récupère l'objet commande
+        order = Order.objects.get(pk=order_id)
+        
+        # Ajout de l'image
+        attachment.order = order
+        attachment.file = file
+        attachment.type = "picture"
+        attachment.save()
+        
+        return HttpResponse("ok")

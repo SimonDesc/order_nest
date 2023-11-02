@@ -1,263 +1,253 @@
 {% extends 'base.html' %}
 {% load static %}
-
 {% block title %}
-    <title>Modifier commande</title>
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
-    <script src="{% static 'js/paper-full.min.js' %}"></script>
-
-    <!-- Load the specific script -->
-    <script src="{% static 'js/canva.js' %}"></script>
-    <script src="{% static 'js/autocomplete.js' %}"></script>
+<title>Modifier commande</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+<script src="{% static 'js/paper-full.min.js' %}"></script>
+<!-- Load the specific script -->
+<script src="{% static 'js/modal.js' %}"></script>
+<script src="{% static 'js/canva.js' %}"></script>
+<script src="{% static 'js/autocomplete.js' %}"></script>
+<script src="{% static 'js/picture.js' %}"></script>
 {% endblock %}
-
 {% block content %}
-
 <div class="titre flex justify-center text-3xl font-bold mt-5 mb-9">
-    <h1 class="text-slate-500">Modification de la commande {{ order_form.instance.id }} créée le {{ order.created_at|date:"SHORT_DATE_FORMAT"}}</h1>
+	<h1 class="text-slate-500">Modification de la commande {{ order_form.instance.id }} créée le {{ order.created_at|date:"SHORT_DATE_FORMAT"}}</h1>
 </div>
-
 <input type="hidden" id="orderPk" value="{{ order_form.instance.pk }}">
-
 <div class="flex justify-center">
-    <form method="POST" class="">
-        {% csrf_token %}
-
-        <div class="infos flex justify-between px-3">
-            <div class="label mb-6 md:mb-4 ">
-                {{ order_form.label.label_tag }}
-                {{ order_form.label }}
-                {% if order_form.label.errors %}
-                <div class="errors">{{ order_form.label.errors }}</div>
-                {% endif %}
-            </div>
-
-            <div class="status mb-6 md:mb-0">
-                    {{ order_form.status.label_tag }}
-                    <div>{{ order_form.status }}</div>
-                    {% if order_form.status.errors %}
-                    <div class="errors">{{ order_form.status.errors }}</div>
-                    {% endif %}
-            </div>
-        </div>
-
-        <div class="client flex flex-nowrap px-3 mb-2">
-
-            <div class="nom mb-6 md:mb-0">
-                {{ customer_form.last_name.label_tag }}
-                <div>{{ customer_form.last_name }}</div>
-                {% if customer_form.last_name.errors %}
-                <div class="errors">{{ customer_form.last_name.errors }}</div>
-                {% endif %}
-            </div>
-
-            <div class="prenom px-3 mb-6 md:mb-0">
-                {{ customer_form.first_name.label_tag }}
-                {{ customer_form.first_name }}
-                {% if customer_form.first_name.errors %}
-                <div class="errors">{{ customer_form.first_name.errors }}</div>
-                {% endif %}
-            </div>
-
-            <div class="tel md:mb-0">
-                {{ customer_form.phone_number.label_tag }}
-                {{ customer_form.phone_number }}
-                {% if customer_form.phone_number.errors %}
-                <div class="errors">{{ customer_form.phone_number.errors }}</div>
-                {% endif %}
-            </div>
-        </div>
-
-        <div class="mailadress flex flex-wrap mt-4 mb-6">
-            <div class="adress px-3 mb-6 md:mb-0">
-                {{ customer_form.address.label_tag }}
-                <div>{{ customer_form.address }}</div>
-                {% if customer_form.address.errors %}
-                <div class="errors">{{ customer_form.address.errors }}</div>
-                {% endif %}
-            </div>
-
-            <div class="mail mb-6 md:mb-0">
-                {{ customer_form.mail.label_tag }}
-                <div>{{ customer_form.mail }}</div>
-                {% if customer_form.mail.errors %}
-                <div class="errors">{{ customer_form.mail.errors }}</div>
-                {% endif %}
-            </div>
-        </div>
-
-        <div class="dates flex flex-nowrap px-3 mb-6">
-            <div class="">
-                    <label for="{{ order_form.estimated_delivery_date.id_for_label }}">Date de livraison :</label>
-                <div>
-                    <input type="date" id="{{ order_form.estimated_delivery_date.id_for_label }}" name="{{ order_form.estimated_delivery_date.name }}" value="{{ order_form.estimated_delivery_date.value|date:'Y-m-d' }}">
-                </div>
-            </div>
-
-            <div class="facturation px-3">
-                    <label for="{{ order_form.invoice_date.id_for_label }}">Date de facturation :</label>
-                <div>
-                    <input type="date" id="{{ order_form.invoice_date.id_for_label }}" name="{{ order_form.invoice_date.name }}" value="{{ order_form.invoice_date.value|date:'Y-m-d' }}">
-                </div>
-            </div>
-        </div>
-
-
-        <div class="comment px-3">
-            {{ order_form.comments.label_tag }}
-            {{ order_form.comments }}
-            {% if order_form.comments.errors %}
-            <div class="errors">{{ order_form.comments.errors }}</div>
-        {% endif %}
-        </div>
-
-
-
-
-        <input type="hidden" name="id" value="{{ customer_form.instance.id }}" readonly>
-
-        {% if form.errors %}
-        <div class="alert alert-danger">
-            <ul>
-            {% for field, errors in form.errors.items %}
-                {% for error in errors %}
-                    <li>{{ field }}: {{ error }}</li>
-                {% endfor %}
-            {% endfor %}
-            </ul>
-        </div>
-        {% endif %}
-        <button type="submit" class="w-full mb-4 mt-4 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded" value="Update">Enregistrer modification</button>
-        <a href="{% url 'webapp:order-delete' pk=order_form.instance.id %}">
-            <button type="button" class="w-full mb-6 mt-0 bg-red-500 hover:bg-red-700 text-white py-2 px-4 rounded" value="Delete">Supprimer commande</button>
-        </a>
-
-    </form>
+	<form method="POST" class="">
+		{% csrf_token %}
+		<div class="infos flex justify-between px-3">
+			<div class="label mb-6 md:mb-4 ">
+				{{ order_form.label.label_tag }}
+				{{ order_form.label }}
+				{% if order_form.label.errors %}
+				<div class="errors">{{ order_form.label.errors }}</div>
+				{% endif %}
+			</div>
+			<div class="status mb-6 md:mb-0">
+				{{ order_form.status.label_tag }}
+				<div>{{ order_form.status }}</div>
+				{% if order_form.status.errors %}
+				<div class="errors">{{ order_form.status.errors }}</div>
+				{% endif %}
+			</div>
+		</div>
+		<div class="client flex flex-nowrap px-3 mb-2">
+			<div class="nom mb-6 md:mb-0">
+				{{ customer_form.last_name.label_tag }}
+				<div>{{ customer_form.last_name }}</div>
+				{% if customer_form.last_name.errors %}
+				<div class="errors">{{ customer_form.last_name.errors }}</div>
+				{% endif %}
+			</div>
+			<div class="prenom px-3 mb-6 md:mb-0">
+				{{ customer_form.first_name.label_tag }}
+				{{ customer_form.first_name }}
+				{% if customer_form.first_name.errors %}
+				<div class="errors">{{ customer_form.first_name.errors }}</div>
+				{% endif %}
+			</div>
+			<div class="tel md:mb-0">
+				{{ customer_form.phone_number.label_tag }}
+				{{ customer_form.phone_number }}
+				{% if customer_form.phone_number.errors %}
+				<div class="errors">{{ customer_form.phone_number.errors }}</div>
+				{% endif %}
+			</div>
+		</div>
+		<div class="mailadress flex flex-wrap mt-4 mb-6">
+			<div class="adress px-3 mb-6 md:mb-0">
+				{{ customer_form.address.label_tag }}
+				<div>{{ customer_form.address }}</div>
+				{% if customer_form.address.errors %}
+				<div class="errors">{{ customer_form.address.errors }}</div>
+				{% endif %}
+			</div>
+			<div class="mail mb-6 md:mb-0">
+				{{ customer_form.mail.label_tag }}
+				<div>{{ customer_form.mail }}</div>
+				{% if customer_form.mail.errors %}
+				<div class="errors">{{ customer_form.mail.errors }}</div>
+				{% endif %}
+			</div>
+		</div>
+		<div class="dates flex flex-nowrap px-3 mb-6">
+			<div class="">
+				<label for="{{ order_form.estimated_delivery_date.id_for_label }}">Date de livraison :</label>
+				<div>
+					<input type="date" id="{{ order_form.estimated_delivery_date.id_for_label }}" name="{{ order_form.estimated_delivery_date.name }}" value="{{ order_form.estimated_delivery_date.value|date:'Y-m-d' }}">
+				</div>
+			</div>
+			<div class="facturation px-3">
+				<label for="{{ order_form.invoice_date.id_for_label }}">Date de facturation :</label>
+				<div>
+					<input type="date" id="{{ order_form.invoice_date.id_for_label }}" name="{{ order_form.invoice_date.name }}" value="{{ order_form.invoice_date.value|date:'Y-m-d' }}">
+				</div>
+			</div>
+		</div>
+		<div class="comment px-3">
+			{{ order_form.comments.label_tag }}
+			{{ order_form.comments }}
+			{% if order_form.comments.errors %}
+			<div class="errors">{{ order_form.comments.errors }}</div>
+			{% endif %}
+		</div>
+		<input type="hidden" name="id" value="{{ customer_form.instance.id }}" readonly>
+		{% if form.errors %}
+		<div class="alert alert-danger">
+			<ul>
+				{% for field, errors in form.errors.items %}
+				{% for error in errors %}
+				<li>{{ field }}: {{ error }}</li>
+				{% endfor %}
+				{% endfor %}
+			</ul>
+		</div>
+		{% endif %}
+		<button type="submit" class="w-full mb-4 mt-4 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded" value="Update">Enregistrer modification</button>
+		<a href="{% url 'webapp:order-delete' pk=order_form.instance.id %}">
+		<button type="button" class="w-full mb-6 mt-0 bg-red-500 hover:bg-red-700 text-white py-2 px-4 rounded" value="Delete">Supprimer commande</button>
+		</a>
+	</form>
 </div>
-
-
 {% if product_order %}
 <div class="px-3">
-  <div class="flex justify-center py-2 align-middle inline-block min-w-full">
-    <div class="overflow-hidden">
-      <table class="min-w-full">
-        <thead>
-          <tr>
-            <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              ID
-            </th>
-            <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Réf.
-            </th>
-            <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Libellé
-            </th>
-            <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              PU
-            </th>
-            <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              QT
-            </th>
-              <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-
-            </th>
-              <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-
-            </th>
-          </tr>
-        </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
-          {% for product in product_order %}
-            <tr>
-              <td class="px-6 py-4 whitespace-nowrap">
-                {{ product.product.pk }}
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                {{ product.product.reference }}
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                {{ product.product.label }}
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                {{ product.product.selling_price_unit }}
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                {{ product.product.quantity }}
-              </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                <a href="{% url 'webapp:product-edit' pk=product.product.id %}">
-                    <img width="25" height="20" src="{% static '/img/edit.svg' %}"></a>
-                </a>
-               </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                <a href="{% url 'webapp:product-delete' pk=product.product.id %}">
-                <img width="25" height="20" src="{% static '/img/delete.svg' %}">
-                </a>
-              </td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-  </div>
+	<div class="flex justify-center py-2 align-middle inline-block min-w-full">
+		<div class="overflow-hidden">
+			<table class="min-w-full">
+				<thead>
+					<tr>
+						<th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+							ID
+						</th>
+						<th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+							Réf.
+						</th>
+						<th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+							Libellé
+						</th>
+						<th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+							PU
+						</th>
+						<th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+							QT
+						</th>
+						<th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+						</th>
+						<th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+						</th>
+					</tr>
+				</thead>
+				<tbody class="bg-white divide-y divide-gray-200">
+					{% for product in product_order %}
+					<tr>
+						<td class="px-6 py-4 whitespace-nowrap">
+							{{ product.product.pk }}
+						</td>
+						<td class="px-6 py-4 whitespace-nowrap">
+							{{ product.product.reference }}
+						</td>
+						<td class="px-6 py-4 whitespace-nowrap">
+							{{ product.product.label }}
+						</td>
+						<td class="px-6 py-4 whitespace-nowrap">
+							{{ product.product.selling_price_unit }}
+						</td>
+						<td class="px-6 py-4 whitespace-nowrap">
+							{{ product.product.quantity }}
+						</td>
+						<td class="px-6 py-4 whitespace-nowrap">
+							<a href="{% url 'webapp:product-edit' pk=product.product.id %}">
+							<img width="25" height="20" src="{% static '/img/edit.svg' %}"></a>
+							</a>
+						</td>
+						<td class="px-6 py-4 whitespace-nowrap">
+							<a href="{% url 'webapp:product-delete' pk=product.product.id %}">
+							<img width="25" height="20" src="{% static '/img/delete.svg' %}">
+							</a>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
 </div>
 {% endif %}
-
 <div class="flex justify-center">
-    <a href="{% url 'webapp:order-add-products' pk=order_form.instance.id %}"><button class="mb-4 bg-yellow-400 hover:bg-yellow-500 text-slate-700 py-2 px-4 rounded"> Ajouter Produit</button></a>
+	<a href="{% url 'webapp:order-add-products' pk=order_form.instance.id %}"><button class="mb-4 bg-yellow-400 hover:bg-yellow-500 text-slate-700 py-2 px-4 rounded"> Ajouter Produit</button></a>
 </div>
 
+<!-- Bouton pour ouvrir le modal -->
 <div class="flex justify-center">
-    <div class="relative">  <!-- Ce div sert de référence pour le positionnement absolu -->
-        <canvas id="drawZone" width="700" height="500" class="px-3 mt-3 rounded-lg border-2 border-gray-600 bg-white"></canvas>
-
-        <div class="absolute top-3 right-0 flex space-x-2">  <!-- Boutons en haut à droite du div relatif -->
-            <button id="bt_whitePaint">
-                <img id="eraserImg" width="35" height="40" src="{% static 'img/eraser.svg' %}" data-active-src="{% static 'img/eraser_active.svg' %}">
-            </button>
-            <button id="bt_eraseDrawing">
-                <img width="35" height="40" src="{% static '/img/delete.svg' %}">
-            </button>
-        </div>
-    </div>
+	<button id="openModalButton" class="bg-blue-500 text-white p-2 rounded">Joindre une photo</button>
 </div>
+<!-- Structure de base du modal -->
+<div id="myModal" class="fixed inset-0 flex items-center justify-center hidden z-50">
+	<!-- Superposition floutée -->
+	<div class="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-md"></div>
+	<!-- Contenu du modal -->
+	<div class="bg-white p-6 rounded-lg w-1/2 border-2 relative z-10">
+		<h2 class="text-2xl mb-4 underline">Joindre une photo</h2>
+		<!-- Joindre une photo -->
 
+		<!-- Conteneur du bouton 'Parcourir' -->
+		<div class="relative inline-block">
+			<input class="hidden" type="file" accept="image/*" id="photoCaptureInput" capture="camera">
+			 <!-- Label personnalisé servant de bouton -->
+  			<label for="photoCaptureInput" class="cursor-pointer bg-blue-500 text-white p-2 rounded">
+				Parcourir
+			</label>
+		</div>
 
-
-        <div class="error flex justify-center">
-            <span id="drawError"></span>
-        </div>
-
-        <div class="flex justify-center">
-            <button id="bt_saveDrawing" class="ml-1 mt-3 bg-transparent hover:bg-blue-500 text-blue-700 hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">Sauvegarder</button>
-        </div>
-
+		<div class="flex justify-center mt-10">
+			<button id="closeModalButton" class="bg-red-500 text-white p-2 rounded">Fermer</button>
+		</div>
+	</div>
+</div>
 <div class="flex justify-center">
-    <ul id="canvasList">
-    {% if attachments %}
-        {% for attachment in attachments %}
-            {% if attachment.file_url %}
-
-            {% endif %}
-                <div class="flex ">
-                    <li class="border-2 border-gray-600 mt-3 bg-white">
-                        <div class="flex justify-end gap-3">
-                            <button class="edit_canvas" data-pk="{{ attachment.pk }}">
-                                <img width="35" height="40" src="{% static '/img/edit.svg' %}">
-                            </button>
-
-                            <button class="delete_canvas" data-pk="{{ attachment.pk }}">
-                                <img width="35" height="40" src="{% static '/img/delete.svg' %}">
-                            </button>
-
-                        </div>
-                        <img src="{{ attachment.file_url }}" alt="{{ attachment.file_name }}">
-                    </li>
-                </div>
-        {% endfor %}
-    {% endif %}
-</ul>
+	<div class="relative">
+		<canvas id="drawZone" width="700" height="500" class="px-3 mt-3 rounded-lg border-2 border-gray-600 bg-white"></canvas>
+		<div class="absolute top-3 right-0 flex space-x-2">
+			<button id="bt_whitePaint">
+			<img id="eraserImg" width="35" height="40" src="{% static 'img/eraser.svg' %}" data-active-src="{% static 'img/eraser_active.svg' %}">
+			</button>
+			<button id="bt_eraseDrawing">
+			<img width="35" height="40" src="{% static '/img/delete.svg' %}">
+			</button>
+		</div>
+	</div>
+</div>
+<div class="error flex justify-center">
+	<span id="drawError"></span>
+</div>
+<div class="flex justify-center">
+	<button id="bt_saveDrawing" class="ml-1 mt-3 bg-transparent hover:bg-blue-500 text-blue-700 hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">Sauvegarder</button>
+</div>
+<div class="flex justify-center">
+	<ul id="canvasList">
+		{% if attachments %}
+		{% for attachment in attachments %}
+		{% if attachment.file_url %}
+		{% endif %}
+		<div class="flex ">
+			<li class="border-2 border-gray-600 mt-3 bg-white">
+				<div class="flex justify-end gap-3">
+					<button class="edit_canvas" data-pk="{{ attachment.pk }}">
+					<img width="35" height="40" src="{% static '/img/edit.svg' %}">
+					</button>
+					<button class="delete_canvas" data-pk="{{ attachment.pk }}">
+					<img width="35" height="40" src="{% static '/img/delete.svg' %}">
+					</button>
+				</div>
+				<img src="{{ attachment.file_url }}" alt="{{ attachment.file_name }}">
+			</li>
+		</div>
+		{% endfor %}
+		{% endif %}
+	</ul>
 </div>
 {% endblock %}
