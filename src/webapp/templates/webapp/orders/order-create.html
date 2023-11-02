@@ -8,131 +8,134 @@
 {% endblock %}
 
 {% block content %}
-<div class="titre flex justify-center text-slate-500 mt-4 text-3xl font-bold mb-4">
-    <h1>Nouvelle commande</h1>
+<div class="flex justify-center">
+<div class="bg-slate-50 rounded-lg p-4 mt-4 w-10/12">
+    <div class="titre flex justify-center text-slate-500 mt-4 text-3xl font-bold mb-4">
+        <h1>Nouvelle commande</h1>
+    </div>
+
+
+    <div class="form flex justify-center">
+        <form method="POST">
+            {% csrf_token %}
+
+             <!-- Champs du formulaire NewCustomerForm -->
+            <div class="id">
+                {% if customer_id %}
+                    ID : <input name="id" value="{{ customer_id }}" readonly>
+                {% else %}
+                    ID : <input name="id" id="id_customer" value="{{ customer_form.instance.id }}" readonly />
+                {% endif %}
+            </div>
+
+            <div class="infos flex flex-no-wrap gap-3">
+                 <div class="nom">
+                    {{ customer_form.last_name.label_tag }} {{ customer_form.last_name }}
+                    {% if customer_form.last_name.errors %}
+                    <div class="errors">
+                        {{ customer_form.last_name.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="prenom">
+                    {{ customer_form.first_name.label_tag }} {{ customer_form.first_name }}
+                    {% if customer_form.first_name.errors %}
+                    <div class="errors">
+                        {{ customer_form.first_name.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+
+
+            </div>
+
+            <div class="coordonnees flex flex-no-wrap gap-3">
+                <div>
+                    {{ customer_form.phone_number.label_tag }} {{ customer_form.phone_number }}
+                    {% if customer_form.phone_number.errors %}
+                    <div class="errors">
+                        {{ customer_form.phone_number.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div>
+
+                </div>
+            </div>
+
+            {{ customer_form.mail.label_tag }} {{ customer_form.mail }}
+                    {% if customer_form.mail.errors %}
+                    <div class="errors">
+                        {{ customer_form.mail.errors }}
+                    </div>
+                    {% endif %}
+
+            <div class="adress">
+                {{ customer_form.address.label_tag }} {{ customer_form.address }}
+                {% if customer_form.address.errors %}
+                <div class="errors">
+                    {{ customer_form.address.errors }}
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="labelstatus flex flex-nowrap justify-between gap-3">
+                <div class="flex-grow">
+                    {{ order_form.label.label_tag }} {{ order_form.label }}
+                    {% if order_form.label.errors %}
+                    <div class="errors">
+                        {{ order_form.label.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="status">
+                    {{ order_form.status.label_tag }} {{ order_form.status }}
+                    {% if order_form.status.errors %}
+                    <div class="errors">
+                        {{ order_form.status.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="dates flex flex-no-wrap gap-4">
+                <div class="livraison">
+                    {{ order_form.estimated_delivery_date.label_tag }} {{ order_form.estimated_delivery_date }}
+                    {% if order_form.estimated_delivery_date.errors %}
+                    <div class="errors">
+                        {{ order_form.estimated_delivery_date.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="facturation">
+                    {{ order_form.invoice_date.label_tag }} {{ order_form.invoice_date }}
+                    {% if order_form.invoice_date.errors %}
+                    <div class="errors">
+                        {{ order_form.invoice_date.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="comment">
+                {{ order_form.comments.label_tag }} {{ order_form.comments }}
+                {% if order_form.comments.errors %}
+                <div class="errors">
+                    {{ order_form.comments.errors }}
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="bouton">
+                <button type="submit" class="w-full mb-4 mt-4 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded" value="Update">
+                    Enregistrer
+                </button>
+            </div>
 </div>
-
-
-<div class="form flex justify-center">
-    <form method="POST">
-        {% csrf_token %}
-
-         <!-- Champs du formulaire NewCustomerForm -->
-        <div class="id">
-            {% if customer_id %}
-                ID : <input name="id" value="{{ customer_id }}" readonly>
-            {% else %}
-                ID : <input name="id" id="id_customer" value="{{ customer_form.instance.id }}" readonly />
-            {% endif %}
-        </div>
-
-        <div class="infos flex flex-no-wrap gap-3">
-             <div class="nom">
-                {{ customer_form.last_name.label_tag }} {{ customer_form.last_name }}
-                {% if customer_form.last_name.errors %}
-                <div class="errors">
-                    {{ customer_form.last_name.errors }}
-                </div>
-                {% endif %}
-            </div>
-
-            <div class="prenom">
-                {{ customer_form.first_name.label_tag }} {{ customer_form.first_name }}
-                {% if customer_form.first_name.errors %}
-                <div class="errors">
-                    {{ customer_form.first_name.errors }}
-                </div>
-                {% endif %}
-            </div>
-
-
-        </div>
-
-        <div class="coordonnees flex flex-no-wrap gap-3">
-            <div>
-                {{ customer_form.phone_number.label_tag }} {{ customer_form.phone_number }}
-                {% if customer_form.phone_number.errors %}
-                <div class="errors">
-                    {{ customer_form.phone_number.errors }}
-                </div>
-                {% endif %}
-            </div>
-
-            <div>
-
-            </div>
-        </div>
-
-        {{ customer_form.mail.label_tag }} {{ customer_form.mail }}
-                {% if customer_form.mail.errors %}
-                <div class="errors">
-                    {{ customer_form.mail.errors }}
-                </div>
-                {% endif %}
-
-        <div class="adress">
-            {{ customer_form.address.label_tag }} {{ customer_form.address }}
-            {% if customer_form.address.errors %}
-            <div class="errors">
-                {{ customer_form.address.errors }}
-            </div>
-            {% endif %}
-        </div>
-
-        <div class="labelstatus flex flex-nowrap justify-between gap-3">
-            <div class="flex-grow">
-                {{ order_form.label.label_tag }} {{ order_form.label }}
-                {% if order_form.label.errors %}
-                <div class="errors">
-                    {{ order_form.label.errors }}
-                </div>
-                {% endif %}
-            </div>
-
-            <div class="status">
-                {{ order_form.status.label_tag }} {{ order_form.status }}
-                {% if order_form.status.errors %}
-                <div class="errors">
-                    {{ order_form.status.errors }}
-                </div>
-                {% endif %}
-            </div>
-        </div>
-
-        <div class="dates flex flex-no-wrap gap-4">
-            <div class="livraison">
-                {{ order_form.estimated_delivery_date.label_tag }} {{ order_form.estimated_delivery_date }}
-                {% if order_form.estimated_delivery_date.errors %}
-                <div class="errors">
-                    {{ order_form.estimated_delivery_date.errors }}
-                </div>
-                {% endif %}
-            </div>
-            <div class="facturation">
-                {{ order_form.invoice_date.label_tag }} {{ order_form.invoice_date }}
-                {% if order_form.invoice_date.errors %}
-                <div class="errors">
-                    {{ order_form.invoice_date.errors }}
-                </div>
-                {% endif %}
-            </div>
-        </div>
-        <div class="comment">
-            {{ order_form.comments.label_tag }} {{ order_form.comments }}
-            {% if order_form.comments.errors %}
-            <div class="errors">
-                {{ order_form.comments.errors }}
-            </div>
-            {% endif %}
-        </div>
-
-        <div class="bouton">
-            <button type="submit" class="w-full mb-4 mt-4 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded" value="Update">
-                Enregistrer
-            </button>
-        </div>
-
     </form>
+</div>
 </div>
 
 
