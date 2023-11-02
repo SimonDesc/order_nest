@@ -181,6 +181,23 @@
 	<a href="{% url 'webapp:order-add-products' pk=order_form.instance.id %}"><button class="mb-4 bg-yellow-400 hover:bg-yellow-500 text-slate-700 py-2 px-4 rounded"> Ajouter Produit</button></a>
 </div>
 
+<div>
+	<ul id="pictureList">
+		{% if attachments_pictures %}
+			 {% for picture in attachments_pictures %}
+			 	<li>
+					<a href="{{ picture.url }}" style="margin-right: 10px;">{{ picture.pk }} - {{ picture.filename|truncatechars:30 }}</a>
+					<button class="delete_picture" data-pk="{{ picture.pk }}" style="margin-left: 10px;">
+						<img width="10" height="10" src="{% static '/img/delete.svg' %}">
+					</button>
+					
+				</li>
+			 {% endfor %}
+		{% endif %}
+	</ul>
+</div>
+
+
 <!-- Bouton pour ouvrir le modal -->
 <div class="flex justify-center">
 	<button id="openModalButton" class="bg-blue-500 text-white p-2 rounded">Joindre une photo</button>
