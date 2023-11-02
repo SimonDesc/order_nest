@@ -3,17 +3,18 @@ from django.conf.urls.static import static
 from django.urls import path
 from django.contrib.auth.views import LoginView, LogoutView
 from .views import WebappHome, CreateOrder, EditOrder, DeleteOrder, SearchOrder, Dashboard, \
-    DeleteProduct, EditProduct, AddProductsToOrder, get_clients, save_canvas, DeleteCanvas, get_canvas, get_orders
+    DeleteProduct, EditProduct, AddProductsToOrder, get_clients, save_canvas, DeleteCanvas, get_canvas, get_orders, LandingPage
 
 app_name = 'webapp'
 
 urlpatterns = [
     # Identification Routes
-    path('', LoginView.as_view(template_name='webapp/login.html'), name='login'),
+    path('login', LoginView.as_view(template_name='webapp/login.html'), name='login'),
     path('logout/', LogoutView.as_view(next_page='webapp:login'), name='logout'),
 
 
     # Primary Routes
+    path('', LandingPage.as_view(), name='landing'),
     path('home/', WebappHome.as_view(), name='home'),
     path('dashboard/', Dashboard.as_view(), name='dashboard'),
 
