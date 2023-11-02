@@ -17,6 +17,9 @@ from .models import Customer, Order, OrderHasProduct, Product, OrderAttachment
 from .forms import NewOrderForm, NewCustomerForm, AddProductsToOrder
 
 
+class LandingPage(TemplateView):
+    template_name = 'webapp/landing.html'
+
 class WebappHome(ListView):
     model = Order
     template_name = 'webapp/home.html'
