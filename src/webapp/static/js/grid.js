@@ -4,15 +4,17 @@ document.addEventListener("DOMContentLoaded", function() {
     } = gridjs;
     function getStatusColorClass(status) {
     if (status === 'En attente') {
-        return '#FF8C00';
+        return '#FF9E2D';
     } else if (status === 'En cours') {
-        return '#1E90FF';
+        return '#0060EF';
     } else if (status === 'Terminée') {
-        return '#32CD32';
+        return '#8D8D8D';
     } else if (status === 'Facturée') {
-        return '#008000';
+        return '#162B49';
     } else if (status === 'Annulée') {
-        return '#FF0000';
+		return '#8D8D8D';
+	} else if (status === 'Urgent') {
+        return '#FF4E27';
     } else {
         return 'text-slate-900'; // Vous pouvez définir une classe par défaut ici
     }

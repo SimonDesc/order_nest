@@ -41,6 +41,8 @@
                 <span class="status-Facturée">{{ commande.status }}</span>
             {% elif commande.status == 'Annulée' %}
                 <span class="status-Annulée">{{ commande.status }}</span>
+			{% elif commande.status == 'Urgent' %}
+                <span class="status-Urgent">{{ commande.status }}</span>
             {% endif %}
 
         </div>

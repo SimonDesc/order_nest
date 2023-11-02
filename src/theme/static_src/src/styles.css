@@ -4,22 +4,25 @@
 @tailwind utilities;
 
 .status-En-attente {
-    color: darkorange;
+    color: #FF9E2D;
 }
 
 .status-En-cours {
-    color: dodgerblue;
+    color: #0060EF;
 }
 
 .status-Terminée {
-    color: limegreen;
+    color: #8D8D8D;
 }
 
 .status-Facturée {
-    color: green;
+    color: #162B49;
 }
 
 .status-Annulée {
-    color: red;
+    color: #8D8D8D;
 }
 
+.status-Urgent {
+    color: #FF4E27;
+}
