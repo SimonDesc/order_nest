@@ -112,6 +112,14 @@ class EditOrder(UpdateView):
         context['customer_form'] = NewCustomerForm(instance=customer_instance)
         context['product_order'] = OrderHasProduct.objects.filter(order=order.id)
         context['attachments'] = OrderAttachment.objects.filter(order=order.id, type="canvas")[:50]
+        context['attachments_pictures'] = [
+            {
+                'filename': os.path.basename(attachment.file.name),
+                'url': attachment.file.url,
+                'pk' : attachment.pk,
+            }
+            for attachment in OrderAttachment.objects.filter(order=order.id, type="picture").order_by('pk')[:50]
+        ]
         return context
 
     # Check la validité de form (order)
@@ -359,6 +367,25 @@ class DeleteCanvas(DeleteView):
         return JsonResponse({'status': 'success'})
 
 
+
+class DeletePicture(DeleteView):
+    model = OrderAttachment
+
+    def get_success_url(self):
+        order_id = self.object.pk
+        return reverse('webapp:order-edit', args=[order_id])
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
+        if self.object.file:
+            file_path = os.path.join(settings.MEDIA_ROOT, self.object.file.path)
+            if os.path.exists(file_path):
+                os.remove(file_path)
+        self.object.delete()
+        return JsonResponse({'status': 'success'})
+
+
 def save_pictures(request):
     if request.method == "POST":
         current_time = datetime.datetime.now().strftime("%H-%M-%S")
@@ -366,10 +393,8 @@ def save_pictures(request):
         order_id = request.POST['orderId']
         
         file.name = current_time + '_' + file.name
-        print(file.name)
-        print(order_id)
         
-        # On créer l'objet OrderAttachment
+        # On crée l'objet OrderAttachment
         attachment = OrderAttachment()
         
         # On récupère l'objet commande
@@ -380,5 +405,14 @@ def save_pictures(request):
         attachment.file = file
         attachment.type = "picture"
         attachment.save()
-        
-        return HttpResponse("ok")
+
+        # Construction de la réponse avec les informations de l'attachment sauvegardé
+        return JsonResponse({
+            'exit': True,
+            'filename': {
+                'url': attachment.file.url,
+                'name': os.path.basename(attachment.file.name)
+            }
+        })
+
+    return HttpResponse(False)

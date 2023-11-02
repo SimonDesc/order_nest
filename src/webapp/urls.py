@@ -2,9 +2,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
 from django.contrib.auth.views import LoginView, LogoutView
-from .views import WebappHome, CreateOrder, EditOrder, DeleteOrder, SearchOrder, Dashboard, \
-
-    DeleteProduct, EditProduct, AddProductsToOrder, get_clients, save_canvas, DeleteCanvas, get_canvas, get_orders, LandingPage, save_pictures
+from .views import DeletePicture, WebappHome, CreateOrder, EditOrder, DeleteOrder, SearchOrder, Dashboard, \
+DeleteProduct, EditProduct, AddProductsToOrder, get_clients, save_canvas, DeleteCanvas, get_canvas, get_orders, LandingPage, save_pictures
 
 
 app_name = 'webapp'
@@ -33,7 +32,8 @@ urlpatterns = [
 
     # Attachment Routes
     path('delete_canvas/<int:pk>', DeleteCanvas.as_view(), name='delete_canvas'),
-
+    path('delete_picture/<int:pk>', DeletePicture.as_view(), name='delete_picture'),
+    
     # API Routes
     path('get_clients/', get_clients, name='get_clients'),
     path('save_canvas/', save_canvas, name='save_canvas'),
