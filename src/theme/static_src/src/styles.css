@@ -26,3 +26,21 @@
 .status-Urgent {
     color: #FF4E27;
 }
+
+.div-ombre {
+    box-shadow: 0px 10px 0px 0px #D4D4D4;
+}
+
+.div-ombre-button-edit {
+    box-shadow: 0px 3px 0px 0px #013D97;
+}
+
+.div-ombre-button-navbar {
+    box-shadow: 0px 3px 0px 0px #2C4569;
+}
+
+.div-ombre-button-navbar-logout {
+    box-shadow: 0px 3px 0px 0px #C80C00;
+}
+
+
