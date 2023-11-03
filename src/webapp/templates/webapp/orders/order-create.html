@@ -9,9 +9,9 @@
 {% block content %}
 <div class="flex justify-center">
 
-	<div class="bg-slate-50 rounded-lg p-4 mt-4 w-10/12">
+	<div class="rounded-lg p-4 mt-4 w-10/12">
 		<div class="titre flex justify-center text-slate-500 mt-4 text-3xl font-bold mb-4">
-			<h1>Crétion d'une nouvelle commande</h1>
+			<h1>Création d'une nouvelle commande</h1>
 		</div>
 		<div class="form flex justify-center">
 			<form method="POST">
@@ -73,12 +73,16 @@
 
 				<div class="boutons flex justify-end gap-4">
 					<div class="annuler">
-						<button type="submit" class="mb-4 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded" value="Update">
-						Enregistrer
+						<button type="submit" class="bg-red-500 font-semibold div-ombre-button-edit py-2 px-6 mr-2 mb-2 text-sm text-white text-gray-900
+						focus:outline-none rounded-lg
+					   focus:z-10 focus:ring-4 focus:ring-gray-200 " value="Update">
+						Annuler
 						</button>
 					</div>
-					<div class="enregistrer">
-						<button type="submit" class="mb-4 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded" value="Update">
+					<div class="enregistrer" >
+						<button style="background-color: #0060EF;" type="submit" class="font-semibold div-ombre-button-edit py-2 px-6 mr-2 mb-2 text-sm text-white text-gray-900
+						focus:outline-none rounded-lg
+					   focus:z-10 focus:ring-4 focus:ring-gray-200 " value="Update">
 						Enregistrer
 						</button>
 					</div>

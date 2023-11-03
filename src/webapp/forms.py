@@ -15,7 +15,7 @@ class NewOrderForm(ModelForm):
     class Meta:
         model = Order
         widgets = {
-            'comments': Textarea(attrs={'rows':4, 'cols':25}),
+            'comments': Textarea(attrs={'rows': 4, 'cols': 25}),
         }
         fields = ("label", "comments", "status", "estimated_delivery_date", "invoice_date", "payment", "payment_method")
 
