@@ -45,6 +45,20 @@ class Order(models.Model):
         ('Urgent', 'Urgent'),
     )
 
+    PAIEMENT = (
+        ('En attente', 'En attente'),
+        ('Réglé', 'Réglé'),
+    )
+
+    METHOD = (
+        ('Carte bancaire', 'Carte bancaire'),
+        ('Espèce', 'Espèce'),
+        ('Chèque', 'Chèque'),
+        ('Virement', 'Virement'),
+    )
+
+
+
     created_at = models.DateTimeField(auto_now_add=True)
     estimated_delivery_date = models.DateField(blank=True, null=True, verbose_name="date de livraison")
     invoice_date = models.DateField(blank=True, null=True, verbose_name="date de facturation")
@@ -54,6 +68,8 @@ class Order(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True)
     products = models.ManyToManyField(Product, through='OrderHasProduct')
     active = models.BooleanField(default=True)
+    payment = models.CharField(max_length=32, choices=PAIEMENT, verbose_name="Paiment" , default='En attente')
+    payment_method = models.CharField(max_length=32, choices=METHOD, verbose_name="Type de paiement", blank=True)
 
     @property
     def total_price(self):
