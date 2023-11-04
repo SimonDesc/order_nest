@@ -1,24 +1,41 @@
-{% extends 'base.html' %}
+<form hx-post="{{ request.path }}" class="modal-content">
+	{% csrf_token %}
+	<div class="ref">
+        {{ form.reference.label_tag }}
+        {{ form.reference }}
+      </div>
 
-{% block title %}
-    <title>Ajouter un nouveau produit</title>
-{% endblock %}
+      <div class="label">
+        {{ form.label.label_tag }}
+        {{ form.label }}
+      </div>
 
-{% block content %}
-<div class="titre flex justify-center text-3xl font-bold mt-5 mb-4">
-    <h1 class="text-slate-500">Nouveau produit pour la commande {{ order_infos.label }} (id: {{ order_id }})</h1>
-</div>
+      <div class="brand">
+        {{ form.brand.label_tag }}
+        {{ form.brand }}
+      </div>
 
-<div class="infoclient flex justify-center text-2xl font-bold mt-0 mb-9">
-    <p class="text-slate-500">Commande de Mr/Mme {{ order_infos.customer.last_name }} {{ order_infos.customer.first_name }}</p>
-</div>
+      <div class="supplier">
+        {{ form.supplier.label_tag }}
+        {{ form.supplier }}
+      </div>
 
-<div class="form flex justify-center">
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-submit">Enregistrer</button>
-    </form>
-</div>
+      <div class="prix">
+        {{ form.purchase_price_unit.label_tag }}
+        {{ form.purchase_price_unit }}
+      </div>
 
-{% endblock %}
+      <div class="vente">
+        {{ form.selling_price_unit.label_tag }}
+        {{ form.selling_price_unit }}
+      </div>
+
+      <div class="quantity">
+        {{ form.quantity.label_tag }}
+        {{ form.quantity }}
+      </div>
+	<div class="modal-footer">
+		<button type="button" id="cancelButton">Cancel</button>
+		<button type="submit">Save</button>
+	</div>
+</form>

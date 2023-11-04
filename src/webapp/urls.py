@@ -3,7 +3,7 @@ from django.conf.urls.static import static
 from django.urls import path
 from django.contrib.auth.views import LoginView, LogoutView
 from .views import WebappHome, CreateOrder, EditOrder, DeleteOrder, SearchOrder, Dashboard, \
-    DeleteProduct, EditProduct, AddProductsToOrder,DeletePicture, get_clients, save_canvas, DeleteCanvas, get_canvas, get_orders, LandingPage, save_pictures
+    DeleteProduct, EditProduct, AddProductsToOrder,DeletePicture, get_clients, product_order_list, save_canvas, DeleteCanvas, get_canvas, get_orders, LandingPage, save_pictures
 
 
 
@@ -29,8 +29,8 @@ urlpatterns = [
 
     # Products Routes
     path('products/<int:pk>/edit/', EditProduct.as_view(), name='product-edit'),
-    path('products/<int:pk>/delete/', DeleteProduct.as_view(), name='product-delete'),
-
+    path('products/<int:pk>/delete/', DeleteProduct.as_view(), name='product-delete'),  
+    
     # Attachment Routes
     path('delete_canvas/<int:pk>', DeleteCanvas.as_view(), name='delete_canvas'),
     path('delete_picture/<int:pk>', DeletePicture.as_view(), name='delete_picture'),
@@ -41,7 +41,7 @@ urlpatterns = [
     path('save_pictures/', save_pictures, name='save_pictures'),
     path('get_canvas/<int:pk>', get_canvas, name='get_canvas'),
     path('get_orders/', get_orders, name='get_orders'),
-
+    path('product_order_list/<int:order_id>/', product_order_list, name='product_order_list'),
 
 ]
 
