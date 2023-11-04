@@ -14,94 +14,80 @@
 <script src="{% static 'js/picture.js' %}"></script>
 {% endblock %}
 {% block content %}
+
 <div class="titre flex justify-center text-3xl font-bold mt-5 mb-9">
-	<h1 class="text-slate-500">Modification de la commande {{ order_form.instance.id }} créée le
-		{{ order.created_at|date:"SHORT_DATE_FORMAT"}}</h1>
+
+	<h1 class="text-slate-500 mt-5">Modification de la commande</h1>
+
 </div>
+
 <input type="hidden" id="orderPk" value="{{ order_form.instance.pk }}">
 <div class="flex justify-center">
 	<form method="POST" class="">
 		{% csrf_token %}
-		<div class="infos flex justify-between px-3">
-			<div class="label mb-6 md:mb-4 ">
+
+		<div class="infosorder mb-3 border-b">
+			<p class="italic">N°{{ order_form.instance.id }}</p>
+			<p class="italic">Créée le: {% now "j F Y" %}</p>
+		</div>
+
+		<div class="labelstatus flex flex-no-wrap mb-3 justify-between gap-3">
+			<div class="label w-5/12 ">
 				{{ order_form.label.label_tag }}
-				{{ order_form.label }} 
-				{% if order_form.label.errors %}
-				<div class="errors">{{ order_form.label.errors }}</div>
-				{% endif %}
+
+				{{ order_form.label }}
+
 			</div>
-			<div class="status mb-6 md:mb-0">
+			<div class="status w-3/12">
 				{{ order_form.status.label_tag }}
-				<div>{{ order_form.status }}</div>
-				{% if order_form.status.errors %}
-				<div class="errors">{{ order_form.status.errors }}</div>
-				{% endif %}
+				{{ order_form.status }}
 			</div>
 		</div>
-		<div class="client flex flex-nowrap px-3 mb-2">
-			<div class="nom mb-6 md:mb-0">
+
+		<div class="client flex flex-no-wrap gap-3 mb-3">
+			<div class="nom">
 				{{ customer_form.last_name.label_tag }}
-				<div>{{ customer_form.last_name }}</div>
-				{% if customer_form.last_name.errors %}
-				<div class="errors">{{ customer_form.last_name.errors }}</div>
-				{% endif %}
+				{{ customer_form.last_name }}
 			</div>
-			<div class="prenom px-3 mb-6 md:mb-0">
+			<div class="prenom">
 				{{ customer_form.first_name.label_tag }}
 				{{ customer_form.first_name }}
-				{% if customer_form.first_name.errors %}
-				<div class="errors">{{ customer_form.first_name.errors }}</div>
-				{% endif %}
 			</div>
-			<div class="tel md:mb-0">
+			<div class="tel">
 				{{ customer_form.phone_number.label_tag }}
 				{{ customer_form.phone_number }}
-				{% if customer_form.phone_number.errors %}
-				<div class="errors">{{ customer_form.phone_number.errors }}</div>
-				{% endif %}
 			</div>
 		</div>
-		<div class="mailadress flex flex-wrap mt-4 mb-6">
-			<div class="adress px-3 mb-6 md:mb-0">
+
+		<div class="mailadress flex flex-no-wrap gap-3 pb-4 border-b">
+			<div class="adress w-6/12">
 				{{ customer_form.address.label_tag }}
 				<div>{{ customer_form.address }}</div>
-				{% if customer_form.address.errors %}
-				<div class="errors">{{ customer_form.address.errors }}</div>
-				{% endif %}
 			</div>
-			<div class="mail mb-6 md:mb-0">
+			<div class="mail w-6/12">
 				{{ customer_form.mail.label_tag }}
 				<div>{{ customer_form.mail }}</div>
-				{% if customer_form.mail.errors %}
-				<div class="errors">{{ customer_form.mail.errors }}</div>
-				{% endif %}
 			</div>
 		</div>
-		<div class="dates flex flex-nowrap px-3 mb-6">
-			<div class="">
-				<label for="{{ order_form.estimated_delivery_date.id_for_label }}">Date de livraison :</label>
-				<div>
-					<input type="date" id="{{ order_form.estimated_delivery_date.id_for_label }}"
-						name="{{ order_form.estimated_delivery_date.name }}"
-						value="{{ order_form.estimated_delivery_date.value|date:'Y-m-d' }}">
+
+
+		<div class="datesandpayment h-44 grid grid-rows-2 grid-flow-col gap-4 mt-3">
+					<div class="comment row-span-1">
+						{{ order_form.comments.label_tag }} {{ order_form.comments }}
+					</div>
+					<div class="paiement row-span-2">
+						{{ order_form.payment.label_tag }} {{ order_form.payment }}
+						{{ order_form.payment_method.label_tag }} {{ order_form.payment_method }}
+					</div>
+
+					<div class="livraisonrow-span-3">
+						{{ order_form.estimated_delivery_date.label_tag }} {{ order_form.estimated_delivery_date }}
+						{{ order_form.invoice_date.label_tag }} {{ order_form.invoice_date }}
+					</div>
+
+
 				</div>
-			</div>
-			<div class="facturation px-3">
-				<label for="{{ order_form.invoice_date.id_for_label }}">Date de facturation :</label>
-				<div>
-					<input type="date" id="{{ order_form.invoice_date.id_for_label }}"
-						name="{{ order_form.invoice_date.name }}"
-						value="{{ order_form.invoice_date.value|date:'Y-m-d' }}">
-				</div>
-			</div>
-		</div>
-		<div class="comment px-3">
-			{{ order_form.comments.label_tag }}
-			{{ order_form.comments }}
-			{% if order_form.comments.errors %}
-			<div class="errors">{{ order_form.comments.errors }}</div>
-			{% endif %}
-		</div>
+
 		<input type="hidden" name="id" value="{{ customer_form.instance.id }}" readonly>
 		{% if form.errors %}
 		<div class="alert alert-danger">
@@ -114,12 +100,24 @@
 			</ul>
 		</div>
 		{% endif %}
-		<button type="submit" class="w-full mb-4 mt-4 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded"
-			value="Update">Enregistrer modification</button>
-		<a href="{% url 'webapp:order-delete' pk=order_form.instance.id %}">
-			<button type="button" class="w-full mb-6 mt-0 bg-red-500 hover:bg-red-700 text-white py-2 px-4 rounded"
-				value="Delete">Supprimer commande</button>
-		</a>
+
+
+		<div class="buttons flex justify-end">
+			<div class="btncnc">
+				<a href="{% url 'webapp:order-delete' pk=order_form.instance.id %}">
+					<button type="button" class="bg-red-500 font-semibold div-ombre-button-edit py-2 px-6 mr-2 mb-2 text-sm text-white text-gray-900
+						focus:outline-none rounded-lg
+					   focus:z-10 focus:ring-4 focus:ring-gray-200 " value="Delete">Supprimer</button>
+				</a>
+			</div>
+			<div class="btnok">
+				<button style="background-color: #0060EF;" type="submit" class="font-semibold div-ombre-button-edit py-2 px-6 mr-2 mb-2 text-sm text-white text-gray-900
+						focus:outline-none rounded-lg
+					   focus:z-10 focus:ring-4 focus:ring-gray-200 " value="Update">Enregistrer</button>
+			</div>
+		</div>
+
+
 	</form>
 </div>
 

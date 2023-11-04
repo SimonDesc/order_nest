@@ -1,144 +1,94 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}
-    <title>Nouvelle commande</title>
+<title>Nouvelle commande</title>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
 <script src="{% static 'js/autocomplete.js' %}"></script>
 {% endblock %}
-
 {% block content %}
 <div class="flex justify-center">
-<div>
-    <div class="titre flex justify-center text-slate-500 mt-4 text-3xl font-bold mb-4">
-        <h1>Nouvelle commande</h1>
-    </div>
 
+	<div class="rounded-lg p-4 mt-4 w-10/12">
+		<div class="titre flex justify-center text-slate-500 mt-4 text-3xl font-bold mb-4">
+			<h1>Création d'une nouvelle commande</h1>
+		</div>
+		<div class="form flex justify-center">
+			<form method="POST">
+				{% csrf_token %}
+				<!-- Champs du formulaire NewCustomerForm -->
+				<div class="id hidden">
+					{% if customer_id %}
+					ID : <input name="id" value="{{ customer_id }}" readonly>
+					{% else %}
+					ID : <input name="id" id="id_customer" value="{{ customer_form.instance.id }}" readonly />
+					{% endif %}
+				</div>
+				<div class="mb-5 border-b italic">
+					Créée le: {% now "j F Y" %}
+				</div>
+				<div class="labelstatus flex flex-no-wrap justify-between gap-3">
+					<div class="label w-6/12">
+						{{ order_form.label.label_tag }}
+						{{ order_form.label }}
+					</div>
+					<div class="status w-3/12">
+						{{ order_form.status.label_tag }} {{ order_form.status }}
+					</div>
+				</div>
+				<div class="infos flex flex-no-wrap gap-3">
+					<div class="nom">
+						{{ customer_form.last_name.label_tag }} {{ customer_form.last_name }}
+					</div>
+					<div class="prenom">
+						{{ customer_form.first_name.label_tag }} {{ customer_form.first_name }}
+					</div>
+					<div>
+						{{ customer_form.phone_number.label_tag }} {{ customer_form.phone_number }}
+					</div>
+				</div>
+				<div class="mailtel flex flex-no-wrap gap-3 pb-4 border-b">
+					<div class="adress w-6/12">
+						{{ customer_form.address.label_tag }} {{ customer_form.address }}
+					</div>
+					<div class="mail w-6/12">
+						{{ customer_form.mail.label_tag }} {{ customer_form.mail }}
+					</div>
+				</div>
+				<div class="datesandpayment h-44 grid grid-rows-2 grid-flow-col gap-4 mt-3">
+					<div class="comment row-span-1">
+						{{ order_form.comments.label_tag }} {{ order_form.comments }}
+					</div>
+					<div class="paiement row-span-2">
+						{{ order_form.payment.label_tag }} {{ order_form.payment }}
+						{{ order_form.payment_method.label_tag }} {{ order_form.payment_method }}
+					</div>
 
-    <div class="form flex justify-center">
-        <form method="POST">
-            {% csrf_token %}
+					<div class="livraisonrow-span-3">
+						{{ order_form.estimated_delivery_date.label_tag }} {{ order_form.estimated_delivery_date }}
+						{{ order_form.invoice_date.label_tag }} {{ order_form.invoice_date }}
+					</div>
 
-             <!-- Champs du formulaire NewCustomerForm -->
-            <div class="id">
-                {% if customer_id %}
-                    ID : <input name="id" value="{{ customer_id }}" readonly>
-                {% else %}
-                    ID : <input name="id" id="id_customer" value="{{ customer_form.instance.id }}" readonly />
-                {% endif %}
-            </div>
+				</div>
 
-            <div class="infos flex flex-no-wrap gap-3">
-                 <div class="nom">
-                    {{ customer_form.last_name.label_tag }} {{ customer_form.last_name }}
-                    {% if customer_form.last_name.errors %}
-                    <div class="errors">
-                        {{ customer_form.last_name.errors }}
-                    </div>
-                    {% endif %}
-                </div>
-
-                <div class="prenom">
-                    {{ customer_form.first_name.label_tag }} {{ customer_form.first_name }}
-                    {% if customer_form.first_name.errors %}
-                    <div class="errors">
-                        {{ customer_form.first_name.errors }}
-                    </div>
-                    {% endif %}
-                </div>
-
-
-            </div>
-
-            <div class="coordonnees flex flex-no-wrap gap-3">
-                <div>
-                    {{ customer_form.phone_number.label_tag }} {{ customer_form.phone_number }}
-                    {% if customer_form.phone_number.errors %}
-                    <div class="errors">
-                        {{ customer_form.phone_number.errors }}
-                    </div>
-                    {% endif %}
-                </div>
-
-                <div>
-
-                </div>
-            </div>
-
-            {{ customer_form.mail.label_tag }} {{ customer_form.mail }}
-                    {% if customer_form.mail.errors %}
-                    <div class="errors">
-                        {{ customer_form.mail.errors }}
-                    </div>
-                    {% endif %}
-
-            <div class="adress">
-                {{ customer_form.address.label_tag }} {{ customer_form.address }}
-                {% if customer_form.address.errors %}
-                <div class="errors">
-                    {{ customer_form.address.errors }}
-                </div>
-                {% endif %}
-            </div>
-
-            <div class="labelstatus flex flex-nowrap justify-between gap-3">
-                <div class="flex-grow">
-                    {{ order_form.label.label_tag }} {{ order_form.label }}
-                    {% if order_form.label.errors %}
-                    <div class="errors">
-                        {{ order_form.label.errors }}
-                    </div>
-                    {% endif %}
-                </div>
-
-                <div class="status">
-                    {{ order_form.status.label_tag }} {{ order_form.status }}
-                    {% if order_form.status.errors %}
-                    <div class="errors">
-                        {{ order_form.status.errors }}
-                    </div>
-                    {% endif %}
-                </div>
-            </div>
-
-            <div class="dates flex flex-no-wrap gap-4">
-                <div class="livraison">
-                    {{ order_form.estimated_delivery_date.label_tag }} {{ order_form.estimated_delivery_date }}
-                    {% if order_form.estimated_delivery_date.errors %}
-                    <div class="errors">
-                        {{ order_form.estimated_delivery_date.errors }}
-                    </div>
-                    {% endif %}
-                </div>
-                <div class="facturation">
-                    {{ order_form.invoice_date.label_tag }} {{ order_form.invoice_date }}
-                    {% if order_form.invoice_date.errors %}
-                    <div class="errors">
-                        {{ order_form.invoice_date.errors }}
-                    </div>
-                    {% endif %}
-                </div>
-            </div>
-            <div class="comment">
-                {{ order_form.comments.label_tag }} {{ order_form.comments }}
-                {% if order_form.comments.errors %}
-                <div class="errors">
-                    {{ order_form.comments.errors }}
-                </div>
-                {% endif %}
-            </div>
-
-            <div class="bouton">
-                <button type="submit" class="w-full mb-4 mt-4 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded" value="Update">
-                    Enregistrer
-                </button>
-            </div>
+				<div class="boutons flex justify-end gap-4">
+					<div class="annuler">
+						<button type="submit" class="bg-red-500 font-semibold div-ombre-button-edit py-2 px-6 mr-2 mb-2 text-sm text-white text-gray-900
+						focus:outline-none rounded-lg
+					   focus:z-10 focus:ring-4 focus:ring-gray-200 " value="Update">
+						Annuler
+						</button>
+					</div>
+					<div class="enregistrer" >
+						<button style="background-color: #0060EF;" type="submit" class="font-semibold div-ombre-button-edit py-2 px-6 mr-2 mb-2 text-sm text-white text-gray-900
+						focus:outline-none rounded-lg
+					   focus:z-10 focus:ring-4 focus:ring-gray-200 " value="Update">
+						Enregistrer
+						</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
 </div>
-    </form>
-</div>
-</div>
-
-
-
-
 {% endblock %}
