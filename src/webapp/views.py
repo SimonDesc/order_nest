@@ -21,7 +21,7 @@ from django.views.generic import (
     TemplateView,
 )
 from .models import Customer, Order, OrderHasProduct, Product, OrderAttachment
-from .forms import NewOrderForm, NewCustomerForm, AddProductsToOrder
+from .forms import AddProductForm, NewOrderForm, NewCustomerForm, AddProductsToOrder
 
 
 class LandingPage(TemplateView):
@@ -273,8 +273,8 @@ class EditProduct(UpdateView):
     
 
 class AddProductsToOrder(CreateView):
-    model = Product
-    fields = "__all__"
+    form_class = AddProductForm
+    
     template_name = "webapp/orders/order-product.html"
 
     def get(self, request, *args, **kwargs):
@@ -477,8 +477,14 @@ def save_pictures(request):
 def product_order_list(request, order_id):
     product_order = OrderHasProduct.objects.filter(order=order_id)
     
+    # Calculer le total pour chaque produit
+    for product in product_order:
+        product.total = product.product.selling_price_unit * product.product.quantity
+    total_order = sum(product.total for product in product_order)
+    
     context = {
         'product_order': product_order,
         'order_id': order_id,
+        'total_order': total_order,  
     }
     return render(request, 'webapp/products/product_order_list.html', context)

@@ -1,73 +1,73 @@
 {% load static %}
 
-<div class="px-3">
-	<div class="flex justify-center py-2 align-middle inline-block min-w-full">
-		<div class="overflow-hidden">
-			<table class="min-w-full">
-				<thead>
+<div class="w-full">
+	<div class="flex justify-center py-2 align-middle inline-block mt-5 w-full">
+		<div class="overflow-x-auto w-full"> 
+			<table class="w-full text-left">
+				<thead class="text-base text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 ">
 					<tr>
+
 						<th
-							class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-							ID
-						</th>
-						<th
-							class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+						scope="col" class="px-6 py-3">
 							Réf.
 						</th>
 						<th
-							class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+						scope="col" class="px-6 py-3">
 							Libellé
 						</th>
 						<th
-							class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-							PU
+						scope="col" class="px-6 py-3">
+							P.A
 						</th>
 						<th
-							class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+						scope="col" class="px-6 py-3">
+						P.V
+						</th>
+						<th
+						scope="col" class="px-6 py-3">
 							QT
 						</th>
 						<th
-							class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+						scope="col" class="px-6 py-3">
+						Total
+					</th>
+						<th
+						scope="col" class="px-6 py-3">
 						</th>
 						<th
-							class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+						scope="col" class="px-6 py-3">
 						</th>
 					</tr>
 				</thead>
 				<tbody class="bg-white divide-y divide-gray-200">
 					{% for product in product_order %}
 					<tr>
-						<td class="px-6 py-4 whitespace-nowrap">
-							{{ product.product.pk }}
-						</td>
-						<td class="px-6 py-4 whitespace-nowrap">
+						<td class="px-6 py-4">
 							{{ product.product.reference }}
 						</td>
-						<td class="px-6 py-4 whitespace-nowrap">
+						<td class="px-6 py-4">
 							{{ product.product.label }}
 						</td>
-						<td class="px-6 py-4 whitespace-nowrap">
+						<td class="px-6 py-4">
+							{{ product.product.purchase_price_unit }}
+						</td>
+						<td class="px-6 py-4">
 							{{ product.product.selling_price_unit }}
 						</td>
-						<td class="px-6 py-4 whitespace-nowrap">
+						<td class="px-6 py-4">
 							{{ product.product.quantity }}
 						</td>
-						<!-- <td class="px-6 py-4 whitespace-nowrap">
-							<a href="{% url 'webapp:product-edit' pk=product.product.id %}">
-							<img width="25" height="20" src="{% static '/img/edit.svg' %}"></a>
-							</a>
-						</td> -->
+						<td class="px-6 py-4">
+							{{ product.total}}
+						</td>
+
 						<td>
 							<a hx-get="{% url 'webapp:product-edit' pk=product.product.id %}"
 								hx-target="#dialog">
 								<img width="25" height="20" src="{% static '/img/edit.svg' %}">
 							</a>
 						</td>
-						<!-- <td class="px-6 py-4 whitespace-nowrap">
-							<a href="{% url 'webapp:product-delete' pk=product.product.id %}">
-								<img width="25" height="20" src="{% static '/img/delete.svg' %}">
-							</a>
-						</td> -->
+	
 						<td>
 							<a hx-get="{% url 'webapp:product-delete' pk=product.product.id %}"
 								hx-target="#dialog">
@@ -78,6 +78,11 @@
 
 					</tr>
 					{% endfor %}
+					<!-- Afficher le total de la commande -->
+					<tr>
+						<td colspan="5" class="text-right">Total de la commande : </td>
+						<td>{{ total_order }}</td>
+					</tr>
 				</tbody>
 			</table>
 		</div>
