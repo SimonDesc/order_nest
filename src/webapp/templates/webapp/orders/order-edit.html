@@ -87,32 +87,32 @@
 			<div class="datesandpayment h-44 grid grid-rows-2 grid-flow-col mb-5">
 				<!-- champ commentaire -->
 				<div class="comment row-span-1">
-				  {{ order_form.comments.label_tag }}
-				  <div class="mt-2"></div>
-				  {{ order_form.comments }}
+					{{ order_form.comments.label_tag }}
+					<div class="mt-2"></div>
+					{{ order_form.comments }}
 				</div>
 				<!-- champs paiements -->
 				<div class="paiement row-span-2 ml-14"> <!-- ajusté ici -->
-				  {{ order_form.payment.label_tag }}
-				  <div class="mt-2"></div>
-				  {{ order_form.payment }}
-				  <div class="mt-2"></div>
-				  {{ order_form.payment_method.label_tag }}
-				  <div class="mt-2"></div>
-				  {{ order_form.payment_method }}
+					{{ order_form.payment.label_tag }}
+					<div class="mt-2"></div>
+					{{ order_form.payment }}
+					<div class="mt-2"></div>
+					{{ order_form.payment_method.label_tag }}
+					<div class="mt-2"></div>
+					{{ order_form.payment_method }}
 				</div>
 				<!-- champ livraisons et facturation -->
 				<div class="livraison row-span-2 justify-self-end"> <!-- ajusté ici -->
-				  {{ order_form.estimated_delivery_date.label_tag }}
-				  <div class="mt-2"></div>
-				  {{ order_form.estimated_delivery_date }}
-				  <div class="mt-2"></div>
-				  {{ order_form.invoice_date.label_tag }}
-				  <div class="mt-2"></div>
-				  {{ order_form.invoice_date }}
+					{{ order_form.estimated_delivery_date.label_tag }}
+					<div class="mt-2"></div>
+					{{ order_form.estimated_delivery_date }}
+					<div class="mt-2"></div>
+					{{ order_form.invoice_date.label_tag }}
+					<div class="mt-2"></div>
+					{{ order_form.invoice_date }}
 				</div>
-			  </div>
-			  
+			</div>
+
 
 			<input type="hidden" name="id" value="{{ customer_form.instance.id }}" readonly>
 			{% if form.errors %}
@@ -149,8 +149,8 @@
 
 		<!-- Conteneur pour la liste des produits -->
 		<div class="titre flex justify-left text-2xl font-bold mt-5 mb-3">
-			<h1 class="title text-slate-500 mt-5">Liste des produits</h1>
-		
+			<h1 class="title text-slate-500 mt-5">Produits</h1>
+
 		</div>
 		<div id="productOrderList" hx-get="{% url 'webapp:product_order_list' order_id=order.id %}"
 			hx-trigger="load, ProductsListChanged from:body" hx-target="#productOrderList">
@@ -172,14 +172,14 @@
 
 		<!-- Liste des photos -->
 		<div class="titre flex justify-left text-2xl font-bold mt-5 mb-3">
-			<h1 class="title text-slate-500 mt-5">Liste des photos</h1>
+			<h1 class="title text-slate-500 mt-5">Photos</h1>
 		</div>
 		<div>
-			<ul id="pictureList">
+			<ul id="pictureList" >
 				{% if attachments_pictures %}
 				{% for picture in attachments_pictures %}
-				<li>
-					<a href="{{ picture.url }}" style="margin-right: 10px;">
+				<li class="mt-2" >
+					<a href="{{ picture.url }}" class="mr-10">
 						{{ picture.filename|truncatechars:30 }}
 					</a>
 					<button class="delete_picture" data-pk="{{ picture.pk }}" style="margin-left: 10px;">
@@ -195,15 +195,71 @@
 
 		<!-- Bouton pour ouvrir le modal Joindre photo -->
 		<div class="flex justify-end">
-			<button style="background-color: #0060EF; border-radius: 10px;"
-			id="openModalPictureButton" class="w-32 text-sm div-ombre-button-edit py-2 px-4 mb-2 text-sm text-white
+			<button style="background-color: #0060EF; border-radius: 10px;" id="openModalPictureButton"
+			class="w-32 text-sm div-ombre-button-edit py-2 px-4 mb-4 text-sm text-white
 			focus:outline-none
 		   focus:z-10 focus:ring-4 focus:ring-gray-200">
 				Joindre photo
 			</button>
 		</div>
 
+		<hr>
+		<div class="titre flex justify-left text-2xl font-bold mt-2 ">
+			<h1 class="title text-slate-500 mt-5">Croquis</h1>
+		</div>
 
+		<!-- Bouton gomme et supprimer -->
+		<div class="flex justify-end gap-5">
+			<button id="bt_whitePaint">
+				<img id="eraserImg" width="35" height="40" src="{% static 'img/eraser.svg' %}"
+					data-active-src="{% static 'img/eraser_active.svg' %}">
+			</button>
+			<button id="bt_eraseDrawing">
+				<img width="35" height="40" src="{% static '/img/delete.svg' %}">
+			</button>
+		</div>
+
+		<canvas id="drawZone" 
+		class="w-full px-3 rounded-lg border border-gray-300 bg-white">
+
+		</canvas>
+	
+
+		<div class="error justify-end">
+			<span id="drawError"></span>
+		</div>
+
+		<div class="flex justify-end">
+			<button id="bt_saveDrawing"
+			style="background-color: #0060EF; border-radius: 10px;"
+				class="w-32 text-sm div-ombre-button-edit py-2 px-4 mb-2 mt-2 text-sm text-white
+				focus:outline-none
+			focus:z-10 focus:ring-4 focus:ring-gray-200">
+				Sauvegarder
+			</button>
+		</div>
+		<!-- Liste des canvas -->
+		<div class="flex justify-center mt-5">
+			<ul id="canvasList">
+				{% if attachments %}
+				{% for attachment in attachments %}
+				<div class="flex ">
+					<li class="border-2 border-gray-600 bg-white border-dashed">
+						<div class="flex justify-end mt-2">
+							<button class="edit_canvas mr-5" data-pk="{{ attachment.pk }}">
+								<img width="35" height="40" src="{% static '/img/edit.svg' %}">
+							</button>
+							<button class="delete_canvas mr-2" data-pk="{{ attachment.pk }}">
+								<img width="35" height="40" src="{% static '/img/delete.svg' %}">
+							</button>
+						</div>
+						<img src="{{ attachment.file_url }}" alt="{{ attachment.file_name }}">
+					</li>
+				</div>
+				{% endfor %}
+				{% endif %}
+			</ul>
+		</div>
 
 	</div>
 </div>
@@ -224,75 +280,38 @@
 		<!-- Joindre une photo -->
 
 		<!-- Conteneur du bouton 'Parcourir' -->
-		<div class="relative inline-block">
+		<div class="flex justify-end inline-block">
+			<button id="closeModalPictureButton"
+			style="background-color: #FF4E27; border-radius: 10px;"
+			class="w-32 text-lg div-ombre-button-navbar-logout py-2 px-4 mr-5 mb-2 text-sm text-white 
+			focus:outline-none
+		   focus:z-10 focus:ring-4 focus:ring-gray-200">
+						Annuler
+					</button>
+
 			<input class="hidden" type="file" accept="image/*" id="photoCaptureInput" capture="camera">
 			<!-- Label personnalisé servant de bouton -->
-			<label for="photoCaptureInput" class="cursor-pointer bg-blue-500 text-white p-2 rounded">
+			<label for="photoCaptureInput"
+			style="background-color: #0060EF; border-radius: 10px;"
+			type="submit"
+			class="cursor-pointer w-32 text-lg div-ombre-button-edit py-2 px-4 mb-2 text-sm text-white
+			focus:outline-none
+			focus:z-10 focus:ring-4 focus:ring-gray-200
+			text-center
+			">
 				Parcourir
 			</label>
-		</div>
+		
 
-		<div class="flex justify-center mt-10">
-			<button id="closeModalPictureButton" class="bg-red-500 text-white p-2 rounded">Fermer</button>
-		</div>
-	</div>
-</div>
+		
 
-
-<!-- Canvas (zone de dessin) -->
-
-<div class="flex justify-center">
-	<div class="relative">
-		<canvas id="drawZone" width="700" height="500"
-			class="px-3 mt-3 rounded-lg border-2 border-gray-600 bg-white"></canvas>
-		<div class="absolute top-3 right-0 flex space-x-2">
-			<button id="bt_whitePaint">
-				<img id="eraserImg" width="35" height="40" src="{% static 'img/eraser.svg' %}"
-					data-active-src="{% static 'img/eraser_active.svg' %}">
-			</button>
-			<button id="bt_eraseDrawing">
-				<img width="35" height="40" src="{% static '/img/delete.svg' %}">
-			</button>
 		</div>
 	</div>
 </div>
 
 
-<!-- Message d'erreur -->
-<div class="error flex justify-center">
-	<span id="drawError"></span>
-</div>
 
 
-<!-- Save Canvas button -->
-<div class="flex justify-center">
-	<button id="bt_saveDrawing"
-		class="ml-1 mt-3 bg-transparent hover:bg-blue-500 text-blue-700 hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">Sauvegarder</button>
-</div>
-
-
-<!-- Liste des canvas -->
-<div class="flex justify-center">
-	<ul id="canvasList">
-		{% if attachments %}
-		{% for attachment in attachments %}
-		<div class="flex ">
-			<li class="border-2 border-gray-600 mt-3 bg-white">
-				<div class="flex justify-end gap-3">
-					<button class="edit_canvas" data-pk="{{ attachment.pk }}">
-						<img width="35" height="40" src="{% static '/img/edit.svg' %}">
-					</button>
-					<button class="delete_canvas" data-pk="{{ attachment.pk }}">
-						<img width="35" height="40" src="{% static '/img/delete.svg' %}">
-					</button>
-				</div>
-				<img src="{{ attachment.file_url }}" alt="{{ attachment.file_name }}">
-			</li>
-		</div>
-		{% endfor %}
-		{% endif %}
-	</ul>
-</div>
 
 
 <!-- Le placeholder pour la modal -->
