@@ -1,71 +1,50 @@
 {% load static tailwind_tags %}
-
 <!DOCTYPE html>
 <html lang="fr">
-
-<head>
-	<meta charset="UTF-8">
-	{% block title %}
-	<title>Login</title>
-	{% endblock %}
-	{% tailwind_css %}
-</head>
-
-
-<body style="background-color:#162B49 ;">
-	<div class="flex justify-center mt-10 gap-24">
-
-
-
-		<div style="background-color: #3B5B89; border: 0.5rem solid #3B5B89; border-radius: 10px;"
-			class="div-ombre-button-navbar">
-			<a href="{% url 'webapp:home' %}"><img src="/static/img/home.svg" alt="Accueil" width="65" height="65"></a>
-		</div>
-
-		<div style="background-color: #3B5B89; border: 0.5rem solid #3B5B89; border-radius: 10px;"
-			class="div-ombre-button-navbar">
-			<a href="{% url 'webapp:order-create' %}"><img src="/static/img/neworder.svg" alt="Nouvelle commande"
-					width="65" height="65"></a>
-		</div>
-
-		<div style="background-color: #3B5B89; border: 0.5rem solid #3B5B89; border-radius: 10px;"
-			class="div-ombre-button-navbar">
-			<a href="{% url 'webapp:dashboard' %}"><img src="/static/img/dashboard.svg" alt="Tableau de bord" width="65"
-					height="65"></a>
-		</div>
-
-
-	</div>
-
-	<div class="absolute top-10 right-40">
-		<div style="background-color: #FF4E27; border: 0.5rem solid #FF4E27; border-radius: 10px;"
-			class="div-ombre-button-navbar-logout">
-			{% if user.is_authenticated %}
-			<form method="post" action="{% url 'webapp:logout' %}">
-				{% csrf_token %}
-				<button type="submit"><img src="/static/img/logout.svg" alt="Se déconnecter" width="30"
-						height="30"></button>
-			</form>
-			{% endif %}
-		</div>
-	</div>
-
-
-
-
-
-	<section class="bg-white ml-24 mr-24 mt-10 pb-10 min-h-screen" id="webapp">
-
-		{% block content %}
-
+	<head>
+		<meta charset="UTF-8">
+		{% block title %}
+		<title>Login</title>
 		{% endblock %}
-
-	</section>
-	<footer class="text-white text-center p-4">
-		<p>© 2023 OrderNest. Tous droits réservés.</p>
-	</footer>
-
-
-</body>
-
+		{% tailwind_css %}
+	</head>
+	<body style="background-color:#162B49 ;">
+		<div class="flex justify-center">
+			<div class="navbar flex justify-center mt-10 gap-24">
+				<div style="background-color: #3B5B89; border: 0.5rem solid #3B5B89; border-radius: 10px;"
+					class="div-ombre-button-navbar">
+					<a href="{% url 'webapp:home' %}"><img src="/static/img/home.svg" alt="Accueil" width="65" height="65"></a>
+				</div>
+				<div style="background-color: #3B5B89; border: 0.5rem solid #3B5B89; border-radius: 10px;"
+					class="div-ombre-button-navbar">
+					<a href="{% url 'webapp:order-create' %}"><img src="/static/img/neworder.svg" alt="Nouvelle commande"
+						width="65" height="65"></a>
+				</div>
+				<div style="background-color: #3B5B89; border: 0.5rem solid #3B5B89; border-radius: 10px;"
+					class="div-ombre-button-navbar">
+					<a href="{% url 'webapp:dashboard' %}"><img src="/static/img/dashboard.svg" alt="Tableau de bord" width="65"
+						height="65"></a>
+				</div>
+				<div class="mt-4">
+					<div style="background-color: #FF4E27; border: 0.5rem solid #FF4E27; border-radius: 10px;"
+						class="div-ombre-button-navbar-logout">
+						{% if user.is_authenticated %}
+						<form method="post" action="{% url 'webapp:logout' %}">
+							{% csrf_token %}
+							<button type="submit"><img src="/static/img/logout.svg" alt="Se déconnecter" width="30"
+								height="30"></button>
+						</form>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+		<section class="bg-white ml-24 mr-24 mt-10 pb-10 min-h-screen" id="webapp">
+			{% block content %}
+			{% endblock %}
+		</section>
+		<footer class="text-white text-center p-4">
+			<p>© 2023 OrderNest. Tous droits réservés.</p>
+		</footer>
+	</body>
 </html>

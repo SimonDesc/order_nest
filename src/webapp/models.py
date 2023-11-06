@@ -1,5 +1,4 @@
 import os
-
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 
@@ -56,8 +55,6 @@ class Order(models.Model):
         ('Chèque', 'Chèque'),
         ('Virement', 'Virement'),
     )
-
-
 
     created_at = models.DateTimeField(auto_now_add=True)
     estimated_delivery_date = models.DateField(blank=True, null=True, verbose_name="date de livraison")

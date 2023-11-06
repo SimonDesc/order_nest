@@ -220,7 +220,6 @@ class Dashboard(ListView):
         count_all = Paginator(all_objects, element_by_page)
         context["total_obj"] = count_all.count
 
-
         accumulated_objects = (page_number - 1) * element_by_page + len(context['page_obj'])
 
         context['accumulated_objects'] = accumulated_objects
