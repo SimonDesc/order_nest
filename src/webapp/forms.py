@@ -2,7 +2,7 @@ from collections.abc import Mapping
 from typing import Any
 from django.core.files.base import File
 from django.db.models.base import Model
-from django.forms import ModelForm, CharField, Textarea, TextInput, DateField, DateInput
+from django.forms import ModelForm, CharField, Textarea, TextInput, DateField, DateInput, NumberInput
 from django.forms.utils import ErrorList
 from .models import *
 
@@ -10,7 +10,7 @@ from .models import *
 class NewOrderForm(ModelForm):
     estimated_delivery_date = DateField(
         widget=DateInput(attrs={"type": "date"}),
-        label="Date de livraison estimée",
+        label="Date de livraison", 
         required=False,
     )
     invoice_date = DateField(
@@ -66,15 +66,20 @@ class NewCustomerForm(ModelForm):
 
 
 class AddProductsToOrder(ModelForm):
+    
+    
     def __init__(self, *args, **kwargs):
         super(AddProductsToOrder, self).__init__(*args, **kwargs)
+        
         self.label_suffix = ""
         tailwind_class = "resize-y block p-2.5 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'"
+        
         for field_name, field in self.fields.items():
             field.widget.attrs.update({"class": tailwind_class})
 
     class Meta:
         model = Product
+        
         fields = (
             "reference",
             "label",

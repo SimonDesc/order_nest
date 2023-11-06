@@ -1,11 +1,27 @@
-
-
-
 <form hx-post="{{ request.path }}" class="modal-content">
-      {% csrf_token %}
-      <div class="text-slate-500 flex justify-center mt-4">Êtes vous sûr de vouloir supprimer le produit {{ product.label }} ?</div>
-      <div class="modal-footer">
-		<button type="button" id="cancelButton">Cancel</button>
-		<button type="submit">Save</button>
+	{% csrf_token %}
+
+	<div class="titre flex justify-center text-xl mb-10">
+		Êtes vous sûr de vouloir supprimer le produit :
 	</div>
-  </form>
+	<div class="text-slate-500 flex justify-center text-xl mb-10">
+		{{ product.reference }} {{ product.label }} {{ product.selling_price_unit }}
+	</div>
+
+	<div class="modal-footer">
+
+
+		<div class="modal-footer flex justify-end gap-4 mt-10">
+			<button style="background-color: #FF4E27; border-radius: 10px;" type="button" id="cancelButton" class="w-32 text-lg div-ombre-button-navbar-logout py-2 px-4 mr-5 mb-2 text-sm text-white 
+	focus:outline-none
+   focus:z-10 focus:ring-4 focus:ring-gray-200">
+				Annuler
+			</button>
+
+
+
+			<button style="background-color: #0060EF; border-radius: 10px;" type="submit" class="w-32 text-lg div-ombre-button-edit py-2 px-4 mb-2 text-sm text-white
+focus:outline-none
+focus:z-10 focus:ring-4 focus:ring-gray-200">Confirmer</button>
+		</div>
+</form>
