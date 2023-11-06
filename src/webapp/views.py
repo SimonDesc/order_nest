@@ -165,6 +165,21 @@ class DeleteOrder(DeleteView):
     template_name = "webapp/orders/order-delete.html"
     success_url = reverse_lazy("webapp:dashboard")
 
+    # Surcharge de la méthode afin de supprimer les medias(canvas+photos)
+    def form_valid(self, form):
+        order_id = self.object.id
+        order_attachments = OrderAttachment.objects.filter(order=order_id)
+
+        if order_attachments:
+            for attachment in order_attachments:
+                if attachment.file:
+                    file_path = os.path.join(settings.MEDIA_ROOT, attachment.file.path)
+                    if os.path.exists(file_path):
+                        os.remove(file_path)
+
+        response = super().form_valid(form)
+        return response
+
 
 class SearchOrder(ListView):
     model = Order
@@ -199,36 +214,39 @@ class Dashboard(ListView):
 
         all_objects = Order.objects.all()
 
-        progress_objects = Order.objects.filter(status='En cours')
+        progress_objects = Order.objects.filter(status="En cours")
         count_progress = progress_objects.count()
 
-        ended_orders = Order.objects.filter(status='Terminée')
+        ended_orders = Order.objects.filter(status="Terminée")
         count_ended = ended_orders.count()
 
-        waiting_objects = Order.objects.filter(status='En attente')
+        waiting_objects = Order.objects.filter(status="En attente")
         count_waiting = waiting_objects.count()
 
-        invoice_objects = Order.objects.filter(status='Facturée')
+        invoice_objects = Order.objects.filter(status="Facturée")
         count_invoice = invoice_objects.count()
 
-        canceled_objects = Order.objects.filter(status='Annulée')
+        canceled_objects = Order.objects.filter(status="Annulée")
         count_canceled = canceled_objects.count()
 
-        urgent_objects = Order.objects.filter(status='Urgent')
+        urgent_objects = Order.objects.filter(status="Urgent")
         count_urgent = urgent_objects.count()
 
         count_all = Paginator(all_objects, element_by_page)
         context["total_obj"] = count_all.count
 
-        accumulated_objects = (page_number - 1) * element_by_page + len(context['page_obj'])
 
-        context['accumulated_objects'] = accumulated_objects
-        context['count_progress'] = count_progress
-        context['count_ended'] = count_ended
-        context['count_waiting'] = count_waiting
-        context['count_invoice'] = count_invoice
-        context['count_canceled'] = count_canceled
-        context['count_urgent'] = count_urgent
+        accumulated_objects = (page_number - 1) * element_by_page + len(
+            context["page_obj"]
+        )
+
+        context["accumulated_objects"] = accumulated_objects
+        context["count_progress"] = count_progress
+        context["count_ended"] = count_ended
+        context["count_waiting"] = count_waiting
+        context["count_invoice"] = count_invoice
+        context["count_canceled"] = count_canceled
+        context["count_urgent"] = count_urgent
 
 
         return context
@@ -238,15 +256,13 @@ class DeleteProduct(DeleteView):
     model = Product
     context_object_name = "product"
     template_name = "webapp/products/product-delete.html"
-    
+
     def get_success_url(self):
-        return ''
-    
-    
+        return ""
+
     def form_valid(self, form):
         response = super().form_valid(form)
-        return HttpResponse(status=204, headers={'HX-Trigger': 'ProductsListChanged'})
-        
+        return HttpResponse(status=204, headers={"HX-Trigger": "ProductsListChanged"})
 
 
 class EditProduct(UpdateView):
@@ -262,18 +278,17 @@ class EditProduct(UpdateView):
     def get_success_url(self):
         return self.request.session.get("previous_url", "/")
 
-    
     def form_valid(self, form):
         form.save()
-        return HttpResponse(status=204, headers={'HX-Trigger': 'ProductsListChanged'})
+        return HttpResponse(status=204, headers={"HX-Trigger": "ProductsListChanged"})
 
     def form_invalid(self, form):
         return self.render_to_response(self.get_context_data(form=form))
-    
+
 
 class AddProductsToOrder(CreateView):
     form_class = AddProductForm
-    
+
     template_name = "webapp/orders/order-product.html"
 
     def get(self, request, *args, **kwargs):
@@ -295,13 +310,13 @@ class AddProductsToOrder(CreateView):
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        
+
         order_id = self.kwargs["pk"]
         order_object = Order.objects.get(pk=order_id)
         order_product = form.save(commit=False)
         order_product = form.save()
         OrderHasProduct.objects.create(order=order_object, product=order_product)
-        return HttpResponse(status=204, headers={'HX-Trigger': 'ProductsListChanged'})
+        return HttpResponse(status=204, headers={"HX-Trigger": "ProductsListChanged"})
 
     def form_invalid(self, form):
         return self.render_to_response(self.get_context_data(form=form))
@@ -335,7 +350,7 @@ def get_clients(request):
 
 
 def get_orders(request):
-    orders = Order.objects.all().order_by("-created_at")
+    orders = Order.objects.all().order_by("-id")
 
     order_list = []
     for order in orders:
@@ -475,15 +490,15 @@ def save_pictures(request):
 
 def product_order_list(request, order_id):
     product_order = OrderHasProduct.objects.filter(order=order_id)
-    
+
     # Calculer le total pour chaque produit
     for product in product_order:
         product.total = product.product.selling_price_unit * product.product.quantity
     total_order = sum(product.total for product in product_order)
-    
+
     context = {
-        'product_order': product_order,
-        'order_id': order_id,
-        'total_order': total_order,  
+        "product_order": product_order,
+        "order_id": order_id,
+        "total_order": total_order,
     }
-    return render(request, 'webapp/products/product_order_list.html', context)
+    return render(request, "webapp/products/product_order_list.html", context)
