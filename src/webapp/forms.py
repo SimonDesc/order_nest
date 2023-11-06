@@ -9,12 +9,12 @@ from .models import *
 
 class NewOrderForm(ModelForm):
     estimated_delivery_date = DateField(
-        widget=DateInput(attrs={"type": "date"}),
+        widget=DateInput(format='%Y-%m-%d', attrs={"type": "date"}),
         label="Date de livraison", 
         required=False,
     )
     invoice_date = DateField(
-        widget=DateInput(attrs={"type": "date"}),
+        widget=DateInput(format='%Y-%m-%d', attrs={"type": "date"}),
         label="Date de facturation",
         required=False,
     )
