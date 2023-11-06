@@ -9,48 +9,44 @@
 {% endblock %}
 
 {% block content %}
-{% now "j F Y H:i" %}
+    <div class="flex items-center justify-center my-2"><h1 class="mt-3 text-4xl font-bold text-slate-700 mb-5">Tableau de bord</h1></div>
+    <div class="stats flex justify-center gap-5 mb-3">
 
-
-
-    <div class="flex items-center justify-center my-2"><h1 class="text-3xl font-bold mb-4">Tableau de bord</h1></div>
-    <div class="stats flex justify-evenly mb-3">
-
-        <div class="progress block p-6 bg-white border border-gray-200 rounded-b-lg shadow-none ">
+        <div class="progress bg-orange-100 block p-6 bg-white border border-gray-200 rounded-b-lg shadow-md ">
             <div class="flex justify-center flex-col">
-                <div class="mb-1"> En attente </div>
-                <div class="flex justify-center font-bold">{{ count_waiting }}</div>
+                <div class="flex text-slate-700 justify-center font-bold text-3xl">{{ count_waiting }}</div>
+                <div class="mt-1 text-sm text-slate-500 italic antialiased"> En attente </div>
             </div>
         </div>
 
-        <div class="termine block p-6 bg-white border border-gray-200 rounded-b-lg shadow-none ">
-            <div class="mb-1"> En cours</div>
-            <div class="flex justify-center font-bold">{{ count_progress }}</div>
+        <div class="termine bg-blue-100 block p-6 border border-gray-200 rounded-b-lg shadow-md ">
+            <div class="flex justify-center text-slate-700 font-bold text-3xl">{{ count_progress }}</div>
+            <div class="mt-1 text-sm text-slate-500 italic antialiased"> En cours</div>
         </div>
 
-        <div class="total block p-6 bg-white border border-gray-200 rounded-b-lg shadow-none ">
-            <div class="mb-1">Annulé</div>
-            <div class="flex justify-center font-bold">{{ count_canceled }}</div>
+        <div class="total block p-6 bg-red-100 border border-gray-200 rounded-b-lg shadow-md ">
+            <div class="flex justify-center text-slate-700 font-bold text-3xl"> {{ count_urgent }}</div>
+            <div class="mt-1 text-sm text-slate-500 italic antialiased">Urgent</div>
         </div>
 
-        <div class="total block p-6 bg-white border border-gray-200 rounded-b-lg shadow-none ">
-            <div class="mb-1">Urgent</div>
-            <div class="flex justify-center font-bold"> {{ count_urgent }}</div>
+        <div class="total block p-6 bg-white border border-gray-200 rounded-b-lg shadow-md ">
+            <div class="flex justify-center text-slate-700 font-bold text-3xl">{{ count_canceled }}</div>
+            <div class="mt-1 text-sm text-slate-500 italic antialiased">Annulé</div>
         </div>
 
-        <div class="total block p-6 bg-white border border-gray-200 rounded-b-lg shadow-none ">
-             <div class="mb-1"> Terminé</div>
-            <div class="flex justify-center font-bold">{{ count_ended }}</div>
+        <div class="total block p-6 bg-white border border-gray-200 rounded-b-lg shadow-md ">
+            <div class="flex justify-center text-slate-700 font-bold text-3xl">{{ count_ended }}</div>
+            <div class="mt-1 text-sm text-slate-500 italic antialiased"> Terminé</div>
         </div>
 
-        <div class="total block p-6 bg-white border border-gray-200 rounded-b-lg shadow-none ">
-            <div class="mb-1">Facturé</div>
-            <div class="flex justify-center font-bold">{{ count_invoice }}</div>
+        <div class="total block p-6 bg-white border border-gray-200 rounded-b-lg shadow-md ">
+            <div class="flex justify-center text-slate-700 font-bold text-3xl">{{ count_invoice }}</div>
+            <div class="mt-1 text-sm text-slate-500 italic antialiased">Facturé</div>
         </div>
 
-        <div class="total block p-6 bg-white border border-gray-200 rounded-b-lg shadow-none ">
-            <div class="mb-1">Total</div>
-            <div class="flex justify-center font-bold">{{ total_obj }}</div>
+        <div class="total block p-6 bg-white border border-gray-200 rounded-b-lg shadow-md ">
+            <div class="flex justify-center text-slate-700 font-bold text-3xl">{{ total_obj }}</div>
+            <div class="mt-1 text-sm text-slate-500 italic antialiased">Total</div>
         </div>
     </div>
 
