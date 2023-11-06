@@ -7,10 +7,12 @@
 {% block content %}
   <form method="POST">
       {% csrf_token %}
-      <div class="text-slate-500 flex justify-center mt-4">Êtes vous sûr de vouloir supprimer la commande du client {{ commandes.customer.last_name }} (id: {{ commandes.pk }}) ?</div>
+      <div class="text-slate-500 flex justify-center text-xl pt-4 mb-4">Êtes vous sûr de vouloir supprimer la commande du client {{ commandes.customer.last_name }} (id: {{ commandes.pk }}) ?</div>
 
       <div class="flex justify-center">
-          <button type="submit" class=" mb-4 mt-4 bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded">Oui, supprimer</button>
+          <button type="submit" class="bg-red-500 font-semibold div-ombre-button-edit py-2 px-6 mr-2 mb-2 text-sm text-white text-gray-900
+						focus:outline-none rounded-lg
+					   focus:z-10 focus:ring-4 focus:ring-gray-200 " value="Delete">Oui, supprimer</button>
       </div>
 
   </form>
