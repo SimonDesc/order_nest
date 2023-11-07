@@ -26,14 +26,21 @@ $(function() {
             $('#id_last_name').val(ui.item.last_name);
             $('#id_phone_number').val(ui.item.phone_number);
             $('#id_address').val(ui.item.address);
-            $('#id_mail').val(ui.item.mail);
-            $('#id_customer').val(ui.item.id);
+			$('#id_mail').val(ui.item.mail);	
+			$('#id_customer').val(ui.item.id);
+			
             return false;
         },
-        response: function(event, ui) {
-            if (ui.content.length === 0) {
+		response: function (event, ui) {
+			if (ui.content.length === 0) {
                 ui.content.push({ label: "Aucun résultat trouvé", value: "" });
             }
         }
-    });
+	});
+	
+	$('#resetButton').click(function() {
+		$('form').each(function() {
+		  this.reset();
+		});
+	  });
 });
