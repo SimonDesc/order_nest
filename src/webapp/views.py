@@ -4,7 +4,6 @@ import json
 import os.path
 
 from django.conf import settings
-from django.contrib.auth.forms import UserCreationForm
 from django.core.files.base import ContentFile
 
 from django.core.paginator import Paginator
@@ -16,7 +15,6 @@ from django.views.generic import (
     ListView,
     CreateView,
     UpdateView,
-    DetailView,
     DeleteView,
     TemplateView,
 )
@@ -31,7 +29,7 @@ class LandingPage(TemplateView):
 class WebappHome(ListView):
     model = Order
     template_name = "webapp/home.html"
-    context_object_name = "commandes"
+    context_object_name = "orders"
 
     def get_queryset(self):
         return Order.objects.filter(Q(status="En cours") | Q(status="Urgent")).order_by(
@@ -55,6 +53,8 @@ class CreateOrder(CreateView):
     def get_or_create_customer(self, customer_id, customer_form):
         is_existing_customer = False
         customer = None
+
+        
         # On test l'id
         try:
             customer_id = int(customer_id)
@@ -76,11 +76,12 @@ class CreateOrder(CreateView):
     def post(self, request, *args, **kwargs):
         order_form = NewOrderForm(request.POST)
         customer_form = NewCustomerForm(request.POST)
-
+       
+        
         if order_form.is_valid() and customer_form.is_valid():
             # On récupère l'id du champ caché
             customer_id = request.POST.get("id", None)
-
+            print(customer_id)
             # On récupère le client (existant ou nouveau)
             customer, is_existing_customer = self.get_or_create_customer(
                 customer_id, customer_form
