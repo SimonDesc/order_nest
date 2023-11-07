@@ -11,6 +11,7 @@ psycopg2 = "*"
 django-phonenumber-field = "*"
 phonenumbers = "*"
 django-browser-reload = "*"
+whitenoise = "*"
 
 [dev-packages]
 mypy = "*"
