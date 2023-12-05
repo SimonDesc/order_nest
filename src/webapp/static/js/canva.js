@@ -69,11 +69,12 @@ function loadCanvas(jsonData) {
 // Function qui permet de modifier le dessin
 async function editCanvas() {
     const idOrder = $("#orderPk").val();
-    let canvasId = $(this).data("pk");
-    const canvas = await getCanvas(idOrder);
-    let parsedCanvas = JSON.parse(canvas);
-    let json_file = parsedCanvas["json_file"]
+	let canvasId = $(this).data("pk");
+	const canvas = await getCanvas(idOrder);
 
+    let parsedCanvas = JSON.parse(canvas);
+	let json_file = parsedCanvas["json_file"]
+	
     loadCanvas(json_file);
     deleteCanvas(canvasId);
 
@@ -150,38 +151,32 @@ async function saveCanvas() {
 
         else {
             const canvas = $('#drawZone')[0];
-            const dataURL = canvas.toDataURL();
-            const csrfToken = $("[name=csrfmiddlewaretoken]").val();
+			const dataURL = canvas.toDataURL();
+			const blob = await (await fetch(dataURL)).blob();
 
-            const canvasName = $("#canvasList");
-            const drawingData = paper.project.exportJSON();
-
-
-            fetch("/save_canvas/", {
-                    method: "POST",
-                    headers: {
-                        'X-CSRFToken': csrfToken,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        img: dataURL,
-                        order_id: idOrder,
-                        drawingData : drawingData,
-                    })
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Erreur réseau ou réponse avec statut échoué.');
-                    }
-                    return response.text();
-                })
-                .then(file => {
-                    eraseDrawing();
-                    location.reload();
-                })
-                .catch(error => {
-                    console.error("Il y a eu un problème avec l'opération fetch:", error);
-                });
-            }
+			const formData = new FormData();
+			formData.append("img", blob, "canvas.png");
+			formData.append("orderId", idOrder);
+			formData.append("drawingData", paper.project.exportJSON());
+			const csrfToken = $("[name=csrfmiddlewaretoken]").val();
+	
+			try {
+				const response = await fetch("/save_canvas/", {
+					method: "POST",
+					headers: {
+						'X-CSRFToken': csrfToken
+					},
+					body: formData
+				});
+	
+				if (!response.ok) {
+					throw new Error('Erreur réseau ou réponse avec statut échoué.');
+				}
+				eraseDrawing();
+				location.reload();
+			} catch (error) {
+				console.error("Il y a eu un problème avec l'opération fetch:", error);
+			}
+		}
 };
 
