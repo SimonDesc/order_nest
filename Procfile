@@ -1,1 +1,1 @@
-web: gunicorn order_nest.wsgi --log-file -
+web: gunicorn src.order_nest.wsgi --log-file -
