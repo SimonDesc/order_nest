@@ -140,7 +140,7 @@ INTERNAL_IPS = [
     "127.0.0.1",
 ]
 
-# Détecter le système d'exploitation
+# Détecter le système d'exploitation 
 if os.name == 'nt':  # Pour Windows
     NPM_BIN_PATH = "npm.cmd"
 
