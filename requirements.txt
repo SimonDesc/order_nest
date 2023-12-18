@@ -1,11 +1,7 @@
--i https://pypi.org/simple
 asgiref==3.7.2; python_version >= '3.7'
 django==4.2.7; python_version >= '3.8'
-django-browser-reload==1.12.1; python_version >= '3.8'
 django-environ==0.11.2; python_version >= '3.6' and python_version < '4'
-django-phonenumber-field==7.2.0; python_version >= '3.8'
 django-tailwind==3.6.0; python_full_version >= '3.8.1' and python_full_version < '4.0.0'
-phonenumbers==8.13.26
 psycopg2==2.9.9; python_version >= '3.7'
 sqlparse==0.4.4; python_version >= '3.5'
 tzdata==2023.3; python_version >= '2'
