@@ -1,1 +1,2 @@
-web: gunicorn src.order_nest.wsgi --log-file -
+release: python manage.py migrate
+web: gunicorn order_nest.wsgi
