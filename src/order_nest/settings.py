@@ -29,7 +29,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DEBUG", False)
 
-ALLOWED_HOST = ["*", "ordernest-production.up.railway.app"]
+ALLOWED_HOST = ["*", "ordernest-production.up.railway.app", "0.0.0.0"]
 CSRF_TRUSTED_ORIGINS = ['https://*.up.railway.app']
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
