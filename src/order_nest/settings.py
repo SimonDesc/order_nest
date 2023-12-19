@@ -31,6 +31,8 @@ DEBUG = env.bool("DEBUG", False)
 
 ALLOWED_HOST = ['*']
 CSRF_TRUSTED_ORIGINS = ['https://*.up.railway.app']
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
 
 # Application definition
 
