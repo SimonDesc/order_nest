@@ -1,6 +1,7 @@
 #!/bin/sh
 
 cd src
+mkdir static
 
 pipenv run python manage.py migrate --no-input
 pipenv run python manage.py collectstatic --no-input
