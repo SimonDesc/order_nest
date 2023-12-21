@@ -441,3 +441,4 @@ $RECYCLE.BIN/
 
 # End of https://www.toptal.com/developers/gitignore/api/python,django,macos,windows,pycharm
 src/order_nest/.env copy
+src/order_nest/.env production

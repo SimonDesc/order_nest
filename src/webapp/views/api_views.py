@@ -1,13 +1,11 @@
-import base64
 import re
 import time
-import json
 import os.path
 import imghdr
-import uuid
+
+
 
 from django.conf import settings
-from django.core.files.base import ContentFile
 from django.db.models import Q
 from django.http import JsonResponse, HttpResponse
 from django.urls import reverse
@@ -16,6 +14,7 @@ from django.views.generic import (
 )
 from ..models import Customer, Order, OrderAttachment
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
+from .utils import delete_file_from_s3
 
 
 def get_clients(request):
@@ -100,6 +99,7 @@ def unique_file_name(original_name, order_id):
     return f"{basename}_{order_id}_{timestamp}{ext}"
 
 
+
 def save_attachment(request):
     """
     Traite et sauvegarde un fichier en tant qu'OrderAttachment.
@@ -109,6 +109,7 @@ def save_attachment(request):
         return JsonResponse({"status": "error", "message": "Méthode non autorisée"}, status=405)
 
     try:
+        
         order_id = request.POST.get('orderId')
         if not order_id:
             raise ValueError("L'ID de commande est requis.")
@@ -172,6 +173,10 @@ def save_attachment(request):
         return JsonResponse({"status": "error", "message": "Permission refusée"}, status=403)
     except Exception as e:
         return JsonResponse({"status": "error", "message": "Erreur interne du serveur"}, status=500)
+    
+
+
+
 
 def get_canvas(request, pk):
     order = OrderAttachment.objects.filter(order_id=pk, type="canvas")[:50]
@@ -204,17 +209,30 @@ class DeleteOrderAttachment(DeleteView):
         Surcharge la méthode delete pour supprimer le fichier associé
         à l'objet OrderAttachment avant de supprimer l'objet lui-même.
         """
-        self.object = self.get_object()
+        try :
+            self.object = self.get_object()
+            file_key = self.object.file.name
+            print("TOTO", file_key)
+            
+            if delete_file_from_s3(file_key):
+                self.object.delete()
+                return JsonResponse({"status": "success"})
+            else:
+                return JsonResponse({"error": "Erreur de suppression du fichier S3."})
+            # # Supprime le fichier si il existe dans le dossier MEDIA_ROOT
+            # if self.object.file:
+            #     file_path = os.path.join(settings.MEDIA_ROOT, self.object.file.path)
+            #     if os.path.exists(file_path):
+            #         os.remove(file_path)
 
-        # Supprime le fichier si il existe dans le dossier MEDIA_ROOT
-        if self.object.file:
-            file_path = os.path.join(settings.MEDIA_ROOT, self.object.file.path)
-            if os.path.exists(file_path):
-                os.remove(file_path)
+            # Supprime l'objet OrderAttachment
+            # self.object.delete()
 
-        # Supprime l'objet OrderAttachment
-        self.object.delete()
+            # Retourne une réponse JSON indiquant le succès de l'opération
+            
+        
+        except OrderAttachment.DoesNotExist:
+            return JsonResponse({"status": "Pièce jointe non trouvée"})
 
-        # Retourne une réponse JSON indiquant le succès de l'opération
-        return JsonResponse({"status": "success"})
+
 

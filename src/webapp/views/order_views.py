@@ -87,6 +87,9 @@ class CreateOrder(CreateView):
             return render(request, self.template_name, context)
 
 
+
+
+
 class EditOrder(UpdateView):
     model = Order
     form_class = NewOrderForm
