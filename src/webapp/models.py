@@ -1,6 +1,8 @@
 import os
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
+from phonenumber_field.phonenumber import PhoneNumber
+import phonenumbers
 
 
 class Customer(models.Model):
@@ -16,6 +18,23 @@ class Customer(models.Model):
 
     def __str__(self):
         return f'{self.first_name} {self.last_name} {self.phone_number}'
+
+    def formatted_phone_number(self):
+        if self.phone_number:
+            parsed_number = phonenumbers.parse(str(self.phone_number), None)
+            if phonenumbers.region_code_for_number(parsed_number) == 'FR':
+                # Formatage personnalisé pour les numéros français
+                national_number = str(parsed_number.national_number)
+                # Grouper les chiffres en format français (2 chiffres par groupe)
+                formatted_number = '0' + ''.join([national_number[i:i+2] for i in range(0, len(national_number), 2)])
+                
+                return '.'.join([formatted_number[i:i+2] for i in range(0, 10, 2)])
+            else:
+                # Formatage standard pour les autres numéros
+                return phonenumbers.format_number(parsed_number, phonenumbers.PhoneNumberFormat.NATIONAL)
+        else:
+            return ''
+
 
 
 class Product(models.Model):

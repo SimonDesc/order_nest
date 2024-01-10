@@ -13,12 +13,10 @@
 <script src="{% static 'js/autocomplete.js' %}"></script>
 <script src="{% static 'js/picture.js' %}"></script>
 
-<link href="https://fonts.googleapis.com/css2?family=VotreFamilleDePolices:wght@400&display=swap" rel="stylesheet">
-
 {% endblock %}
 {% block content %}
 
-<div class="titre flex justify-center text-3xl font-bold mt-5 mb-9">
+<div class="titre flex justify-center text-3xl font-bold mb-9">
 	<h1 class="title text-slate-500 mt-5">Modification de la commande</h1>
 </div>
 
@@ -179,7 +177,7 @@
 				{% if attachments_pictures %}
 				{% for picture in attachments_pictures %}
 				<li class="mt-2" >
-					<a href="{{ picture.url }}" class="mr-10">
+					<a target="_blank" href="{{ picture.url }}" class="mr-10">
 						{{ picture.filename|truncatechars:30 }}
 					</a>
 					<button class="delete_picture" data-pk="{{ picture.pk }}" style="margin-left: 10px;">

@@ -45,29 +45,45 @@ def get_clients(request):
 
 
 def get_orders(request):
-    orders = Order.objects.all().order_by("-id")
+    search_query = request.GET.get('search', '')
 
-    order_list = []
-    for order in orders:
-        order_dict = {
+    # Définir la base de la requête
+    if search_query:
+        orders_query = Order.objects.filter(
+            Q(customer__last_name__icontains=search_query) |
+            Q(customer__first_name__icontains=search_query) 
+        )
+    else:
+        orders_query = Order.objects.all()
+
+    # Calculer le total avant la pagination
+    total = orders_query.count()
+
+    # Pagination
+    page = int(request.GET.get('page', 1))
+    size = int(request.GET.get('size', 20))
+    offset = size * page
+    orders_query = orders_query.order_by("-id")[offset:offset + size]
+
+    # Construction de la liste de résultats
+    order_list = [
+        {
             "IDorder": str(order.pk),
-            "customer": str(order.customer.last_name + " " + order.customer.first_name)[
-                0:20
-            ]
-            + "..."
-            if len(str(order.customer.last_name + " " + order.customer.first_name)) > 19
-            else str(order.customer.last_name + " " + order.customer.first_name)[0:20],
-            "label": str(order.label)[0:20] + "..."
-            if len(str(order.label)) > 14
-            else str(order.label)[0:20],
+            "customer": str(order.customer.last_name + " " + order.customer.first_name)[:20] + "..." if len(str(order.customer.last_name + " " + order.customer.first_name)) > 19 else str(order.customer.last_name + " " + order.customer.first_name)[:20],
+            "label": str(order.label)[:30],
             "status": str(order.status),
             "created": order.created_at.strftime("%d/%m/%Y"),
             "url": str(reverse("webapp:order-edit", kwargs={"pk": order.pk})),
-        }
-        order_list.append(order_dict)
+        } for order in orders_query
+    ]
 
-    data = {"results": order_list}
+    data = {
+        "results": order_list,
+        "total": total,
+    }
+
     return JsonResponse(data)
+
 
 
 def is_allowed_extension(filename):
@@ -212,7 +228,6 @@ class DeleteOrderAttachment(DeleteView):
         try :
             self.object = self.get_object()
             file_key = self.object.file.name
-            print("TOTO", file_key)
             
             if delete_file_from_s3(file_key):
                 self.object.delete()

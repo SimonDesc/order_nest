@@ -5,35 +5,35 @@
 @tailwind utilities;
 
 .status-en-attente {
-    color: #FF9E2D;
+	color: #FF9E2D;
 }
 
 .status-en-cours {
-    color: #0060EF;
+	color: #0060EF;
 }
 
 .status-terminée {
-    color: #8D8D8D;
+	color: #8D8D8D;
 }
 
 .status-facturée {
-    color: #162B49;
+	color: #162B49;
 }
 
 .status-annulée {
-    color: #8D8D8D;
+	color: #8D8D8D;
 }
 
 .status-urgent {
-    color: #FF4E27;
+	color: #FF4E27;
 }
 
-.div-ombre {
-    box-shadow: 0px 10px 0px 0px #EFEFEF;
-}
+/* .div-ombre {
+	box-shadow: 0px 10px 0px 0px #EFEFEF;
+} */
 
 .blue-button {
-	background-color: #0060EF;
+	background-color: #4674F8;
 	box-shadow: 0px 3px 0px 0px #013D97;
 }
 
@@ -42,13 +42,17 @@
 	box-shadow: 0px 3px 0px 0px #C80C00;
 }
 
+.grey-button {
+	background-color: #F7F7F7;
+	color: black;
+}
 
 .div-ombre-button-navbar {
-    box-shadow: 0px 6px 0px 0px #2C4569;
+	box-shadow: 0px 6px 0px 0px #2C4569;
 }
 
 .div-ombre-button-navbar-logout {
-    box-shadow: 0px 3px 0px 0px #C80C00;
+	box-shadow: 0px 3px 0px 0px #C80C00;
 }
 
 .title {
@@ -60,4 +64,67 @@
 .subtitle {
 
 	color: #26474E;
+}
+
+tr:nth-of-type(even) td {
+	background: #ffffff;
+}
+
+tr:nth-of-type(odd) td {
+	background: #F7F7F7;
+}
+
+.current-page {
+	background-color: #3B5B89;
+	border: 0.5rem solid #3B5B89;
+	box-shadow: 0px 6px 0px 0px #2C4569;
+}
+
+.other-page {
+	background-color: #F7F7F7;
+	border: 0.5rem solid #F7F7F7;
+	box-shadow: 0px 6px 0px 0px #f7f7f7b8;
+}
+
+
+
+
+.box {
+	background: #fff;
+	border-radius: 2px;
+}
+
+.box::before,
+.box::after {
+	content: '';
+	position: absolute;
+	bottom: 10px;
+	width: 40%;
+	height: 10px;
+	box-shadow: 0 5px 14px rgba(0, 0, 0, .7);
+	z-index: -1;
+	transition: all .3s ease-in-out;
+}
+
+.box::before {
+	left: 15px;
+	transform: skew(-5deg) rotate(-5deg);
+}
+
+.box::after {
+	right: 15px;
+	transform: skew(5deg) rotate(5deg);
+}
+
+.box:hover::before,
+.box:hover::after {
+	box-shadow: 0 2px 14px rgba(0, 0, 0, .4);
+}
+
+.box:hover::before {
+	left: 5px;
+}
+
+.box:hover::after {
+	right: 5px;
 }

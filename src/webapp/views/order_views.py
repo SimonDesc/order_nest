@@ -12,7 +12,7 @@ from django.urls import reverse_lazy
 import os.path
 from django.conf import settings
 from django.db.models import Q
-
+from .api_views import DeleteOrderAttachment
 
 class CreateOrder(CreateView):
     form_class = NewOrderForm
@@ -149,15 +149,20 @@ class DeleteOrder(DeleteView):
     # Surcharge de la méthode afin de supprimer les medias(canvas+photos)
     def form_valid(self, form):
         order_id = self.object.id
+        # Trouver toutes les pièces jointes associées à cette commande
         order_attachments = OrderAttachment.objects.filter(order=order_id)
 
-        if order_attachments:
-            for attachment in order_attachments:
-                if attachment.file:
-                    file_path = os.path.join(settings.MEDIA_ROOT, attachment.file.path)
-                    if os.path.exists(file_path):
-                        os.remove(file_path)
+        for attachment in order_attachments:
+            # Créer une instance de DeleteOrderAttachment
+            delete_attachment_view = DeleteOrderAttachment()
+            delete_attachment_view.object = attachment
+            delete_attachment_view.request = self.request
+            delete_attachment_view.kwargs = {'pk': attachment.pk}  # Passer l'identifiant de l'objet
 
+
+            # Appeler la méthode delete de DeleteOrderAttachment
+            delete_attachment_view.delete(self.request)
+        
         response = super().form_valid(form)
         return response
 

@@ -16,9 +16,10 @@ document.addEventListener("DOMContentLoaded", function () {
 		} else if (status === 'Urgent') {
 			return '#FF4E27';
 		} else {
-			return 'text-slate-900';
+			return 'text-slate-900'; // Vous pouvez définir une classe par défaut ici
 		}
 	};
+
 	const columns = [
 		'ID',
 		'Client',
@@ -36,61 +37,58 @@ document.addEventListener("DOMContentLoaded", function () {
 		{
 			name: 'Modifier',
 			formatter: (_, row) => {
-				return html(`<div style="text-align: center;">
-				<a href='${row.cells[5].data}' type="button" class="blue-button div-ombre-button-edit py-2 px-6 mb-2 text-sm text-white text-gray-900 focus:outline-none rounded-xl focus:z-10 focus:ring-4 focus:ring-gray-200
-				cursor-pointer transition-all   hover:-translate-y-[1px]  active:border-b-[2px]
-				active:brightness-90 active:translate-y-[2px]">
-				Modifier
-			</a>
-			</div>`)
+				return html(`<div class="flex justify-center"><a href='${row.cells[5].data}'><svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 48 48" width="25px" height="28px"><path fill="#E57373" d="M42.583,9.067l-3.651-3.65c-0.555-0.556-1.459-0.556-2.015,0l-1.718,1.72l5.664,5.664l1.72-1.718C43.139,10.526,43.139,9.625,42.583,9.067"/><path fill="#FF9800" d="M4.465 21.524H40.471999999999994V29.535H4.465z" transform="rotate(134.999 22.469 25.53)"/><path fill="#B0BEC5" d="M34.61 7.379H38.616V15.392H34.61z" transform="rotate(-45.02 36.61 11.385)"/><path fill="#FFC107" d="M6.905 35.43L5 43 12.571 41.094z"/><path fill="#37474F" d="M5.965 39.172L5 43 8.827 42.035z"/></a></div>`)
 			}
 		},
 	]
 
 	const grid = new gridjs.Grid({
 		columns: columns,
+		// to-do : Implementer la search bar server-side :)
+		// search: true,
 		search: {
 			server: {
 				url: (prev, keyword) => {
-					const separator = prev.includes('?') ? '&' : '?';
-					const searchUrl = `${prev}${separator}search=${keyword}`;
+					// Construire l'URL
+					const searchUrl = `${prev}?search=${keyword}`;
+					// Afficher l'URL et les paramètres dans la console
+					console.log('URL de recherche:', searchUrl);
+					console.log('Mot-clé de recherche:', keyword);
+					// Retourner l'URL construite
 					return searchUrl;
 				} 
 			}
 		},
-		pagination: {
-			limit: 20,
-			server: {
-				url: (prev, page, limit) => {
-					const separator = prev.includes('?') ? '&' : '?';
-					const paginationUrl = `${prev}${separator}page=${page}&size=${limit}`;
-					return paginationUrl;
-				}
-			}
-		},
+		// pagination: {
+		// 	limit: 20,
+		// 	server: {
+		// 		url: (prev, page, limit) => `/get_orders/?page=${page}&size=${limit}`
+		// 	}
+		// },
 		server: {
 			url: '/get_orders/',
 			then: data => {
+				console.log("Data received:", data); // Affiche les données reçues
 				return data.results.map(order => [order.IDorder, order.customer, order.label, order.status, order.created, order.url]);
 			},
 			total: data => {
+				console.log("Total records:", data.total);  // Imprimer la valeur de 'total' dans la console
 				return data.total;
 			}
 		},
-		
+
+
+		width: 950,
 		resizable: true,
 		sort: true,
-		width: '80%',
-  		height: '80%',
 		style: {
-			container:{
-				'width':'80%',
-				'height':'80%'
-			  },
 			table: {
+				border: '1px solid #ccc'
 			},
 			th: {
-				'background-color': 'white',
+				'background-color': 'rgba(240, 240, 240)',
+				color: '#000',
+				'border-bottom': '3px solid #ccc',
 				'text-align': 'center'
 			},
 			td: {
@@ -129,6 +127,6 @@ document.addEventListener("DOMContentLoaded", function () {
 				'desc': 'Décroissant'
 			}
 		}
-	  });
+	});
 	grid.render(document.getElementById("wrapper"));
 });

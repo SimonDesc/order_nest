@@ -13,13 +13,13 @@
 
 {% block content %}
 
-<div class="titre flex justify-center text-3xl font-bold mt-5 mb-9">
+<div class="titre flex justify-center text-3xl font-bold mb-9">
 	<h1 class="title text-slate-500 mt-5">Nouvelle commande</h1>
 </div>
 
 
 
-<div class="flex justify-center">
+<div class="flex items-center justify-center gap-5">
 	<div class="w-full max-w-4xl px-4 sm:px-6 md:px-8 ">
 		<form method="POST" class="">
 			{% csrf_token %}
@@ -130,13 +130,17 @@
 			<div class="buttons flex justify-end">
 			<div class="btncnc">
 					<button id="resetButton" type="button" class="red-button py-2 px-6 mb-2 mr-5 text-sm text-white text-gray-900
-					focus:outline-none rounded-xl focus:z-10 focus:ring-4 focus:ring-gray-200" value="Delete">Tout effacer</button>
+					focus:outline-none rounded-xl focus:z-10 focus:ring-4 focus:ring-gray-200
+					cursor-pointer transition-all   hover:-translate-y-[1px]  active:border-b-[2px]
+					active:brightness-90 active:translate-y-[2px]" value="Delete">Tout effacer</button>
 			</div>
 
 			
 				<div class="btnok">
 					<button type="submit" class="blue-button div-ombre-button-edit py-2 px-6 mb-2 text-sm text-white text-gray-900
-					focus:outline-none rounded-xl focus:z-10 focus:ring-4 focus:ring-gray-200" value="Update">Enregistrer</button>
+					focus:outline-none rounded-xl focus:z-10 focus:ring-4 focus:ring-gray-200
+					cursor-pointer transition-all   hover:-translate-y-[1px]  active:border-b-[2px]
+					active:brightness-90 active:translate-y-[2px]" value="Update">Enregistrer</button>
 				</div>
 			</div>
 		</form>
