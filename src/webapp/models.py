@@ -80,7 +80,7 @@ class Order(models.Model):
     invoice_date = models.DateField(blank=True, null=True, verbose_name="date de facturation")
     label = models.CharField(max_length=45, blank=False, default='', verbose_name="libellé")
     comments = models.TextField(max_length=2000, blank=True, verbose_name="commentaire")
-    status = models.CharField(max_length=32, choices=STATUS, default='En attente')
+    status = models.CharField(max_length=32, choices=STATUS, default='En cours')
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True)
     products = models.ManyToManyField(Product, through='OrderHasProduct')
     active = models.BooleanField(default=True)

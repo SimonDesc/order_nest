@@ -2,58 +2,48 @@
 {% load static %}
 
 {% block title %}
-    <title>Tableau de bord</title>
-    <script src="https://cdn.jsdelivr.net/npm/gridjs/dist/gridjs.umd.js"></script>
-    <script src="{% static 'js/grid.js' %}"></script>
-    <link href="https://cdn.jsdelivr.net/npm/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
+<title>Tableau de bord</title>
+<script src="https://cdn.jsdelivr.net/npm/gridjs/dist/gridjs.umd.js"></script>
+<script src="{% static 'js/grid.js' %}"></script>
+<link href="https://cdn.jsdelivr.net/npm/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
 {% endblock %}
 
 {% block content %}
-    <!-- <div class="flex items-center justify-center">
-		<h1 class="text-4xl font-bold text-slate-700">Tableau de bord</h1>
-	</div> -->
-    <div class="stats flex justify-center gap-5 p-4">
 
-        <div class="progress bg-orange-100 block p-6 rounded-2xl div-ombre p-5 mt-10 ml-14 shadow ">
-            <div class="flex justify-center flex-col">
-                <div class="flex text-slate-700 justify-center font-bold text-3xl">{{ count_waiting }}</div>
-                <div class="mt-1 text-sm text-slate-500 italic antialiased">En attente</div>
-            </div>
-        </div>
+<div class="titre flex justify-center text-3xl font-bold ">
+	<h1 class="title text-slate-500 mt-5">Toutes les commandes</h1>
+</div>
 
-        <div class="termine bg-blue-100 block p-6 rounded-2xl div-ombre p-5 mt-10 ml-14 shadow">
-            <div class="flex justify-center text-slate-700 font-bold text-3xl">{{ count_progress }}</div>
-            <div class="mt-1 text-sm text-slate-500 italic antialiased">En cours</div>
-        </div>
+<div class="min-h-screen justify-center ">
 
-        <div class="total block p-6 bg-red-100 rounded-2xl div-ombre p-5 mt-10 ml-14 shadow">
-            <div class="flex justify-center text-slate-700 font-bold text-3xl"> {{ count_urgent }}</div>
-            <div class="mt-1 text-sm text-slate-500 italic antialiased">Urgent</div>
-        </div>
+	<!-- Cards -->
+	<div class="flex flex-wrap gap-5 p-5 justify-center">
+		<div
+			class="flex flex-col space p-5 mt-10 bg-white x ring-1 ring-gray-900/5 border-2 border-amber-500/50 w-32 h-32">
+			<div class="text-center font-semibold">{{ count_waiting }}</div>
+			<div class="text-center mt-3 "><h3>En attente</h3></div>
+		</div>
+		<div
+			class="flex flex-col p-5 mt-10 bg-white px-6 ring-1 ring-gray-900/5 border-2 border-indigo-500/50 w-32">
+			<div class="text-center font-semibold">{{ count_progress }}</div>
+			<div class="text-center mt-3"><h3>En cours</h3></div>
+		</div>
+		<div
+			class="flex flex-col p-5 mt-10 bg-white px-6 ring-1 ring-gray-900/5 border-2 border-rose-500/50 w-32">
+			<div class="text-center font-semibold">{{ count_urgent }}</div>
+			<div class="text-center mt-3"><h3>Urgent</h3></div>
+		</div>
 
-        <!-- <div class="total block p-6 bg-white border border-gray-200 rounded-b-lg shadow-md ">
-            <div class="flex justify-center text-slate-700 font-bold text-3xl">{{ count_canceled }}</div>
-            <div class="mt-1 text-sm text-slate-500 italic antialiased">Annulé</div>
-        </div> -->
+	</div>
 
-        <!-- <div class="total block p-6 bg-white border border-gray-200 rounded-b-lg shadow-md ">
-            <div class="flex justify-center text-slate-700 font-bold text-3xl">{{ count_ended }}</div>
-            <div class="mt-1 text-sm text-slate-500 italic antialiased"> Terminé</div>
-        </div>
-
-        <div class="total block p-6 bg-white border border-gray-200 rounded-b-lg shadow-md ">
-            <div class="flex justify-center text-slate-700 font-bold text-3xl">{{ count_invoice }}</div>
-            <div class="mt-1 text-sm text-slate-500 italic antialiased">Facturé</div>
-        </div>
-
-        <div class="total block p-6 bg-white border border-gray-200 rounded-b-lg shadow-md ">
-            <div class="flex justify-center text-slate-700 font-bold text-3xl">{{ total_obj }}</div>
-            <div class="mt-1 text-sm text-slate-500 italic antialiased">Total</div>
-        </div> -->
-    </div>
-
-
-    <div id="wrapper" class="dashboard flex justify-center pr-16 pl-16"></div>
-
+	<!-- Dashboard -->
+	<div class="flex justify-center pt-5">
+		<div class="w-full max-w-5xl">
+			<div class="bg-white rounded-xl pt-10 pb-10 mb-10 shadow-xl ring-1 ring-gray-900/5 px-6">
+				<div id="wrapper" class="dashboard flex justify-center "></div>
+			</div>
+		</div>
+	</div>
+</div>
 
 {% endblock %}

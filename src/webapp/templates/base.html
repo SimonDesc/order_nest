@@ -1,73 +1,83 @@
 {% load static tailwind_tags %}
 <!DOCTYPE html>
 <html lang="fr">
-	<head>
-		<meta charset="UTF-8">
-		{% block title %}
-		<title>Login</title>
-		{% endblock %}
-		{% tailwind_css %}
-	</head>
-	{% url 'webapp:home' as home_url %}
-	{% url 'webapp:order-create' as order_create_url %}
-	{% url 'webapp:dashboard' as dashboard_url %}
-	<body style="background-color: #3d5a80;">
 
-		<div class="flex justify-center mt-5 mb-5">
-			<div class="navbar flex justify-center gap-24 w-full"> <!-- Ajout de w-full ici -->
-				<div class="flex justify-center gap-24 flex-grow"> <!-- Conteneur pour les éléments centrés -->
-					<div class="rounded-2xl {% if request.path == home_url %}current-page{% else %}other-page{% endif %}
-					cursor-pointer transition-all   hover:-translate-y-[1px]  active:border-b-[2px]
-					active:brightness-90 active:translate-y-[2px]
-					">
-						<!-- Lien Accueil -->
-						<a href="{{ home_url }}">
-							<img src="{% if request.path == home_url %}{% static 'img/home.svg' %}{% else %}{% static 'img/home_grey.svg' %}{% endif %}" alt="Accueil" width="50" height="40">
-					</a>
-					</div>
-					<div class="rounded-2xl {% if request.path == order_create_url %}current-page{% else %}other-page{% endif %}
-					cursor-pointer transition-all   hover:-translate-y-[1px]  active:border-b-[2px]
-					active:brightness-90 active:translate-y-[2px]
-					
-					">
-						<!-- Lien Nouvelle Commande -->
-						<a href="{{ order_create_url }}">
-							<img src="{% if request.path == order_create_url %}{% static 'img/neworder.svg' %}{% else %}{% static 'img/neworder_grey.svg' %}{% endif %}" alt="Nouvelle commande" width="50" height="40">
-						</a>
-					</div>
-					<div class="rounded-2xl {% if request.path == dashboard_url %}current-page{% else %}other-page{% endif %}
-					cursor-pointer transition-all   hover:-translate-y-[1px]  active:border-b-[2px]
-					active:brightness-90 active:translate-y-[2px]">
-						<!-- Lien Tableau de Bord -->
-						<a href="{{ dashboard_url }}">
-							<img src="{% if request.path == dashboard_url %}{% static 'img/dashboard.svg' %}{% else %}{% static 'img/dashboard_grey.svg' %}{% endif %}" alt="Tableau de bord" width="50" height="40">
-						</a>
-					</div>
+<head>
+	<meta charset="UTF-8">
+	{% block title %}
+	<title>Login</title>
+	{% endblock %}
+	{% tailwind_css %}
+</head>
+{% url 'webapp:home' as home_url %}
+{% url 'webapp:order-create' as order_create_url %}
+{% url 'webapp:dashboard' as dashboard_url %}
+
+<body class="primary-background flex flex-col min-h-screen">
+
+	<nav class="flex items-center justify-center p-2 mb-3 mt-3">
+		<!-- Conteneur central pour les éléments de la barre de navigation -->
+		<div class="flex justify-center items-center space-x-36">
+			<!-- Élément Accueil -->
+			<a href="{{ home_url }}">
+				<div class="rounded-2xl {% if request.path == home_url %}current-page{% else %}other-page{% endif %}
+								cursor-pointer transition-all hover:-translate-y-[1px] active:border-b-[2px]
+								active:brightness-90 active:translate-y-[2px]">
+
+					<img src="{% if request.path == home_url %}{% static 'img/home.svg' %}{% else %}{% static 'img/home_grey.svg' %}{% endif %}"
+						alt="Accueil" width="50" height="40">
+
 				</div>
-		
-				<div class="ml-auto pr-16">
-					<div style="background-color: #FF4E27; border: 0.5rem solid #FF4E27;" class="rounded-xl ">
-						<!-- Bouton Se Déconnecter -->
-						{% if user.is_authenticated %}
-						<form method="post" action="{% url 'webapp:logout' %}" >
-							{% csrf_token %}
-							<button type="submit" style="display: flex; justify-content: center; align-items: center;">
-								<img src="/static/img/logout.svg"  alt="Se déconnecter" width="30" height="20">
-							</button>
-						</form>
-						{% endif %}
-					</div>
+			</a>
+
+			<!-- Élément Nouvelle Commande -->
+			<a href="{{ order_create_url }}">
+				<div class="rounded-2xl {% if request.path == order_create_url %}current-page{% else %}other-page{% endif %}
+								cursor-pointer transition-all hover:-translate-y-[1px] active:border-b-[2px]
+								active:brightness-90 active:translate-y-[2px]">
+
+					<img src="{% if request.path == order_create_url %}{% static 'img/neworder.svg' %}{% else %}{% static 'img/neworder_grey.svg' %}{% endif %}"
+						alt="Nouvelle commande" width="50" height="40">
+
 				</div>
+			</a>
+
+			<!-- Élément Tableau de Bord -->
+			<a href="{{ dashboard_url }}">
+				<div class="rounded-2xl {% if request.path == dashboard_url %}current-page{% else %}other-page{% endif %}
+								cursor-pointer transition-all hover:-translate-y-[1px] active:border-b-[2px]
+								active:brightness-90 active:translate-y-[2px]">
+
+					<img src="{% if request.path == dashboard_url %}{% static 'img/dashboard.svg' %}{% else %}{% static 'img/dashboard_grey.svg' %}{% endif %}"
+						alt="Tableau de bord" width="50" height="40">
+				</div>
+			</a>
+		</div>
+
+		<!-- Bouton de déconnexion aligné à droite, en dehors du conteneur central -->
+		<div class="absolute right-0 top-0 mt-3 mr-2">
+			<div style="background-color: #dd6e42; border: 0.5rem solid #dd6e42;" class="rounded-xl">
+				{% if user.is_authenticated %}
+				<form method="post" action="{% url 'webapp:logout' %}">
+					{% csrf_token %}
+					<button type="submit" style="display: flex; justify-content: center; align-items: center;">
+						<img src="/static/img/logout.svg" alt="Se déconnecter" width="30" height="20">
+					</button>
+				</form>
+				{% endif %}
 			</div>
 		</div>
-		
+	</nav>
 
-		<section style="background-color: #edf2f4" id="webapp">
-			{% block content %}
-			{% endblock %}
-		</section>
-		<footer class="text-white text-center p-4 max-h-2.5">
-			<p>© {% now "Y" %} OrderNest. Tous droits réservés.</p>
-		</footer>
-	</body>
+
+
+	<section class="secondary-background " id="webapp">
+		{% block content %}
+		{% endblock %}
+	</section>
+	<footer class="mt-auto text-white text-center p-4 max-h-2.5">
+		<p>© {% now "Y" %} OrderNest. Tous droits réservés.</p>
+	</footer>
+</body>
+
 </html>

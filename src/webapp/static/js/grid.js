@@ -80,11 +80,11 @@ document.addEventListener("DOMContentLoaded", function () {
 		
 		resizable: true,
 		sort: true,
-		width: '80%',
+		width: '100%',
   		height: '80%',
 		style: {
 			container:{
-				'width':'80%',
+				'width':'100%',
 				'height':'80%'
 			  },
 			table: {

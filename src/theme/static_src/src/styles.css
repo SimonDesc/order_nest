@@ -4,6 +4,34 @@
 @tailwind components;
 @tailwind utilities;
 
+
+/* Background */
+
+.primary-background {
+	background-color: #162B49  ;
+}
+
+.secondary-background {
+	background-color: #F5F8FA ;
+}
+
+/* Primary Button */
+
+.current-page {
+	background-color: #3B5B89 ;
+	border: 0.5rem solid #3B5B89 ;
+	box-shadow: 0px 6px 0px 0px #294873 ;
+}
+
+.other-page {
+	background-color: #F7F7F7;
+	border: 0.5rem solid #F7F7F7;
+	box-shadow: 0px 6px 0px 0px #f7f7f7b8;
+}
+
+
+
+
 .status-en-attente {
 	color: #FF9E2D;
 }
@@ -74,17 +102,6 @@ tr:nth-of-type(odd) td {
 	background: #F7F7F7;
 }
 
-.current-page {
-	background-color: #3B5B89;
-	border: 0.5rem solid #3B5B89;
-	box-shadow: 0px 6px 0px 0px #2C4569;
-}
-
-.other-page {
-	background-color: #F7F7F7;
-	border: 0.5rem solid #F7F7F7;
-	box-shadow: 0px 6px 0px 0px #f7f7f7b8;
-}
 
 
 
