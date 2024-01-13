@@ -8,57 +8,64 @@
 					<tr>
 
 						<th
-						scope="col" class="px-6 py-3">
-							Réf.
-						</th>
-						<th
-						scope="col" class="px-6 py-3">
+						scope="col" class="px-1 py-3">
 							Libellé
 						</th>
 						<th
-						scope="col" class="px-6 py-3">
-							P.A
+						scope="col" class="px-1 py-3">
+							Taille
 						</th>
 						<th
-						scope="col" class="px-6 py-3">
-						P.V
+						scope="col" class="px-1 py-3">
+							Baguette
 						</th>
 						<th
-						scope="col" class="px-6 py-3">
-							QT
+						scope="col" class="px-1 py-3">
+							Verre
 						</th>
 						<th
-						scope="col" class="px-6 py-3">
-						Total
-					</th>
-						<th
-						scope="col" class="px-6 py-3">
+						scope="col" class="px-1 py-3">
+							Passe-partout
 						</th>
 						<th
-						scope="col" class="px-6 py-3">
+						scope="col" class="px-1 py-3">
+							Filet
+						</th>
+						<th
+						scope="col" class="px-1 py-3">
+							Prix
+						</th>
+						<th
+						scope="col" class="px-1 py-3">
+						</th>
+						<th
+						scope="col" class="px-1 py-3">
 						</th>
 					</tr>
 				</thead>
 				<tbody class="bg-white divide-y divide-gray-200">
 					{% for product in product_order %}
 					<tr>
-						<td class="px-6 py-4">
-							{{ product.product.reference }}
-						</td>
-						<td class="px-6 py-4">
+						<td class="px-1 py-4">
 							{{ product.product.label }}
 						</td>
-						<td class="px-6 py-4">
-							{{ product.product.purchase_price_unit }}
+						<td class="px-1 py-4">
+							{{ product.product.size }}
 						</td>
-						<td class="px-6 py-4">
+						<td class="px-1 py-4">
+							{{ product.product.wand }}
+						</td>
+						<td class="px-1 py-4">
+							{{ product.product.glass }}
+						</td>
+						<td class="px-1 py-4">
+							{{ product.product.mat }}
+						</td>
+						<td class="px-1 py-4">
+							{{ product.product.mesh }}
+						</td>
+						<td class="px-1 py-4">
 							{{ product.product.selling_price_unit }}
-						</td>
-						<td class="px-6 py-4">
-							{{ product.product.quantity }}
-						</td>
-						<td class="px-6 py-4">
-							{{ product.total}}
 						</td>
 
 						<td>

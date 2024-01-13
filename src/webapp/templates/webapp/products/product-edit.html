@@ -7,27 +7,17 @@
 {% csrf_token %}
 <div class="grid grid-cols-12 gap-4 mb-4">
 	<!-- Première ligne -->
-	<!-- Champ Référence -->
-	<div class="col-span-3">
-		{{ form.reference.label_tag }}
-		{{ form.reference }}
-	</div>
 
 	<!-- Champ Libellé -->
-	<div class="col-span-5">
+	<div class="col-span-8">
 		{{ form.label.label_tag }}
 		{{ form.label }}
 	</div>
 
-	<!-- Prix de vente et Quantité -->
-	<div class="col-span-2">
-		{{ form.selling_price_unit.label_tag }}
-		{{ form.selling_price_unit }}
-	</div>
-
-	<div class="col-span-2">
-		{{ form.quantity.label_tag }}
-		{{ form.quantity }}
+	<!-- Champ Dimension -->
+	<div class="col-span-3">
+		{{ form.size.label_tag }}
+		{{ form.size }}
 	</div>
 </div>
 
@@ -35,26 +25,41 @@
 
 <div class="grid grid-cols-12 gap-4 mb-4">
 	<!-- Deuxième ligne -->
-	<!-- Champ Marque -->
+	<!-- Champ Baguette -->
 	<div class="col-span-3">
-		{{ form.brand.label_tag }}
-		{{ form.brand }}
+		{{ form.wand.label_tag }}
+		{{ form.wand }}
 	</div>
 
-	<!-- Champ Fournisseur -->
+	<!-- Champ Verre -->
 	<div class="col-span-3">
-		{{ form.supplier.label_tag }}
-		{{ form.supplier }}
+		{{ form.glass.label_tag }}
+		{{ form.glass }}
 	</div>
 
-	<div class="col-span-2"></div>
+	<!-- Passe partout -->
+	<div class="col-span-3">
+		{{ form.mat.label_tag }}
+		{{ form.mat }}
+	</div>
 
-	<!-- Prix d'achat -->
+	<!-- Filet -->
 	<div class="col-span-2">
-		{{ form.purchase_price_unit.label_tag }}
-		{{ form.purchase_price_unit }}
+		{{ form.mesh.label_tag }}
+		{{ form.mesh }}
 	</div>
 </div>
+
+<div class="grid grid-cols-12 gap-4 mb-4">
+	<!-- Troisième ligne -->
+	<!-- Champ Prix de vente -->
+	<div class="col-span-3">
+		{{ form.selling_price_unit.label_tag }}
+		{{ form.selling_price_unit }}
+	</div>
+
+</div>
+
 
 <div class="modal-footer flex justify-end gap-4 mt-10">
 	<button style="background-color: #FF4E27; border-radius: 10px;"

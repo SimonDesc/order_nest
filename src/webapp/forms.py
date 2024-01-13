@@ -81,13 +81,13 @@ class AddProductsToOrder(ModelForm):
         model = Product
         
         fields = (
-            "reference",
+            "size",
             "label",
-            "brand",
-            "supplier",
-            "purchase_price_unit",
+            "wand",
+            "glass",
+            "mat",
+            "mesh",
             "selling_price_unit",
-            "quantity",
         )
 
 
@@ -102,11 +102,11 @@ class AddProductForm(ModelForm):
     class Meta:
         model = Product
         fields = (
-            "reference",
+            "size",
             "label",
-            "brand",
-            "supplier",
-            "purchase_price_unit",
+            "wand",
+            "glass",
+            "mat",
+            "mesh",
             "selling_price_unit",
-            "quantity",
         )

@@ -14,7 +14,7 @@ def product_order_list(request, order_id):
 
     # Calculer le total pour chaque produit
     for product in product_order:
-        product.total = product.product.selling_price_unit * product.product.quantity
+        product.total = product.product.selling_price_unit * 1
     total_order = sum(product.total for product in product_order)
 
     context = {
@@ -81,12 +81,13 @@ class AddProductsToOrder(CreateView):
         return context
 
     def form_valid(self, form):
-        response = super().form_valid(form)
-
         order_id = self.kwargs["pk"]
         order_object = Order.objects.get(pk=order_id)
+        
         order_product = form.save(commit=False)
+
         order_product = form.save()
+        
         OrderHasProduct.objects.create(order=order_object, product=order_product)
         return HttpResponse(status=204, headers={"HX-Trigger": "ProductsListChanged"})
 

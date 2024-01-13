@@ -1,74 +1,74 @@
-	<div class="titre flex justify-left text-3xl font-bold mb-10">
+<div class="titre flex justify-left text-3xl font-bold mb-10">
 
-		<h1 class="title">Nouveau produit</h1>
+	<h1 class="title">Nouveau produit</h1>
 
-	</div>
+</div>
 <form hx-post="{{ request.path }}" class="modal-content">
-    {% csrf_token %}
+	{% csrf_token %}
 	<div class="grid grid-cols-12 gap-4 mb-4">
 		<!-- Première ligne -->
-		<!-- Champ Référence -->
-		<div class="col-span-3">
-			{{ form.reference.label_tag }}
-			{{ form.reference }}
-		</div>
-	
+
 		<!-- Champ Libellé -->
-		<div class="col-span-5">
+		<div class="col-span-8">
 			{{ form.label.label_tag }}
 			{{ form.label }}
 		</div>
-	
-		<!-- Prix de vente et Quantité -->
+
+		<!-- Champ Dimension -->
+		<div class="col-span-3">
+			{{ form.size.label_tag }}
+			{{ form.size }}
+		</div>
+	</div>
+
+
+
+	<div class="grid grid-cols-12 gap-4 mb-4">
+		<!-- Deuxième ligne -->
+		<!-- Champ Baguette -->
+		<div class="col-span-3">
+			{{ form.wand.label_tag }}
+			{{ form.wand }}
+		</div>
+
+		<!-- Champ Verre -->
+		<div class="col-span-3">
+			{{ form.glass.label_tag }}
+			{{ form.glass }}
+		</div>
+
+		<!-- Passe partout -->
+		<div class="col-span-3">
+			{{ form.mat.label_tag }}
+			{{ form.mat }}
+		</div>
+
+		<!-- Filet -->
 		<div class="col-span-2">
+			{{ form.mesh.label_tag }}
+			{{ form.mesh }}
+		</div>
+	</div>
+
+	<div class="grid grid-cols-12 gap-4 mb-4">
+		<!-- Troisième ligne -->
+		<!-- Champ Prix de vente -->
+		<div class="col-span-3">
 			{{ form.selling_price_unit.label_tag }}
 			{{ form.selling_price_unit }}
 		</div>
 	
-		<div class="col-span-2">
-			{{ form.quantity.label_tag }}
-			{{ form.quantity }}
-		</div>
-	</div>
-	
-	
-
-    <div class="grid grid-cols-12 gap-4 mb-4">
-		<!-- Deuxième ligne -->
-		<!-- Champ Marque -->
-		<div class="col-span-3">
-			{{ form.brand.label_tag }}
-			{{ form.brand }}
-		</div>
-	
-		<!-- Champ Fournisseur -->
-		<div class="col-span-3">
-			{{ form.supplier.label_tag }}
-			{{ form.supplier }}
-		</div>
-
-		<div class="col-span-2"></div>
-
-		<!-- Prix d'achat -->
-		<div class="col-span-2">
-			{{ form.purchase_price_unit.label_tag }}
-			{{ form.purchase_price_unit }}
-		</div>
 	</div>
 
-    <div class="modal-footer flex justify-end gap-4 mt-10">
-        <button style="background-color: #FF4E27; border-radius: 10px;"
-		type="button" id="cancelButton"
-		class="w-32 text-lg div-ombre-button-navbar-logout py-2 px-4 mr-5 mb-2 text-sm text-white 
+	<div class="modal-footer flex justify-end gap-4 mt-10">
+		<button style="background-color: #FF4E27; border-radius: 10px;" type="button" id="cancelButton" class="w-32 text-lg div-ombre-button-navbar-logout py-2 px-4 mr-5 mb-2 text-sm text-white 
 		focus:outline-none
 	   focus:z-10 focus:ring-4 focus:ring-gray-200">
-		Annuler
-	</button>
-        <button
-		 type="submit"
-		 class="blue-button div-ombre-button-edit rounded-xl
+			Annuler
+		</button>
+		<button type="submit" class="blue-button div-ombre-button-edit rounded-xl
 		 w-32 text-lg div-ombre-button-edit py-2 px-4 mb-2 text-sm text-white
 		 focus:outline-none
 		focus:z-10 focus:ring-4 focus:ring-gray-200">Enregistrer</button>
-    </div>
+	</div>
 </form>

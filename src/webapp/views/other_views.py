@@ -1,20 +1,31 @@
+from typing import Any
 from django.core.paginator import Paginator
-from django.db.models import Q
+from django.db.models import Q, Prefetch
 from django.views.generic import (
     ListView,
 )
-from ..models import Order
+from ..models import Order, Customer, OrderAttachment
 
 
 class WebappHome(ListView):
     model = Order
     template_name = "webapp/home.html"
     context_object_name = "orders"
+    
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['verbose_names'] = {field.name: field.verbose_name for field in Order._meta.get_fields() if hasattr(field, 'verbose_name')}
+        context['customer_verbose_names'] = {field.name: field.verbose_name for field in Customer._meta.get_fields() if hasattr(field, 'verbose_name')}
+        return context
 
     def get_queryset(self):
-        return Order.objects.filter(Q(status="En cours") | Q(status="Urgent")).order_by(
-            "-created_at"
-        )[:20]
+        attachments = OrderAttachment.objects.all()
+        queryset = Order.objects.filter(
+            Q(status="En cours") | Q(status="Urgent")
+        ).prefetch_related(
+            Prefetch('attachments', queryset=attachments)
+        ).order_by("-created_at")[:20]
+        return queryset
 
 
 class Dashboard(ListView):

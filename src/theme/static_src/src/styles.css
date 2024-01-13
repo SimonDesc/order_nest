@@ -30,7 +30,7 @@
 }
 
 
-
+/* Status */
 
 .status-en-attente {
 	color: #FF9E2D;
@@ -56,9 +56,7 @@
 	color: #FF4E27;
 }
 
-/* .div-ombre {
-	box-shadow: 0px 10px 0px 0px #EFEFEF;
-} */
+/* Bouton */
 
 .blue-button {
 	background-color: #4674F8;
@@ -75,37 +73,7 @@
 	color: black;
 }
 
-.div-ombre-button-navbar {
-	box-shadow: 0px 6px 0px 0px #2C4569;
-}
-
-.div-ombre-button-navbar-logout {
-	box-shadow: 0px 3px 0px 0px #C80C00;
-}
-
-.title {
-
-	color: #26474E;
-}
-
-
-.subtitle {
-
-	color: #26474E;
-}
-
-tr:nth-of-type(even) td {
-	background: #ffffff;
-}
-
-tr:nth-of-type(odd) td {
-	background: #F7F7F7;
-}
-
-
-
-
-
+/* Effet du bouton */
 .box {
 	background: #fff;
 	border-radius: 2px;
@@ -144,4 +112,43 @@ tr:nth-of-type(odd) td {
 
 .box:hover::after {
 	right: 5px;
+}
+
+/* Navbar */
+.div-ombre-button-navbar {
+	box-shadow: 0px 6px 0px 0px #2C4569;
+}
+
+.div-ombre-button-navbar-logout {
+	box-shadow: 0px 3px 0px 0px #C80C00;
+}
+
+/* Titre principal */
+.title {
+
+	color: #26474E;
+}
+
+.subtitle {
+
+	color: #26474E;
+}
+
+tr:nth-of-type(even) td {
+	background: #ffffff;
+}
+
+tr:nth-of-type(odd) td {
+	background: #F7F7F7;
+}
+
+
+
+/* Effet popup consultation commande */
+div[id^="popup-"] {
+	display: none;
+}
+div[id^="popup-"]:target {
+	z-index: 1000;
+	display: block;
 }
