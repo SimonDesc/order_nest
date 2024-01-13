@@ -8,19 +8,19 @@
 /* Background */
 
 .primary-background {
-	background-color: #162B49  ;
+	background-color: #162B49;
 }
 
 .secondary-background {
-	background-color: #F5F8FA ;
+	background-color: #F5F8FA;
 }
 
 /* Primary Button */
 
 .current-page {
-	background-color: #3B5B89 ;
-	border: 0.5rem solid #3B5B89 ;
-	box-shadow: 0px 6px 0px 0px #294873 ;
+	background-color: #3B5B89;
+	border: 0.5rem solid #3B5B89;
+	box-shadow: 0px 6px 0px 0px #294873;
 }
 
 .other-page {
@@ -143,12 +143,19 @@ tr:nth-of-type(odd) td {
 }
 
 
+tr.status-active td {
+    background-color: rgba(35, 220, 61, 0.3) !important;
+}
+
 
 /* Effet popup consultation commande */
 div[id^="popup-"] {
 	display: none;
 }
+
 div[id^="popup-"]:target {
 	z-index: 1000;
 	display: block;
 }
+
+

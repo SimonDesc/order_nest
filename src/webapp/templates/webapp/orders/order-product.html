@@ -52,10 +52,24 @@
 
 	<div class="grid grid-cols-12 gap-4 mb-4">
 		<!-- Troisième ligne -->
+	
 		<!-- Champ Prix de vente -->
 		<div class="col-span-3">
 			{{ form.selling_price_unit.label_tag }}
 			{{ form.selling_price_unit }}
+		</div>
+		<div class="col-span-3">
+
+		</div>
+	
+		<!-- Champ Fait/oui/non -->
+		<div class="col-span-6 text-center">
+			Commande terminée
+			<div class="flex justify-center mt-3">
+				<div class="checkbox-wrapper-12">
+				{{ form.status }}
+				</div>
+			</div>
 		</div>
 	
 	</div>

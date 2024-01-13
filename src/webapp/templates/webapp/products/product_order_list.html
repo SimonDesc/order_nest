@@ -45,8 +45,9 @@
 				</thead>
 				<tbody class="bg-white divide-y divide-gray-200">
 					{% for product in product_order %}
-					<tr>
+					<tr class="{% if product.product.status %}status-active{% endif %}">
 						<td class="px-1 py-4">
+							{{ product.product.status }}
 							{{ product.product.label }}
 						</td>
 						<td class="px-1 py-4">
@@ -81,8 +82,6 @@
 								<img width="25" height="20" src="{% static '/img/delete.svg' %}">
 							</a>
 						</td>
-
-
 					</tr>
 					{% endfor %}
 
