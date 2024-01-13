@@ -31,301 +31,296 @@
 	<h1 class="title text-slate-500 mt-5">Accueil</h1>
 </div>
 <div class="min-h-screen flex justify-items-center justify-center">
-	<div
-		class="flex flex-wrap gap-5 pb-5 w-full max-w-5xl justify-center">
-		{% for order in orders %}
+	<div>
+		<div class="flex flex-wrap gap-5 pb-5 w-full max-w-5xl justify-center">
+			{% for order in orders %}
 
-		<!-- POPUP CONSULTATION -->
-		<div id="popup-{{ forloop.counter }}"
-			class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
-			<!-- Popup -->
-			<div class="relative top-20 mx-auto p-5 borderw-full max-w-5xl shadow-lg rounded-md bg-white">
-				<!-- Content -->
+			<!-- POPUP CONSULTATION -->
+			<div id="popup-{{ forloop.counter }}"
+				class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+				<!-- Popup -->
+				<div class="relative top-20 mx-auto p-5 borderw-full max-w-5xl shadow-lg rounded-md bg-white">
+					<!-- Content -->
 
-				<div class="mt-3">
-					<div class="titre flex justify-center text-3xl font-bold">
-						<h1 class="title text-slate-500">{{ order.label }}</h1>
-					</div>
-					<!-- Titre -->
-					<div class="subtitle infosorder mb-5">
-						<p>N°{{ order.id }}</p>
-						<p>Créée le: {% now "j F Y" %}</p>
-					</div>
-					<div class="border-b"></div>
-					<!-- libellé et status  -->
-					<div class="labelstatus flex flex-no-wrap gap-5 mt-5">
-						<div class="label w-7/12">
-							{{ verbose_names.label|capfirst }}
-							<div
-								class="resize-y block p-2.5 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'">
-								{{ order.label }}
-							</div>
-
+					<div class="mt-3">
+						<!-- Titre -->
+						<div class="subtitle infosorder mb-5">
+							<p>N°{{ order.id }}</p>
+							<p>Créée le: {% now "j F Y" %}</p>
 						</div>
-						<div class="status w-3/12 ml-auto">
-							{{ verbose_names.status|capfirst }}
-							<div
-								class="resize-y block p-2.5 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'">
-								{{ order.status }}
+						<div class="border-b"></div>
+						<!-- libellé et status  -->
+						<div class="labelstatus flex flex-no-wrap gap-5 mt-5">
+							<div class="label w-7/12">
+								{{ verbose_names.label|capfirst }}
+								<div
+									class="resize-y block p-2.5 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'">
+									{{ order.label }}
+								</div>
+
+							</div>
+							<div class="status w-3/12 ml-auto">
+								{{ verbose_names.status|capfirst }}
+								<div
+									class="resize-y block p-2.5 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'">
+									{{ order.status }}
+								</div>
 							</div>
 						</div>
-					</div>
-					<div class="border-b mb-5 mt-5"></div>
-					<!-- Clients -->
-					<div class="client flex flex-no-wrap gap-8">
-						<div class="nom w-4/12">
-							{{ customer_verbose_names.last_name|capfirst }}
-							<div
-								class="resize-y block p-2.5 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'">
-								{{ order.customer.last_name }}
+						<div class="border-b mb-5 mt-5"></div>
+						<!-- Clients -->
+						<div class="client flex flex-no-wrap gap-8">
+							<div class="nom w-4/12">
+								{{ customer_verbose_names.last_name|capfirst }}
+								<div
+									class="resize-y block p-2.5 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'">
+									{{ order.customer.last_name }}
+								</div>
+							</div>
+							<div class="prenom w-4/12">
+								{{ customer_verbose_names.first_name|capfirst }}
+								<div
+									class="resize-y block p-2.5 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'">
+									{{ order.customer.first_name|default:"&nbsp;" }}
+								</div>
+							</div>
+							<div class="tel w-3/12 ml-auto">
+								{{ customer_verbose_names.phone_number|capfirst }}
+								<div
+									class="resize-y block p-2.5 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'">
+									{{ order.customer.phone_number }}
+								</div>
 							</div>
 						</div>
-						<div class="prenom w-4/12">
-							{{ customer_verbose_names.first_name|capfirst }}
-							<div
-								class="resize-y block p-2.5 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'">
-								{{ order.customer.first_name|default:"&nbsp;" }}
-							</div>
-						</div>
-						<div class="tel w-3/12 ml-auto">
-							{{ customer_verbose_names.phone_number|capfirst }}
-							<div
-								class="resize-y block p-2.5 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'">
-								{{ order.customer.phone_number }}
-							</div>
-						</div>
-					</div>
-					<!-- Coordonées : adresse & mail -->
-					<div class="mailadress flex flex-no-wrap pb-4 mt-3">
-						<div class="adress w-6/12 mr-10">
-							{{ customer_verbose_names.address|capfirst }}
-							<div
-								class="resize-y block p-2.5 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 min-h-48">
-								{{ order.customer.address|default:"&nbsp;" }}
-							</div>
+						<!-- Coordonées : adresse & mail -->
+						<div class="mailadress flex flex-no-wrap pb-4 mt-3">
+							<div class="adress w-6/12 mr-10">
+								{{ customer_verbose_names.address|capfirst }}
+								<div
+									class="resize-y block p-2.5 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 min-h-48">
+									{{ order.customer.address|default:"&nbsp;" }}
+								</div>
 
-						</div>
-						<div class="mail w-6/12 ml-auto">
-							{{ customer_verbose_names.mail|capfirst }}
-							<div
-								class="resize-y block p-2.5 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'">
-								{{ order.customer.mail|default:"&nbsp;" }}
+							</div>
+							<div class="mail w-6/12 ml-auto">
+								{{ customer_verbose_names.mail|capfirst }}
+								<div
+									class="resize-y block p-2.5 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'">
+									{{ order.customer.mail|default:"&nbsp;" }}
+								</div>
 							</div>
 						</div>
-					</div>
 
-					<div class="border-b mb-5 mt-5"></div>
+						<div class="border-b mb-5 mt-5"></div>
 
-					<div class="datesandpayment h-44 grid grid-rows-2 grid-flow-col mb-5">
-						<!-- champ commentaire -->
-						<div class="comment row-span-1">
-							{{ verbose_names.comments|capfirst }}
-							<div
-								class="resize-y block p-2.5 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'">
-								{{ order.comments|default:"&nbsp;" }}
+						<div class="datesandpayment h-44 grid grid-rows-2 grid-flow-col mb-5">
+							<!-- champ commentaire -->
+							<div class="comment row-span-1">
+								{{ verbose_names.comments|capfirst }}
+								<div
+									class="resize-y block p-2.5 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'">
+									{{ order.comments|default:"&nbsp;" }}
+								</div>
+							</div>
+							<!-- champs paiements -->
+							<div class="paiement row-span-2 ml-14">
+								{{ verbose_names.payment|capfirst }}
+								<div
+									class="resize-y block p-2.5 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'">
+									{{ order.payment|default:"&nbsp;" }}
+								</div>
+								<div class="mt-2"></div>
+								{{ verbose_names.payment_method|capfirst }}
+								<div
+									class="resize-y block p-2.5 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'">
+									{{ order.payment_method|default:"&nbsp;" }}
+								</div>
+							</div>
+							<!-- champ livraisons et facturation -->
+							<div class="livraison row-span-2 justify-self-end">
+								{{ verbose_names.estimated_delivery_date|capfirst }}
+								<div
+									class="resize-y block p-2.5 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'">
+									{{ order.estimated_delivery_date|default:"&nbsp;" }}
+								</div>
+								<div class="mt-2"></div>
+								{{ verbose_names.invoice_date|capfirst }}
+								<div
+									class="resize-y block p-2.5 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'">
+									{{ order.invoice_date|default:"&nbsp;" }}
+								</div>
+
 							</div>
 						</div>
-						<!-- champs paiements -->
-						<div class="paiement row-span-2 ml-14">
-							{{ verbose_names.payment|capfirst }}
-							<div
-								class="resize-y block p-2.5 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'">
-								{{ order.payment|default:"&nbsp;" }}
-							</div>
-							<div class="mt-2"></div>
-							{{ verbose_names.payment_method|capfirst }}
-							<div
-								class="resize-y block p-2.5 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'">
-								{{ order.payment_method|default:"&nbsp;" }}
-							</div>
-						</div>
-						<!-- champ livraisons et facturation -->
-						<div class="livraison row-span-2 justify-self-end">
-							{{ verbose_names.estimated_delivery_date|capfirst }}
-							<div
-								class="resize-y block p-2.5 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'">
-								{{ order.estimated_delivery_date|default:"&nbsp;" }}
-							</div>
-							<div class="mt-2"></div>
-							{{ verbose_names.invoice_date|capfirst }}
-							<div
-								class="resize-y block p-2.5 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'">
-								{{ order.invoice_date|default:"&nbsp;" }}
-							</div>
 
+						<!-- Tableau des produits -->
+						<div class="titre flex text-xl font-bold mb-5 mt-5">
+							<h1 class="title text-slate-500">Produits</h1>
 						</div>
-					</div>
+						<table class="w-full text-left">
+							<thead class="text-base text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 ">
+								<tr>
 
-					<!-- Tableau des produits -->
-					<div class="titre flex justify-center text-3xl font-bold mb-5">
-						<h1 class="title text-slate-500">Produits</h1>
-					</div>
-					<table class="w-full text-left">
-						<thead class="text-base text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 ">
-							<tr>
-		
-								<th
-								scope="col" class="px-1 py-3">
-									Libellé
-								</th>
-								<th
-								scope="col" class="px-1 py-3">
-									Taille
-								</th>
-								<th
-								scope="col" class="px-1 py-3">
-									Baguette
-								</th>
-								<th
-								scope="col" class="px-1 py-3">
-									Verre
-								</th>
-								<th
-								scope="col" class="px-1 py-3">
-									Passe-partout
-								</th>
-								<th
-								scope="col" class="px-1 py-3">
-									Filet
-								</th>
-								<th
-								scope="col" class="px-1 py-3">
-									Prix
-								</th>
+									<th scope="col" class="px-1 py-3">
+										Libellé
+									</th>
+									<th scope="col" class="px-1 py-3">
+										Taille
+									</th>
+									<th scope="col" class="px-1 py-3">
+										Baguette
+									</th>
+									<th scope="col" class="px-1 py-3">
+										Verre
+									</th>
+									<th scope="col" class="px-1 py-3">
+										Passe-partout
+									</th>
+									<th scope="col" class="px-1 py-3">
+										Filet
+									</th>
+									<th scope="col" class="px-1 py-3">
+										Prix
+									</th>
 
 
-							</tr>
-						</thead>
-						<tbody class="bg-white divide-y divide-gray-200">
-							{% for product in order.products.all %}
-							<tr>
-								<td class="px-1 py-4">
-									{{ product.label }}
-								</td>
-								<td class="px-1 py-4">
-									{{ product.size }}
-								</td>
-								<td class="px-1 py-4">
-									{{ product.wand }}
-								</td>
-								<td class="px-1 py-4">
-									{{ product.glass }}
-								</td>
-								<td class="px-1 py-4">
-									{{ product.mat }}
-								</td>
-								<td class="px-1 py-4">
-									{{ product.mesh }}
-								</td>
-								<td class="px-1 py-4">
-									{{ product.selling_price_unit }}
-								</td>
-		
-		
-							</tr>
-							{% endfor %}
-		
-		
-						</tbody>
-					</table>
-					<div class="titre flex justify-center text-3xl font-bold mb-5">
-						<h1 class="title text-slate-500">Photos</h1>
-					</div>
-					<div>
-						<ul id="pictureList">
-							
-							{% for attachment in order.attachments.all %}
+								</tr>
+							</thead>
+							<tbody class="bg-white divide-y divide-gray-200">
+								{% for product in order.products.all %}
+								<tr>
+									<td class="px-1 py-4">
+										{{ product.label }}
+									</td>
+									<td class="px-1 py-4">
+										{{ product.size }}
+									</td>
+									<td class="px-1 py-4">
+										{{ product.wand }}
+									</td>
+									<td class="px-1 py-4">
+										{{ product.glass }}
+									</td>
+									<td class="px-1 py-4">
+										{{ product.mat }}
+									</td>
+									<td class="px-1 py-4">
+										{{ product.mesh }}
+									</td>
+									<td class="px-1 py-4">
+										{{ product.selling_price_unit }}
+									</td>
+
+
+								</tr>
+								{% endfor %}
+
+
+							</tbody>
+						</table>
+						<div class="titre flex text-xl font-bold mb-5 mt-5">
+							<h1 class="title text-slate-500">Photos</h1>
+						</div>
+						<div>
+							<ul id="pictureList">
+
+								{% for attachment in order.attachments.all %}
 								<li>
 									<a target="_blank" href="{{ attachment.file.url }}" class="mr-10">
 										{{ attachment.file.name }}
 									</a>
 								</li>
-							{% endfor %}
-						</ul>
-					</div>
+								{% endfor %}
+							</ul>
+						</div>
 
-					<!-- Footer -->
-					<div class="flex justify-end m-5">
+						<!-- Footer -->
+						<div class="flex justify-end m-5">
 
-						<div class="lg:mt-2">
-							<a href="javascript:void(0);" class="grey-button div-ombre-button-edit py-2 px-6 mb-2 text-sm text-white text-gray-900
-							focus:outline-none rounded-xl focus:z-10 focus:ring-4 focus:ring-gray-200
-							cursor-pointer transition-all border-b-[4px]  hover:-translate-y-[1px]  active:border-b-[2px]
-							active:brightness-90 active:translate-y-[2px]" onclick="closePopup(event, 'popup-{{ forloop.counter }}')">
-								Fermer
-							</a>
-							<a href="{% url 'webapp:order-edit' pk=order.pk %}">
-								<button type="button" class="blue-button div-ombre-button-edit py-2 px-6 mb-2 ml-4 text-sm text-white text-gray-900
-									focus:outline-none rounded-xl focus:z-10 focus:ring-4 focus:ring-gray-200
-									cursor-pointer transition-all   hover:-translate-y-[1px]  active:border-b-[2px]
-									active:brightness-90 active:translate-y-[2px]">
-									Modifier
-								</button>
-							</a>
+							<div class="lg:mt-2">
+								<a href="javascript:void(0);" class="grey-button div-ombre-button-edit py-2 px-6 mb-2 text-sm text-white text-gray-900
+								focus:outline-none rounded-xl focus:z-10 focus:ring-4 focus:ring-gray-200
+								cursor-pointer transition-all border-b-[4px]  hover:-translate-y-[1px]  active:border-b-[2px]
+								active:brightness-90 active:translate-y-[2px]" onclick="closePopup(event, 'popup-{{ forloop.counter }}')">
+									Fermer
+								</a>
+								<a href="{% url 'webapp:order-edit' pk=order.pk %}">
+									<button type="button" class="blue-button div-ombre-button-edit py-2 px-6 mb-2 ml-4 text-sm text-white text-gray-900
+										focus:outline-none rounded-xl focus:z-10 focus:ring-4 focus:ring-gray-200
+										cursor-pointer transition-all   hover:-translate-y-[1px]  active:border-b-[2px]
+										active:brightness-90 active:translate-y-[2px]">
+										Modifier
+									</button>
+								</a>
+							</div>
 						</div>
 					</div>
-				</div>
 
-			</div>
-		</div>
-
-
-		<div id="card" style="background-color: #FFFFFF; width: 300px; height: 350px;"
-			class="flex flex-col justify-between p-5 mt-10 mr-5  bg-white px-6 rounded-xl pt-10 shadow-xl ring-1 ring-gray-900/5 ">
-			<!-- Libellé -->
-			<div class="libellé_id flex mb-6 border-b border-zinc-300 text-xl">
-				<h1 class="font-bold">{{ order.label }}</h1>
-			</div>
-			<!-- Date de création -->
-			<div style="color:#686868" class="flex justify-between border-b border-zinc-300 dark:text-gray-400 mb-6">
-				<div>Date de création</div>
-				<div>{{ order.created_at|date:"SHORT_DATE_FORMAT" }}</div>
-			</div>
-			<!-- Client -->
-			<div style="color:#686868" class="customer border-b border-zinc-300 mb-6">
-				<p class="font-normal dark:text-gray-400">{{ order.customer.first_name }} {{ order.customer.last_name }}
-				</p>
-				<div class="flex items-center">
-					<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512" class="mr-2">
-						<path
-							d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z" />
-					</svg>
-					<p class="font-normal dark:text-gray-400">{{ order.customer.formatted_phone_number }}</p>
 				</div>
 			</div>
 
-			<!-- Status -->
-			<div class="status">
-				<span class="status-{{ order.status|slugify }}">{{ order.status }}</span>
-			</div>
-			<div class="flex justify-between">
-				<div class="lg:mt-2">
-					<a href="#popup-{{ forloop.counter }}" onclick="openPopup('popup-{{ forloop.counter }}')">
-						<button type="button" class="grey-button div-ombre-button-edit py-2 px-6 mb-2 text-sm text-white text-gray-900
+
+
+			<div id="card" style="background-color: #FFFFFF; width: 300px; height: 350px;"
+				class="flex flex-col justify-between p-5 mt-10 mr-5  bg-white px-6 rounded-xl pt-10 shadow-xl ring-1 ring-gray-900/5 ">
+				<!-- Libellé -->
+				<div class="libellé_id flex mb-6 border-b border-zinc-300 text-xl">
+					<h1 class="font-bold">{{ order.label }}</h1>
+				</div>
+				<!-- Date de création -->
+				<div style="color:#686868"
+					class="flex justify-between border-b border-zinc-300 dark:text-gray-400 mb-6">
+					<div>Date de création</div>
+					<div>{{ order.created_at|date:"SHORT_DATE_FORMAT" }}</div>
+				</div>
+				<!-- Client -->
+				<div style="color:#686868" class="customer border-b border-zinc-300 mb-6">
+					<p class="font-normal dark:text-gray-400">{{ order.customer.first_name }}
+						{{ order.customer.last_name }}
+					</p>
+					<div class="flex items-center">
+						<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"
+							class="mr-2">
+							<path
+								d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z" />
+						</svg>
+						<p class="font-normal dark:text-gray-400">{{ order.customer.formatted_phone_number }}</p>
+					</div>
+				</div>
+
+				<!-- Status -->
+				<div class="status">
+					<span class="status-{{ order.status|slugify }}">{{ order.status }}</span>
+				</div>
+				<div class="flex justify-between">
+					<div class="lg:mt-2">
+						<a href="#popup-{{ forloop.counter }}" onclick="openPopup('popup-{{ forloop.counter }}')">
+							<button type="button" class="grey-button div-ombre-button-edit py-2 px-6 mb-2 text-sm text-white text-gray-900
 					focus:outline-none rounded-xl focus:z-10 focus:ring-4 focus:ring-gray-200
 					cursor-pointer transition-all border-b-[4px]  hover:-translate-y-[1px]  active:border-b-[2px]
 					active:brightness-90 active:translate-y-[2px]">
-							Consulter
-						</button>
-					</a>
-				</div>
-				<div class="lg:mt-2">
-					<a href="{% url 'webapp:order-edit' pk=order.pk %}">
-						<button type="button" class="blue-button div-ombre-button-edit py-2 px-6 mb-2 text-sm text-white text-gray-900
+								Consulter
+							</button>
+						</a>
+					</div>
+					<div class="lg:mt-2">
+						<a href="{% url 'webapp:order-edit' pk=order.pk %}">
+							<button type="button" class="blue-button div-ombre-button-edit py-2 px-6 mb-2 text-sm text-white text-gray-900
                             focus:outline-none rounded-xl focus:z-10 focus:ring-4 focus:ring-gray-200
 							cursor-pointer transition-all   hover:-translate-y-[1px]  active:border-b-[2px]
 							active:brightness-90 active:translate-y-[2px]">
-							Modifier
-						</button>
-					</a>
+								Modifier
+							</button>
+						</a>
+					</div>
 				</div>
 			</div>
+
+
+
+
+			{% endfor %}
 		</div>
-
-
-
-
-		{% endfor %}
 	</div>
 </div>
 {% endblock %}

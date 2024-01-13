@@ -74,7 +74,8 @@ class CreateOrder(CreateView):
             order = order_form.save(commit=False)
             order.customer = customer
             order.save()
-            return redirect("/dashboard")
+            redirect_url = f"/orders/{order.id}/edit/"
+            return redirect(redirect_url)
         else:
             # Si le formulaire n'est pas valide
             # On renvoi le context + l'id du client
