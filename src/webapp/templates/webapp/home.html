@@ -188,7 +188,7 @@
 							</thead>
 							<tbody class="bg-white divide-y divide-gray-200">
 								{% for product in order.products.all %}
-								<tr>
+								<tr class="{% if product.status %}status-active{% endif %}">
 									<td class="px-1 py-4">
 										{{ product.label }}
 									</td>

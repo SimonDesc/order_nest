@@ -945,6 +945,10 @@ select{
   height: 1.25rem;
 }
 
+.h-60{
+  height: 15rem;
+}
+
 .h-full{
   height: 100%;
 }
@@ -1041,6 +1045,14 @@ select{
 
 .grid-rows-2{
   grid-template-rows: repeat(2, minmax(0, 1fr));
+}
+
+.grid-rows-1{
+  grid-template-rows: repeat(1, minmax(0, 1fr));
+}
+
+.grid-rows-3{
+  grid-template-rows: repeat(3, minmax(0, 1fr));
 }
 
 .flex-col{
@@ -1395,6 +1407,11 @@ select{
 .text-xl{
   font-size: 1.25rem;
   line-height: 1.75rem;
+}
+
+.text-xs{
+  font-size: 0.75rem;
+  line-height: 1rem;
 }
 
 .font-bold{

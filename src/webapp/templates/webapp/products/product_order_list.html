@@ -47,7 +47,6 @@
 					{% for product in product_order %}
 					<tr class="{% if product.product.status %}status-active{% endif %}">
 						<td class="px-1 py-4">
-							{{ product.product.status }}
 							{{ product.product.label }}
 						</td>
 						<td class="px-1 py-4">
@@ -85,12 +84,16 @@
 					</tr>
 					{% endfor %}
 
-
 				</tbody>
 			</table>
 		</div>
 	</div>
 </div>
 <!-- Afficher le total de la commande -->
-<div colspan="5" class="text-right mr-10 mb-5">Total de la commande : <b>{{ total_order }}</b> €</div>
+<div colspan="5" class="text-right mr-10">Total de la commande : <b>{{ total_order }}</b> €</div>
+{% if total_order > 100 %}
+<div colspan="5" class="text-right mr-10 mb-5 text-sm">
+	Acompte proposé de <b>{{ deposit }} €</b> (30% du total)
+</div>
+{% endif %}
 

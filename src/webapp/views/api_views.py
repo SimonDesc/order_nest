@@ -73,6 +73,7 @@ def get_orders(request):
             "label": str(order.label)[:30],
             "status": str(order.status),
             "created": order.created_at.strftime("%d/%m/%Y"),
+            "payment": str(order.payment),
             "url": str(reverse("webapp:order-edit", kwargs={"pk": order.pk})),
         } for order in orders_query
     ]

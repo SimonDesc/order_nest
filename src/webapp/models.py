@@ -100,7 +100,8 @@ class Order(models.Model):
     active = models.BooleanField(default=True)
     payment = models.CharField(max_length=32, choices=PAIEMENT, verbose_name="Etat paiement" , default='En attente')
     payment_method = models.CharField(max_length=32, choices=METHOD, verbose_name="Mode de paiement", blank=True)
-
+    deposit = models.DecimalField(default=0, max_digits=10, decimal_places=2, verbose_name="acompte")
+    
     @property
     def total_price(self):
         total = 0

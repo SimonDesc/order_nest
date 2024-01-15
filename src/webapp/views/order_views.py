@@ -88,9 +88,6 @@ class CreateOrder(CreateView):
             return render(request, self.template_name, context)
 
 
-
-
-
 class EditOrder(UpdateView):
     model = Order
     form_class = NewOrderForm
@@ -139,7 +136,16 @@ class EditOrder(UpdateView):
         context = self.get_context_data()
         context["customer_form"] = customer_form
         return self.render_to_response(context)
+    
+    
+    def get(self, request, *args, **kwargs):
+        # Sauvegarder le referer dans la session lors du premier chargement de la page
+        self.request.session['referer'] = self.request.META.get('HTTP_REFERER', reverse_lazy("webapp:dashboard"))
+        return super().get(request, *args, **kwargs)
 
+    def get_success_url(self):
+        # Utiliser l'URL de la session ou une URL par défaut
+        return self.request.session.get('referer', reverse_lazy("webapp:dashboard"))
 
 class DeleteOrder(DeleteView):
     model = Order

@@ -16,11 +16,13 @@ def product_order_list(request, order_id):
     for product in product_order:
         product.total = product.product.selling_price_unit * 1
     total_order = sum(product.total for product in product_order)
-
+    deposit = (total_order * 30 / 100)
+    
     context = {
         "product_order": product_order,
         "order_id": order_id,
         "total_order": total_order,
+        "deposit" : deposit,
     }
     return render(request, "webapp/products/product_order_list.html", context)
 

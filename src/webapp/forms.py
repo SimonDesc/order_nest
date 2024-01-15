@@ -39,6 +39,7 @@ class NewOrderForm(ModelForm):
             "invoice_date",
             "payment",
             "payment_method",
+            "deposit",
         )
 
 
