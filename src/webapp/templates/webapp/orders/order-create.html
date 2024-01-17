@@ -41,6 +41,7 @@
 						{{ order_form.label.label_tag }}
 						<div class="mt-2"></div>
 						{{ order_form.label }}
+
 					</div>
 					<div class="status w-3/12 ml-auto">
 						{{ order_form.status.label_tag }}
@@ -80,8 +81,10 @@
 						<div>{{ customer_form.mail }}</div>
 					</div>
 				</div>
+
 				<div class="border-b mb-5 mt-5"></div>
-				<div class="datesandpayment h-44 grid grid-rows-2 grid-flow-col mb-5">
+
+				<div class="datesandpayment grid grid-rows-2 grid-flow-col ">
 					<!-- champ commentaire -->
 					<div class="comment row-span-1">
 						{{ order_form.comments.label_tag }}
@@ -107,7 +110,12 @@
 						{{ order_form.invoice_date.label_tag }}
 						<div class="mt-2"></div>
 						{{ order_form.invoice_date }}
+						<div class="mt-2"></div>
+						{{ order_form.deposit.label_tag }}
+						<div class="mt-2"></div>
+						{{ order_form.deposit }}
 					</div>
+
 				</div>
 
 
