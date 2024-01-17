@@ -1,7 +1,6 @@
 #!/bin/sh
 
 cd src
-rm -rf static
 mkdir static
 
 pipenv run python manage.py migrate --no-input
