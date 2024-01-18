@@ -18,6 +18,7 @@ boto3 = "*"
 pip = "*"
 install = "*"
 django-storages = "*"
+mysqlclient = "*"
 
 [dev-packages]
 mypy = "*"

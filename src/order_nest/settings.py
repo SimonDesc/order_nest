@@ -87,12 +87,15 @@ WSGI_APPLICATION = 'order_nest.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env('POSTGRES_DB'),
-        'USER': env('PGUSER'),
-        'PASSWORD': env('POSTGRES_PASSWORD'),
-        'HOST': env('PGHOST'),
-        'PORT': env('PGPORT'),
+        'NAME': env('NAME'),
+        'ENGINE': 'django.db.backends.mysql',
+        'HOST': env('HOST'),
+        'PORT': env('PORT'),
+        'USER': env('USER'),
+        'PASSWORD': env('PASSWORD'),
+        'OPTIONS': {
+          'autocommit': True
+        },
     }
 }
 
