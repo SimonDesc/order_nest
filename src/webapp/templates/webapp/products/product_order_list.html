@@ -1,45 +1,36 @@
 {% load static %}
 
-<div class="w-full">
+<div class="product w-full">
 	<div class="flex justify-center py-2 align-middle inline-block mt-5 w-full">
-		<div class="overflow-x-auto w-full"> 
+		<div class="overflow-x-auto w-full">
 			<table class="w-full text-left">
 				<thead class="text-base text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 ">
 					<tr>
 
-						<th
-						scope="col" class="px-1 py-3">
+						<th scope="col" class="px-1 py-3">
 							Libellé
 						</th>
-						<th
-						scope="col" class="px-1 py-3">
+						<th scope="col" class="px-1 py-3">
 							Taille
 						</th>
-						<th
-						scope="col" class="px-1 py-3">
+						<th scope="col" class="px-1 py-3">
 							Baguette
 						</th>
-						<th
-						scope="col" class="px-1 py-3">
+						<th scope="col" class="px-1 py-3">
 							Verre
 						</th>
-						<th
-						scope="col" class="px-1 py-3">
+						<th scope="col" class="px-1 py-3">
 							Passe-partout
 						</th>
-						<th
-						scope="col" class="px-1 py-3">
+						<th scope="col" class="px-1 py-3">
 							Filet
 						</th>
-						<th
-						scope="col" class="px-1 py-3">
+						<th scope="col" class="px-1 py-3">
 							Prix
 						</th>
-						<th
-						scope="col" class="px-1 py-3">
+						<th scope="col" class="px-1 py-3">
 						</th>
-						<th
-						scope="col" class="px-1 py-3">
+						<th scope="col" class="px-1 py-3">
 						</th>
 					</tr>
 				</thead>
@@ -69,15 +60,13 @@
 						</td>
 
 						<td>
-							<a hx-get="{% url 'webapp:product-edit' pk=product.product.id %}"
-								hx-target="#dialog">
+							<a hx-get="{% url 'webapp:product-edit' pk=product.product.id %}" hx-target="#dialog">
 								<img width="25" height="20" src="{% static '/img/edit.svg' %}">
 							</a>
 						</td>
-	
+
 						<td>
-							<a hx-get="{% url 'webapp:product-delete' pk=product.product.id %}"
-								hx-target="#dialog">
+							<a hx-get="{% url 'webapp:product-delete' pk=product.product.id %}" hx-target="#dialog">
 								<img width="25" height="20" src="{% static '/img/delete.svg' %}">
 							</a>
 						</td>
@@ -90,10 +79,42 @@
 	</div>
 </div>
 <!-- Afficher le total de la commande -->
-<div colspan="5" class="text-right mr-10">Total de la commande : <b>{{ total_order }}</b> €</div>
 {% if total_order > 100 %}
 <div colspan="5" class="text-right mr-10 mb-5 text-sm">
 	Acompte proposé de <b>{{ deposit }} €</b> (30% du total)
 </div>
 {% endif %}
+
+<div class="flex justify-end mb-5 mr-5">
+    <table>
+        <tr>
+            <td class="text-left align-top" style="padding-right: 20px; padding-top: 10px;"> 
+                Total de la commande :
+            </td>
+            <td class="text-right align-top" style="padding-top: 10px;">
+                <b>{{ total_order|floatformat:2 }}</b> €
+            </td>
+        </tr>
+        <tr>
+            <td class="text-left align-top" style="padding-right: 20px; padding-top: 10px;"> 
+                Acompte perçu :
+            </td>
+            <td class="text-right align-top" style="padding-top: 10px;">
+                <b>{{ order.deposit }}</b> €
+            </td>
+        </tr>
+		<tr>
+            <td class="text-left align-top" style="padding-right: 20px; padding-top: 10px;"> 
+                Reste à percevoir :
+            </td>
+            <td class="text-right align-top" style="padding-top: 10px;">
+                <b>{{ remaining }}</b> €
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+
+
 

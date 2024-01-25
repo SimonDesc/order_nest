@@ -1694,11 +1694,11 @@ select{
   color: #26474E;
 }
 
-tr:nth-of-type(even) td {
+.product tr:nth-of-type(even) td {
   background: #ffffff;
 }
 
-tr:nth-of-type(odd) td {
+.product tr:nth-of-type(odd) td {
   background: #F7F7F7;
 }
 
