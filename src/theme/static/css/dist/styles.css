@@ -905,6 +905,14 @@ select{
   margin-top: auto;
 }
 
+.ml-3{
+  margin-left: 0.75rem;
+}
+
+.mr-4{
+  margin-right: 1rem;
+}
+
 .block{
   display: block;
 }
@@ -943,10 +951,6 @@ select{
 
 .h-5{
   height: 1.25rem;
-}
-
-.h-60{
-  height: 15rem;
 }
 
 .h-full{
@@ -1045,14 +1049,6 @@ select{
 
 .grid-rows-2{
   grid-template-rows: repeat(2, minmax(0, 1fr));
-}
-
-.grid-rows-1{
-  grid-template-rows: repeat(1, minmax(0, 1fr));
-}
-
-.grid-rows-3{
-  grid-template-rows: repeat(3, minmax(0, 1fr));
 }
 
 .flex-col{
@@ -1358,6 +1354,10 @@ select{
   padding-top: 1.25rem;
 }
 
+.pr-4{
+  padding-right: 1rem;
+}
+
 .text-left{
   text-align: left;
 }
@@ -1368,6 +1368,10 @@ select{
 
 .text-right{
   text-align: right;
+}
+
+.align-top{
+  vertical-align: top;
 }
 
 .align-middle{
@@ -1407,11 +1411,6 @@ select{
 .text-xl{
   font-size: 1.25rem;
   line-height: 1.75rem;
-}
-
-.text-xs{
-  font-size: 0.75rem;
-  line-height: 1rem;
 }
 
 .font-bold{
@@ -1694,11 +1693,11 @@ select{
   color: #26474E;
 }
 
-tr:nth-of-type(even) td {
+.product tr:nth-of-type(even) td {
   background: #ffffff;
 }
 
-tr:nth-of-type(odd) td {
+.product tr:nth-of-type(odd) td {
   background: #F7F7F7;
 }
 

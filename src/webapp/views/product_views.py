@@ -10,6 +10,7 @@ from django.http import  HttpResponse
 
 
 def product_order_list(request, order_id):
+    order = Order.objects.get(pk=order_id)
     product_order = OrderHasProduct.objects.filter(order=order_id)
 
     # Calculer le total pour chaque produit
@@ -17,8 +18,11 @@ def product_order_list(request, order_id):
         product.total = product.product.selling_price_unit * 1
     total_order = sum(product.total for product in product_order)
     deposit = (total_order * 30 / 100)
+    remaining = (total_order - order.deposit)
     
     context = {
+        "remaining" : remaining,
+        "order": order,
         "product_order": product_order,
         "order_id": order_id,
         "total_order": total_order,
