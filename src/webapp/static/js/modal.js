@@ -28,6 +28,11 @@ $(document).ready(function () {
 	function closeModal(modalId) {
 		$(modalId).addClass("hidden").removeClass("flex");
 		$("body").removeClass("overflow-hidden");
+		$("#progressContainer").hide();
+		$("#progressText").hide();
+		$('#pictureError').text();
+		$('#pictureError').removeClass();
+		$('#pictureError').hide();
 	}
 
 	// Ferme la modale des images si on clique sur le fond flouté

@@ -148,7 +148,7 @@ tr.status-active td {
 }
 
 
-/* Effet popup consultation commande */
+/* Effet popup consultation commande
 div[id^="popup-"] {
 	display: none;
 }
@@ -156,6 +156,13 @@ div[id^="popup-"] {
 div[id^="popup-"]:target {
 	z-index: 1000;
 	display: block;
+} */
+
+
+/* Validation envoi de la photo */
+
+.pictureError {
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    display: inline-block;
 }
-
-

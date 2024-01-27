@@ -178,8 +178,9 @@ def save_attachment(request):
                 {
                     "status": "success",
                     "filename": {
+                        "pk": attachment.pk,
                         "url": attachment.file.url,
-                        "name": os.path.basename(attachment.file.name),
+                        "name": os.path.basename(attachment.file.name)[0:20],
                     },
                 }
             )

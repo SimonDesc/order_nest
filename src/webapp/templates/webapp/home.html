@@ -2,265 +2,226 @@
 
 {% block title %}
 <title>Accueil</title>
-
-<script>
-	function openPopup(popupId) {
-		var popup = document.getElementById(popupId);
-		if (popup) {
-			popup.style.display = 'block';
-		}
-	}
-
-	function closePopup(event, popupId) {
-		event.preventDefault();
-		var popup = document.getElementById(popupId);
-		if (popup) {
-			popup.style.display = 'none';
-		}
-	}
-</script>
-
 {% endblock %}
 
 {% block content %}
-
-
-
-
 <div class="titre flex justify-center text-3xl font-bold ">
 	<h1 class="title text-slate-500 mt-5">Accueil</h1>
 </div>
+
 <div class="min-h-screen flex justify-items-center justify-center">
 	<div>
 		<div class="flex flex-wrap gap-5 pb-5 w-full max-w-5xl justify-center">
 			{% for order in orders %}
 
-			<!-- POPUP CONSULTATION -->
-			<div id="popup-{{ forloop.counter }}"
-				class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
-				<!-- Popup -->
-				<div class="relative top-20 mx-auto p-5 borderw-full max-w-5xl shadow-lg rounded-md bg-white">
-					<!-- Content -->
 
-					<div class="mt-3">
-						<!-- Titre -->
-						<div class="subtitle infosorder mb-5">
-							<p>N°{{ order.id }}</p>
-							<p>Créée le: {% now "j F Y" %}</p>
-						</div>
-						<div class="border-b"></div>
-						<!-- libellé et status  -->
-						<div class="labelstatus flex flex-no-wrap gap-5 mt-5">
-							<div class="label w-7/12">
-								{{ verbose_names.label|capfirst }}
-								<div
-									class="resize-y block p-2.5 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'">
-									{{ order.label }}
-								</div>
+			<!-- Modal -->
+			<div id="popup-{{ order.pk }}" class="hidden fixed z-10 inset-0 overflow-y-auto">
+				<div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
 
-							</div>
-							<div class="status w-3/12 ml-auto">
-								{{ verbose_names.status|capfirst }}
-								<div
-									class="resize-y block p-2.5 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'">
-									{{ order.status }}
-								</div>
-							</div>
-						</div>
-						<div class="border-b mb-5 mt-5"></div>
-						<!-- Clients -->
-						<div class="client flex flex-no-wrap gap-8">
-							<div class="nom w-4/12">
-								{{ customer_verbose_names.last_name|capfirst }}
-								<div
-									class="resize-y block p-2.5 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'">
-									{{ order.customer.last_name }}
-								</div>
-							</div>
-							<div class="prenom w-4/12">
-								{{ customer_verbose_names.first_name|capfirst }}
-								<div
-									class="resize-y block p-2.5 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'">
-									{{ order.customer.first_name|default:"&nbsp;" }}
-								</div>
-							</div>
-							<div class="tel w-3/12 ml-auto">
-								{{ customer_verbose_names.phone_number|capfirst }}
-								<div
-									class="resize-y block p-2.5 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'">
-									{{ order.customer.phone_number }}
-								</div>
-							</div>
-						</div>
-						<!-- Coordonées : adresse & mail -->
-						<div class="mailadress flex flex-no-wrap pb-4 mt-3">
-							<div class="adress w-6/12 mr-10">
-								{{ customer_verbose_names.address|capfirst }}
-								<div
-									class="resize-y block p-2.5 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 min-h-48">
-									{{ order.customer.address|default:"&nbsp;" }}
-								</div>
+					<!-- Overlay -->
+					<div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
 
-							</div>
-							<div class="mail w-6/12 ml-auto">
-								{{ customer_verbose_names.mail|capfirst }}
-								<div
-									class="resize-y block p-2.5 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'">
-									{{ order.customer.mail|default:"&nbsp;" }}
-								</div>
-							</div>
+					<!-- Modal content -->
+					<span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+					<div
+						class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all
+						sm:my-8 sm:align-middle sm:max-w-3xl w-4/5">
+						<!-- Modal header -->
+						<div class="flex items-center justify-between p-4 border-b">
+							<h3 class="text-lg font-medium leading-6 text-gray-900">Détails de la Commande</h3>
+
+
+							<button type="button" onclick="closePopup('popup-{{ order.pk }}')"
+								class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
+								<svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+									viewBox="0 0 14 14">
+									<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+										stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+								</svg>
+								<span class="sr-only">Close modal</span>
+							</button>
 						</div>
 
-						<div class="border-b mb-5 mt-5"></div>
+						<!-- Modal body -->
+						<div class="p-2">
+							<!-- Modal body -->
+							<div class="p-2 md:p-3">
+								<!-- Section Informations de la Commande -->
+								<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+									<!-- Libellé -->
+									<div>
+										<label class="block text-sm font-medium text-gray-700">Libellé</label>
+										<div
+											class="mt-1 bg-gray-50 border border-gray-300 rounded-lg p-2 text-gray-900">
+											{{ order.label }}
+										</div>
+									</div>
+									<!-- Libellé -->
+									<div>
+										<label class="block text-sm font-medium text-gray-700">Status</label>
+										<div
+											class="mt-1 bg-gray-50 border border-gray-300 rounded-lg p-2 text-gray-900">
+											{{ order.status }}
+										</div>
+									</div>
 
-						<div class="datesandpayment h-44 grid grid-rows-2 grid-flow-col mb-5">
-							<!-- champ commentaire -->
-							<div class="comment row-span-1">
-								{{ verbose_names.comments|capfirst }}
-								<div
-									class="resize-y block p-2.5 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'">
-									{{ order.comments|default:"&nbsp;" }}
+								</div>
+
+								<!-- Section Informations Client -->
+								<div class="border-t border-gray-200 pt-4 mt-4">
+									<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+										<!-- Nom -->
+										<div>
+											<label class="block text-sm font-medium text-gray-700">Nom</label>
+											<div
+												class="mt-1 bg-gray-50 border border-gray-300 rounded-lg p-2 text-gray-900">
+												{{ order.customer.last_name }}
+											</div>
+										</div>
+
+										<!-- Prénom -->
+										<div>
+											<label class="block text-sm font-medium text-gray-700">Prénom</label>
+											<div
+												class="mt-1 bg-gray-50 border border-gray-300 rounded-lg p-2 text-gray-900">
+												{{ order.customer.first_name|default:"&nbsp;" }}
+											</div>
+										</div>
+
+										<!-- Téléphone -->
+										<div>
+											<label class="block text-sm font-medium text-gray-700">Téléphone</label>
+											<div
+												class="mt-1 bg-gray-50 border border-gray-300 rounded-lg p-2 text-gray-900">
+												{{ order.customer.formatted_phone_number }}
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- Section Commentaires -->
+								<div class="border-t border-gray-200 pt-4 mt-4">
+									<div class="flex gap-4">
+										<!-- Commentaire -->
+										<div>
+											<label class="block text-sm font-medium text-gray-700">Commentaires</label>
+											<div
+												class="mt-1 bg-gray-50 border border-gray-300 rounded-lg p-2 text-gray-900">
+												{{ order.comments|default:"&nbsp;" }}
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- Section Products -->
+								<div class="border-t border-gray-200 pt-4 mt-4">
+									<div class="flex gap-4">
+										<!-- Commentaire -->
+										<div class="w-full">
+											<table class="w-full text-left">
+												<thead class=" ">
+													<tr>
+
+														<th scope="col" class="px-1 py-3">
+															Libellé
+														</th>
+														<th scope="col" class="px-1 py-3">
+															Taille
+														</th>
+														<th scope="col" class="px-1 py-3">
+															Baguette
+														</th>
+														<th scope="col" class="px-1 py-3">
+															Verre
+														</th>
+														<th scope="col" class="px-1 py-3">
+															Passe-partout
+														</th>
+														<th scope="col" class="px-1 py-3">
+															Filet
+														</th>
+													</tr>
+												</thead>
+												<tbody class="bg-white divide-y divide-gray-200">
+													{% for product in order.products.all %}
+													<tr class="{% if product.status %}status-active{% endif %}">
+														<td class="px-1 py-4">
+															{{ product.label }}
+														</td>
+														<td class="px-1 py-4">
+															{{ product.size }}
+														</td>
+														<td class="px-1 py-4">
+															{{ product.wand }}
+														</td>
+														<td class="px-1 py-4">
+															{{ product.glass }}
+														</td>
+														<td class="px-1 py-4">
+															{{ product.mat }}
+														</td>
+														<td class="px-1 py-4">
+															{{ product.mesh }}
+														</td>
+
+													</tr>
+													{% endfor %}
+
+
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+
+								<!-- Section Photos -->
+								<div class="border-t border-gray-200 pt-4 mt-4">
+									<div>
+										<div id="pictureList">
+
+											<div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+
+												{% for attachment in order.attachments.all %}
+
+												<div>
+													<a target="_blank" href="{{ attachment.file.url }}" class="mr-10">
+														<img class="max-h-60 max-w-full rounded-lg"
+															src="{{ attachment.file.url }}"
+															alt=" {{ attachment.file.name |truncatechars:30 }}">
+
+													</a>
+												</div>
+												{% endfor %}
+
+											</div>
+										</div>
+									</div>
 								</div>
 							</div>
-							<!-- champs paiements -->
-							<div class="paiement row-span-2 ml-14">
-								{{ verbose_names.payment|capfirst }}
-								<div
-									class="resize-y block p-2.5 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'">
-									{{ order.payment|default:"&nbsp;" }}
-								</div>
-								<div class="mt-2"></div>
-								{{ verbose_names.payment_method|capfirst }}
-								<div
-									class="resize-y block p-2.5 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'">
-									{{ order.payment_method|default:"&nbsp;" }}
-								</div>
-							</div>
-							<!-- champ livraisons et facturation -->
-							<div class="livraison row-span-2 justify-self-end">
-								{{ verbose_names.estimated_delivery_date|capfirst }}
-								<div
-									class="resize-y block p-2.5 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'">
-									{{ order.estimated_delivery_date|default:"&nbsp;" }}
-								</div>
-								<div class="mt-2"></div>
-								{{ verbose_names.invoice_date|capfirst }}
-								<div
-									class="resize-y block p-2.5 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'">
-									{{ order.invoice_date|default:"&nbsp;" }}
-								</div>
 
-							</div>
 						</div>
 
-						<!-- Tableau des produits -->
-						<div class="titre flex text-xl font-bold mb-5 mt-5">
-							<h1 class="title text-slate-500">Produits</h1>
-						</div>
-						<table class="w-full text-left">
-							<thead class="text-base text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 ">
-								<tr>
-
-									<th scope="col" class="px-1 py-3">
-										Libellé
-									</th>
-									<th scope="col" class="px-1 py-3">
-										Taille
-									</th>
-									<th scope="col" class="px-1 py-3">
-										Baguette
-									</th>
-									<th scope="col" class="px-1 py-3">
-										Verre
-									</th>
-									<th scope="col" class="px-1 py-3">
-										Passe-partout
-									</th>
-									<th scope="col" class="px-1 py-3">
-										Filet
-									</th>
-									<th scope="col" class="px-1 py-3">
-										Prix
-									</th>
-
-
-								</tr>
-							</thead>
-							<tbody class="bg-white divide-y divide-gray-200">
-								{% for product in order.products.all %}
-								<tr class="{% if product.status %}status-active{% endif %}">
-									<td class="px-1 py-4">
-										{{ product.label }}
-									</td>
-									<td class="px-1 py-4">
-										{{ product.size }}
-									</td>
-									<td class="px-1 py-4">
-										{{ product.wand }}
-									</td>
-									<td class="px-1 py-4">
-										{{ product.glass }}
-									</td>
-									<td class="px-1 py-4">
-										{{ product.mat }}
-									</td>
-									<td class="px-1 py-4">
-										{{ product.mesh }}
-									</td>
-									<td class="px-1 py-4">
-										{{ product.selling_price_unit }}
-									</td>
-
-
-								</tr>
-								{% endfor %}
-
-
-							</tbody>
-						</table>
-						<div class="titre flex text-xl font-bold mb-5 mt-5">
-							<h1 class="title text-slate-500">Photos</h1>
-						</div>
-						<div>
-							<ul id="pictureList">
-
-								{% for attachment in order.attachments.all %}
-								<li>
-									<a target="_blank" href="{{ attachment.file.url }}" class="mr-10">
-										{{ attachment.file.name }}
-									</a>
-								</li>
-								{% endfor %}
-							</ul>
-						</div>
-
-						<!-- Footer -->
-						<div class="flex justify-end m-5">
-
-							<div class="lg:mt-2">
-								<a href="javascript:void(0);" class="grey-button div-ombre-button-edit py-2 px-6 mb-2 text-sm text-white text-gray-900
-								focus:outline-none rounded-xl focus:z-10 focus:ring-4 focus:ring-gray-200
-								cursor-pointer transition-all border-b-[4px]  hover:-translate-y-[1px]  active:border-b-[2px]
-								active:brightness-90 active:translate-y-[2px]" onclick="closePopup(event, 'popup-{{ forloop.counter }}')">
-									Fermer
-								</a>
-								<a href="{% url 'webapp:order-edit' pk=order.pk %}">
-									<button type="button" class="blue-button div-ombre-button-edit py-2 px-6 mb-2 ml-4 text-sm text-white text-gray-900
-										focus:outline-none rounded-xl focus:z-10 focus:ring-4 focus:ring-gray-200
-										cursor-pointer transition-all   hover:-translate-y-[1px]  active:border-b-[2px]
-										active:brightness-90 active:translate-y-[2px]">
-										Modifier
-									</button>
-								</a>
-							</div>
+						<!-- Modal footer -->
+						<div class="flex justify-end p-4 border-t">
+							<button onclick="closePopup('popup-{{ order.pk }}')" class="grey-button div-ombre-button-edit py-2 px-6 mb-2 text-sm text-white text-gray-900
+							focus:outline-none rounded-xl focus:z-10 focus:ring-4 focus:ring-gray-200
+							cursor-pointer transition-all border-b-[4px]  hover:-translate-y-[1px]  active:border-b-[2px]
+							active:brightness-90 active:translate-y-[2px]">
+								Fermer
+							</button>
+							<a href="{% url 'webapp:order-edit' pk=order.pk %}">
+								<button type="button" class="blue-button div-ombre-button-edit py-2 px-6 mb-2 ml-4 text-sm text-white text-gray-900
+									focus:outline-none rounded-xl focus:z-10 focus:ring-4 focus:ring-gray-200
+									cursor-pointer transition-all   hover:-translate-y-[1px]  active:border-b-[2px]
+									active:brightness-90 active:translate-y-[2px]">
+									Modifier
+								</button>
+							</a>
 						</div>
 					</div>
-
 				</div>
 			</div>
 
-
-
+			<!-- DEBUT DES CARDS -->
 			<div id="card" style="background-color: #FFFFFF; width: 300px; height: 350px;"
 				class="flex flex-col justify-between p-5 mt-10 mr-5  bg-white px-6 rounded-xl pt-10 shadow-xl ring-1 ring-gray-900/5 ">
 				<!-- Libellé -->
@@ -294,7 +255,11 @@
 				</div>
 				<div class="flex justify-between">
 					<div class="lg:mt-2">
-						<a href="#popup-{{ forloop.counter }}" onclick="openPopup('popup-{{ forloop.counter }}')">
+						<!-- <a href="#popup-{{ forloop.counter }}" onclick="openPopup('popup-{{ forloop.counter }}')"> -->
+						<a data-modal-target="popup-{{ forloop.counter }}"
+							data-modal-toggle="popup-{{ forloop.counter }}" href="javascript:void(0);"
+							onclick="openPopup('popup-{{ order.pk }}')">
+
 							<button type="button" class="grey-button div-ombre-button-edit py-2 px-6 mb-2 text-sm text-white text-gray-900
 					focus:outline-none rounded-xl focus:z-10 focus:ring-4 focus:ring-gray-200
 					cursor-pointer transition-all border-b-[4px]  hover:-translate-y-[1px]  active:border-b-[2px]
@@ -316,11 +281,25 @@
 				</div>
 			</div>
 
-
-
-
 			{% endfor %}
 		</div>
 	</div>
 </div>
+
+<script>
+	function openPopup(popupId) {
+		var popup = document.getElementById(popupId);
+		if (popup) {
+			popup.classList.remove('hidden');
+		}
+	}
+
+	function closePopup(popupId) {
+		var popup = document.getElementById(popupId);
+		if (popup) {
+			popup.classList.add('hidden');
+		}
+	}
+</script>
+
 {% endblock %}
