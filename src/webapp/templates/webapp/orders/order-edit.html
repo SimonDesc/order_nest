@@ -1,11 +1,16 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}
+
 <title>Modifier commande</title>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
 <script src="{% static 'js/paper-full.min.js' %}"></script>
 <script src="https://unpkg.com/htmx.org"></script>
+<!-- Script to optimize weight of picture -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/compressorjs/1.2.1/compressor.min.js"
+	integrity="sha512-MgYeYFj8R3S6rvZHiJ1xA9cM/VDGcT4eRRFQwGA7qDP7NHbnWKNmAm28z0LVjOuUqjD0T9JxpDMdVqsZOSHaSA=="
+	crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <!-- Load the specific script -->
 <script src="{% static 'js/modal.js' %}"></script>
@@ -22,7 +27,7 @@
 
 <input type="hidden" id="orderPk" value="{{ order_form.instance.pk }}">
 <div class="flex justify-center">
-	
+
 	<div class="w-full max-w-5xl">
 
 		<div class="bg-white px-6 rounded-xl pt-10 shadow-xl ring-1 ring-gray-900/5 px-14">
@@ -143,7 +148,8 @@
 					</div>
 					<div class="btnok">
 						<button type="submit" class="blue-button div-ombre-button-edit py-2 px-6 text-sm text-white text-gray-900
-					focus:outline-none rounded-xl focus:z-10 focus:ring-4 focus:ring-gray-200 mb-8" value="Update">Enregistrer</button>
+					focus:outline-none rounded-xl focus:z-10 focus:ring-4 focus:ring-gray-200 mb-8"
+							value="Update">Enregistrer</button>
 					</div>
 				</div>
 				<hr>
@@ -151,7 +157,7 @@
 		</div>
 
 
-		
+
 
 		<!-- Conteneur pour la liste des produits -->
 		<div class="titre flex justify-left text-2xl font-bold mt-5 mb-3">
@@ -161,24 +167,25 @@
 
 		<div class="bg-white px-4 rounded-xl pt-1 shadow-xl ring-1 ring-gray-900/5">
 
-		
-		<div id="productOrderList" hx-get="{% url 'webapp:product_order_list' order_id=order.id %}"
-			hx-trigger="load, ProductsListChanged from:body" hx-target="#productOrderList">
-			<!-- Le contenu de la liste des produits sera ici -->
-		</div>
 
-		<!-- Conteneur pour le bouton, aligné en bas à droite -->
-		<div class="flex justify-end mt-auto">
-			<button hx-get="{% url 'webapp:order-add-products' pk=order_form.instance.id %}" hx-target="#dialog" class="blue-button div-ombre-button-edit rounded-xl w-32 text-sm div-ombre-button-edit py-2 px-4 mb-2 text-sm text-white
+			<div id="productOrderList" hx-get="{% url 'webapp:product_order_list' order_id=order.id %}"
+				hx-trigger="load, ProductsListChanged from:body" hx-target="#productOrderList">
+				<!-- Le contenu de la liste des produits sera ici -->
+			</div>
+
+			<!-- Conteneur pour le bouton, aligné en bas à droite -->
+			<div class="flex justify-end mt-auto">
+				<button hx-get="{% url 'webapp:order-add-products' pk=order_form.instance.id %}" hx-target="#dialog"
+					class="blue-button div-ombre-button-edit rounded-xl w-32 text-sm div-ombre-button-edit py-2 px-4 mb-2 text-sm text-white
 					focus:outline-none
 				   focus:z-10 focus:ring-4 focus:ring-gray-200 mb-8">
-				Ajouter Produit
-			</button>
+					Ajouter Produit
+				</button>
 			</div>
 
 		</div>
 
-		
+
 		<hr>
 
 
@@ -191,38 +198,50 @@
 		</div>
 
 		<div class="bg-white px-4 rounded-xl pt-3 shadow-xl ring-1 ring-gray-900/5">
-		
-		<div>
-			<ul id="pictureList">
-				{% if attachments_pictures %}
-				{% for picture in attachments_pictures %}
-				<li class="mt-2">
-					<a target="_blank" href="{{ picture.url }}" class="mr-10">
-						{{ picture.filename|truncatechars:30 }}
-					</a>
-					<button class="delete_picture" data-pk="{{ picture.pk }}" style="margin-left: 10px;">
-						<img width="10" height="10" src="{% static '/img/delete.svg' %}">
-					</button>
 
-				</li>
-				{% endfor %}
-				{% endif %}
-			</ul>
-		</div>
-	
+			<div>
+				<div id="pictureList">
 
-		<!-- Bouton pour ouvrir le modal Joindre photo -->
-		<div class="flex justify-end">
-			<button id="openModalPictureButton" class="blue-button div-ombre-button-edit rounded-xl
-			w-32 text-sm div-ombre-button-edit py-2 px-4 mb-8 text-sm text-white
+					<div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+						{% if attachments_pictures %}
+						{% for picture in attachments_pictures %}
+
+						<div>
+							{{ picture.filename|truncatechars:20 }}
+							<button
+								class="delete_picture bg-white rounded-md p-2 inline-flex items-center justify-center text-red-400 hover:text-red-500 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
+								data-pk="{{ picture.pk }}" style="margin-left: 10px;">
+								<svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+									stroke="currentColor" aria-hidden="true">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+										d="M6 18L18 6M6 6l12 12" />
+								</svg>
+							</button>
+							<a target="_blank" href="{{ picture.url }}" class="mr-10">
+								<img class="max-h-60 max-w-full rounded-lg" src="{{ picture.url }}"
+									alt="{{ picture.filename|truncatechars:30 }}">
+
+							</a>
+						</div>
+						{% endfor %}
+						{% endif %}
+					</div>
+				</div>
+			</div>
+
+
+			<!-- Bouton pour ouvrir le modal Joindre photo -->
+			<div class="flex justify-end">
+				<button id="openModalPictureButton" class="blue-button div-ombre-button-edit rounded-xl
+			w-32 text-sm div-ombre-button-edit py-2 px-4 mb-8 mt-8 text-sm text-white
 			focus:outline-none
 		   focus:z-10 focus:ring-4 focus:ring-gray-200">
-				Joindre photo
-			</button>
+					Joindre photo
+				</button>
+			</div>
+
+
 		</div>
-
-
-	</div>
 
 		<hr>
 		<div class="titre flex justify-left text-2xl font-bold mt-2 ">
@@ -295,14 +314,21 @@
 	<div class="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-md"></div>
 	<!-- Contenu du modal -->
 	<div style="max-width: 800px; width: 90%;" class="bg-white p-6 rounded-lg mx-auto border-2 relative z-10">
-		<!-- <h2 class="text-2xl mb-4 underline">Joindre une photo</h2> -->
-		<div class="titre flex justify-left text-3xl font-bold mb-10">
-
+		<div class="titre flex-col justify-left text-3xl font-bold mb-5">
 			<h1 class="title">Joindre une photo</h1>
-
-
 		</div>
-		<div class="error justify-end">
+
+		<!-- Barre de chargement -->
+		<div id="progressText" class="flex justify-between mb-1">
+			<span class="text-base font-medium text-blue-700 dark:text-white">Upload de l'image</span>
+			<span id="progressNumber" class="text-sm font-medium text-blue-700 dark:text-white"></span>
+		</div>
+		<div id="progressContainer" class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 mb-5">
+			<div id="progressBar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
+		</div>
+
+		<!-- Affichage du résultat de l'upload -->
+		<div class="error justify-end mb-3">
 			<span id="pictureError"></span>
 		</div>
 		<!-- Joindre une photo -->
@@ -312,7 +338,7 @@
 			<button id="closeModalPictureButton" style="background-color: #FF4E27; border-radius: 10px;" class="w-32 text-lg div-ombre-button-navbar-logout py-2 px-4 mr-5 mb-2 text-sm text-white 
 			focus:outline-none
 		   focus:z-10 focus:ring-4 focus:ring-gray-200">
-				Annuler
+				Fermer
 			</button>
 
 			<input class="hidden" type="file" accept="image/*" id="photoCaptureInput" capture="camera">
@@ -325,11 +351,6 @@
 			">
 				Parcourir
 			</label>
-
-
-
-
-
 
 		</div>
 	</div>
