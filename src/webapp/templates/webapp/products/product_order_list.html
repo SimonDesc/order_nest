@@ -7,7 +7,7 @@
 				<thead class="text-base text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 ">
 					<tr>
 
-						<th scope="col" class="px-1 py-3">
+						<th scope="col" class="px-5 py-3">
 							Libellé
 						</th>
 						<th scope="col" class="px-1 py-3">
@@ -37,7 +37,7 @@
 				<tbody class="bg-white divide-y divide-gray-200">
 					{% for product in product_order %}
 					<tr class="{% if product.product.status %}status-active{% endif %}">
-						<td class="px-1 py-4">
+						<td class="px-5 py-4">
 							{{ product.product.label }}
 						</td>
 						<td class="px-1 py-4">

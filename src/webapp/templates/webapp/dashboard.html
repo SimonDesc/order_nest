@@ -5,7 +5,6 @@
 <title>Tableau de bord</title>
 <script src="https://cdn.jsdelivr.net/npm/gridjs/dist/gridjs.umd.js"></script>
 <script src="{% static 'js/grid.js' %}"></script>
-<script src="{% static 'js/chart.js' %}"></script>
 <link href="https://cdn.jsdelivr.net/npm/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
 
 {% endblock %}
@@ -31,7 +30,7 @@
 							<img width="25" height="20" src="/static/img/waiting.svg">
 						</div>
 						<div>
-							<div class="text-gray-400">En attente</div>
+							<div class="text-gray-600">En attente</div>
 							<div class="text-2xl font-bold text-gray-900">{{ count_waiting }}</div>
 						</div>
 					</div>
@@ -88,13 +87,13 @@
 							<a id="default-tab" class="bg-white
 					  inline-block p-4
 					  rounded-t-lg hover:border-gray-300
-					  border" href="#" onclick="openTab(event, 'wrapper')">En Attente, En cours, Urgent</a>
+					  border" href="#" onclick="openTab(event, 'wrapper')">En Attente | En cours | Urgent</a>
 						</li>
 						<li class="me-2">
 							<a class="bg-white
 					  inline-block p-4
 					  rounded-t-lg hover:border-gray-300
-					  border" href="#" onclick="openTab(event, 'wrapperEnCours')">Terminées, Annulées</a>
+					  border" href="#" onclick="openTab(event, 'wrapperEnCours')">Terminées | Annulées</a>
 						</li>
 						<li class="me-2">
 							<a class="bg-white
