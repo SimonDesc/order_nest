@@ -134,6 +134,8 @@
 	color: #26474E;
 }
 
+/* Tableau des produits */
+
 .product tr:nth-of-type(even) td {
 	background: #ffffff;
 }
@@ -147,22 +149,45 @@ tr.status-active td {
     background-color: rgba(35, 220, 61, 0.3) !important;
 }
 
-
-/* Effet popup consultation commande
-div[id^="popup-"] {
-	display: none;
-}
-
-div[id^="popup-"]:target {
-	z-index: 1000;
-	display: block;
-} */
-
-
 /* Validation envoi de la photo */
 
 .pictureError {
     padding: 0.5rem;
     border-radius: 0.25rem;
     display: inline-block;
+}
+
+/* Dashboard */
+.tab-content tr:nth-of-type(even) td {
+	background: #ffffff;
+}
+
+.tab-content tr:nth-of-type(odd) td {
+	background: #F7F7F7;
+}
+
+/* Bleu Clair */
+.blue-color {
+    background-color: #3B5B89;
+}
+
+/* Gris Clair */
+.grey-color {
+    background-color: #F7F7F7;
+	color: #515258;
+}
+
+/* Orange */
+.orange-color {
+	background-color: #FF9E2D;
+}
+
+/* Blue */
+.blue-color-text {
+	background-color: #0060EF;
+}
+
+/* Red */
+.red-color-text {
+	background-color: #FF4E27;
 }

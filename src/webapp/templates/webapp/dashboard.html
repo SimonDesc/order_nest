@@ -5,7 +5,9 @@
 <title>Tableau de bord</title>
 <script src="https://cdn.jsdelivr.net/npm/gridjs/dist/gridjs.umd.js"></script>
 <script src="{% static 'js/grid.js' %}"></script>
+<script src="{% static 'js/chart.js' %}"></script>
 <link href="https://cdn.jsdelivr.net/npm/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
+
 {% endblock %}
 
 {% block content %}
@@ -14,33 +16,102 @@
 	<h1 class="title text-slate-500 mt-5">Toutes les commandes</h1>
 </div>
 
-<div class="min-h-screen justify-center ">
+<div class="min-h-screen justify-center gap-5 p-5">
 
-	<!-- Cards -->
-	<div class="flex flex-wrap gap-5 p-5 justify-center">
-		<div
-			class="flex flex-col space p-5 mt-10 bg-white x ring-1 ring-gray-900/5 border-2 border-amber-500/50 w-32 h-32">
-			<div class="text-center font-semibold">{{ count_waiting }}</div>
-			<div class="text-center mt-3 "><h3>En attente</h3></div>
-		</div>
-		<div
-			class="flex flex-col p-5 mt-10 bg-white px-6 ring-1 ring-gray-900/5 border-2 border-indigo-500/50 w-32">
-			<div class="text-center font-semibold">{{ count_progress }}</div>
-			<div class="text-center mt-3"><h3>En cours</h3></div>
-		</div>
-		<div
-			class="flex flex-col p-5 mt-10 bg-white px-6 ring-1 ring-gray-900/5 border-2 border-rose-500/50 w-32">
-			<div class="text-center font-semibold">{{ count_urgent }}</div>
-			<div class="text-center mt-3"><h3>Urgent</h3></div>
-		</div>
 
+
+	<div class="container max-w-6xl px-5 mx-auto">
+		<div class="flex justify-center">
+			<div class="grid gap-7 sm:grid-cols-2 lg:grid-cols-3 max-w-4xl">
+
+				<!-- Carte 1 : En attente -->
+				<div class="p-5 bg-white rounded shadow-sm">
+					<div class="flex items-center space-x-4">
+						<div class="flex items-center justify-center w-12 h-12 rounded-full orange-color  text-amber-400">
+							<img width="25" height="20" src="/static/img/waiting.svg">
+						</div>
+						<div>
+							<div class="text-gray-400">En attente</div>
+							<div class="text-2xl font-bold text-gray-900">{{ count_waiting }}</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Carte 2 : En cours -->
+				<div class="p-5 bg-white rounded shadow-sm">
+					<div class="flex items-center space-x-4">
+						<div class="flex items-center justify-center w-12 h-12 rounded-full blue-color-text text-amber-400">
+							<img width="25" height="20" src="/static/img/in-progress.svg">
+						</div>
+						<div>
+							<div class="text-gray-400">En cours</div>
+							<div class="text-2xl font-bold text-gray-900">{{ count_progress }}</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Carte 3 : Urgent -->
+				<div class="p-5 bg-white rounded shadow-sm">
+					<div class="flex items-center space-x-4">
+						<div class="flex items-center justify-center w-12 h-12 rounded-full red-color-text text-amber-400">
+							<img width="25" height="20" src="/static/img/urgent.svg">
+						</div>
+						<div>
+							<div class="text-gray-400">Urgent</div>
+							<div class="text-2xl font-bold text-gray-900">{{ count_urgent }}</div>
+						</div>
+					</div>
+				</div>
+
+
+			</div>
+		</div>
 	</div>
 
+
+
+
+
+
+
+
+
 	<!-- Dashboard -->
+	<div class="hidden bg-sky-900 blue-color border-blue-500 text-blue-600 border-gray-300"></div>
 	<div class="flex justify-center pt-5">
 		<div class="w-full max-w-5xl">
-			<div class="bg-white rounded-xl pt-10 pb-10 mb-10 shadow-xl ring-1 ring-gray-900/5 px-6">
-				<div id="wrapper" class="dashboard flex justify-center "></div>
+			<div class="flex justify-center pt-5">
+				<div class="w-full max-w-5xl">
+					<!-- Onglets -->
+					<ul class="flex font-medium text-center ">
+						<li class="me-2">
+							<a id="default-tab" class="bg-white
+					  inline-block p-4
+					  rounded-t-lg hover:border-gray-300
+					  border" href="#" onclick="openTab(event, 'wrapper')">En Attente, En cours, Urgent</a>
+						</li>
+						<li class="me-2">
+							<a class="bg-white
+					  inline-block p-4
+					  rounded-t-lg hover:border-gray-300
+					  border" href="#" onclick="openTab(event, 'wrapperEnCours')">Terminées, Annulées</a>
+						</li>
+						<li class="me-2">
+							<a class="bg-white
+					  inline-block p-4 
+					  rounded-t-lg hover:border-gray-300
+					  border" href="#" onclick="openTab(event, 'wrapperFacture')">Facturées</a>
+						</li>
+					</ul>
+
+					<!-- Contenu des onglets -->
+					<div id="wrapper"
+						class="tab-content rounded-b-lg pt-5 pb-10 mb-10 shadow-xl ring-1 ring-gray-900/5 px-6"></div>
+					<div id="wrapperEnCours"
+						class="tab-content rounded-b-lg pt-5 pb-10 mb-10 shadow-xl ring-1 ring-gray-900/5 px-6"></div>
+					<div id="wrapperFacture"
+						class="tab-content rounded-b-lg pt-5 pb-10 mb-10 shadow-xl ring-1 ring-gray-900/5 px-6"></div>
+				</div>
 			</div>
 		</div>
 	</div>

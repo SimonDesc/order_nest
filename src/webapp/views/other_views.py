@@ -59,7 +59,10 @@ class Dashboard(ListView):
 
         urgent_objects = Order.objects.filter(status="Urgent")
         count_urgent = urgent_objects.count()
-
+        
+        payment_objects = Order.objects.filter(payment="Réglé")
+        count_urgent = urgent_objects.count()
+        
         count_all = Paginator(all_objects, element_by_page)
         context["total_obj"] = count_all.count
 
@@ -75,6 +78,8 @@ class Dashboard(ListView):
         context["count_invoice"] = count_invoice
         context["count_canceled"] = count_canceled
         context["count_urgent"] = count_urgent
+        
+        context["count_payment"] = count_urgent
 
 
         return context
