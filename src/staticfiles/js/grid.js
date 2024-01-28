@@ -1,3 +1,26 @@
+// Gestion des onglets
+function openTab(evt, tabName) {
+	var i, tabcontent, tablinks;
+
+	// Cache les onglets
+	tabcontent = document.getElementsByClassName("tab-content");
+	for (i = 0; i < tabcontent.length; i++) {
+		tabcontent[i].classList.add("hidden");
+	}
+
+	// Enlève la classe "active" de tous les éléments avec la classe "tablink"
+	tablinks = document.querySelectorAll(".flex ul li a");
+	tablinks.forEach(function (link) {
+		link.classList.remove("blue-color", "border-gray-300", "text-white");
+		link.classList.add("grey-color");
+	});
+
+	// Affiche le contenu de l'onglet courant et ajoute la classe "active"
+	document.getElementById(tabName).classList.remove("hidden");
+	evt.currentTarget.classList.remove("grey-color");
+	evt.currentTarget.classList.add("border-b-2", "blue-color", "border-gray-300", "text-white");
+}
+
 document.addEventListener("DOMContentLoaded", function () {
 	const {
 		html
@@ -20,10 +43,11 @@ document.addEventListener("DOMContentLoaded", function () {
 		}
 	};
 	const columns = [
-		'ID',
-		'Client',
-		'Intitulé',
+		{ id: 'ID', name: 'ID' },
+		{ id: 'Client', name: 'Client' },
+		{ id: 'Intitule', name: 'Intitulé' },
 		{
+			id: 'Status',
 			name: 'Status',
 			formatter: (cell) => {
 				const status = cell;
@@ -32,98 +56,126 @@ document.addEventListener("DOMContentLoaded", function () {
 			},
 		},
 
-		'Création',
-		'Paiement',
+		{ id: 'Creation', name: 'Création' },
+		{ id: 'Paiement', name: 'Paiement' },
 		{
+			id: 'Edit',
 			name: '',
 			formatter: (_, row) => {
-				return html(`<div class="flex justify-center"><a href='${row.cells[6].data}'><svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 48 48" width="25px" height="28px"><path fill="#E57373" d="M42.583,9.067l-3.651-3.65c-0.555-0.556-1.459-0.556-2.015,0l-1.718,1.72l5.664,5.664l1.72-1.718C43.139,10.526,43.139,9.625,42.583,9.067"/><path fill="#FF9800" d="M4.465 21.524H40.471999999999994V29.535H4.465z" transform="rotate(134.999 22.469 25.53)"/><path fill="#B0BEC5" d="M34.61 7.379H38.616V15.392H34.61z" transform="rotate(-45.02 36.61 11.385)"/><path fill="#FFC107" d="M6.905 35.43L5 43 12.571 41.094z"/><path fill="#37474F" d="M5.965 39.172L5 43 8.827 42.035z"/></a></div>`)
+				return html(`
+				<div class="flex justify-center"><a href='${row.cells[6].data}'>
+				<img width="25" height="20" src="/static/img/edit.svg">
+				`)
 			}
 		},
 	]
 
-	const grid = new gridjs.Grid({
-		columns: columns,
-		search: {
+	function createStatusTable(statusFilter) {
+		return new gridjs.Grid({
+			columns: columns,
+			search: {
+				server: {
+					url: (prev, keyword) => {
+						const separator = prev.includes('?') ? '&' : '?';
+						const searchUrl = `${prev}${separator}search=${keyword}`;
+						return searchUrl;
+					}
+				}
+			},
+			pagination: {
+				limit: 20,
+				server: {
+					url: (prev, page, limit) => {
+						const separator = prev.includes('?') ? '&' : '?';
+						// const paginationUrl = `${prev}${separator}page=${page}&size=${limit}`;
+						const statusFilter2 = statusFilter.join(',');
+        				const paginationUrl = `${prev}${separator}page=${page}&size=${limit}&status=${statusFilter2}`;
+						return paginationUrl;
+					}
+				}
+			},
 			server: {
-				url: (prev, keyword) => {
-					const separator = prev.includes('?') ? '&' : '?';
-					const searchUrl = `${prev}${separator}search=${keyword}`;
-					return searchUrl;
-				} 
-			}
-		},
-		pagination: {
-			limit: 20,
-			server: {
-				url: (prev, page, limit) => {
-					const separator = prev.includes('?') ? '&' : '?';
-					const paginationUrl = `${prev}${separator}page=${page}&size=${limit}`;
-					return paginationUrl;
+				url: '/get_orders/',
+				then: data => data.results
+					.filter(order => statusFilter.some(status => order.status === status))
+					.map(order => [order.IDorder, order.customer, order.label, order.status, order.created, order.payment, order.url]),
+				total: data => {
+					return data.total;
+				}
+			},
+
+			resizable: true,
+			sort: true,
+			width: '100%',
+			height: '80%',
+			style: {
+				container: {
+					'width': '100%',
+					'height': '80%'
+				},
+				table: {
+				},
+				th: {
+					'background-color': '#f3f4f6', 
+					'color': '#111827', 
+					'text-align': 'center',
+					'padding': '10px', 
+					'border-bottom': '2px solid #e5e7eb',
+				},
+				td: {
+					'text-align': 'left',
+					'padding': '10px',
+					'border-bottom': '1px solid #e5e7eb', 
+				},
+			},
+			language: {
+				'search': {
+					'placeholder': 'Rechercher...'
+				},
+				'pagination': {
+					'previous': 'Précédent',
+					'next': 'Suivant',
+					'showing': 'Affichage de',
+					'to': 'à',
+					'of': 'sur',
+					'results': 'résultats',
+					'first': 'Premier',
+					'last': 'Dernier',
+					'info': 'Affiche de $1 à $2 sur $3 résultats'
+				},
+				'loading': 'Chargement...',
+				'noRecordsFound': 'Aucun enregistrement trouvé',
+				'serverError': 'Erreur serveur',
+				'export': {
+					'csv': 'Télécharger en CSV',
+					'json': 'Télécharger en JSON'
+				},
+				'clear': 'Effacer',
+				'filter': {
+					'apply': 'Appliquer',
+					'cancel': 'Annuler'
+				},
+				'sort': {
+					'asc': 'Croissant',
+					'desc': 'Décroissant'
 				}
 			}
-		},
-		server: {
-			url: '/get_orders/',
-			then: data => {
-				return data.results.map(order => [order.IDorder, order.customer, order.label, order.status, order.created, order.payment, order.url]);
-			},
-			total: data => {
-				return data.total;
-			}
-		},
-		
-		resizable: true,
-		sort: true,
-		width: '100%',
-  		height: '80%',
-		style: {
-			container:{
-				'width':'100%',
-				'height':'80%'
-			  },
-			table: {
-			},
-			th: {
-				'background-color': 'white',
-				'text-align': 'center'
-			},
-			td: {
-				'text-align': 'left'
-			},
-		},
-		language: {
-			'search': {
-				'placeholder': 'Rechercher...'
-			},
-			'pagination': {
-				'previous': 'Précédent',
-				'next': 'Suivant',
-				'showing': 'Affichage de',
-				'to': 'à',
-				'of': 'sur',
-				'results': 'résultats',
-				'first': 'Premier',
-				'last': 'Dernier',
-				'info': 'Affiche de $1 à $2 sur $3 résultats'
-			},
-			'loading': 'Chargement...',
-			'noRecordsFound': 'Aucun enregistrement trouvé',
-			'serverError': 'Erreur serveur',
-			'export': {
-				'csv': 'Télécharger en CSV',
-				'json': 'Télécharger en JSON'
-			},
-			'clear': 'Effacer',
-			'filter': {
-				'apply': 'Appliquer',
-				'cancel': 'Annuler'
-			},
-			'sort': {
-				'asc': 'Croissant',
-				'desc': 'Décroissant'
-			}
-		}
-	  });
-	grid.render(document.getElementById("wrapper"));
+		});
+	}
+
+	const gridEncours = createStatusTable(['En cours', 'Urgent', 'En attente']);
+	gridEncours.render(document.getElementById("wrapper"));
+
+	const gridTermines = createStatusTable(['Terminée', 'Annulée']);
+	gridTermines.render(document.getElementById("wrapperEnCours"));
+
+	const gridFacture = createStatusTable(['Facturée']);
+	gridFacture.render(document.getElementById("wrapperFacture"));
+
+
+
+
+	// Pour afficher l'onglet par défaut au chargement
+	document.getElementById("default-tab").click();
+
 });

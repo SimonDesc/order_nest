@@ -1343,11 +1343,6 @@ select{
   border-color: rgb(212 212 216 / var(--tw-border-opacity));
 }
 
-.bg-amber-50{
-  --tw-bg-opacity: 1;
-  background-color: rgb(255 251 235 / var(--tw-bg-opacity));
-}
-
 .bg-black{
   --tw-bg-opacity: 1;
   background-color: rgb(0 0 0 / var(--tw-bg-opacity));
@@ -1897,8 +1892,8 @@ select{
   background: #F7F7F7;
 }
 
-tr.status-active td {
-  background-color: rgba(35, 220, 61, 0.3) !important;
+tr.status-active td{
+  background-color: #ECFFDC !important;
 }
 
 /* Validation envoi de la photo */
