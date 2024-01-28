@@ -89,7 +89,7 @@ document.addEventListener("DOMContentLoaded", function () {
 						const separator = prev.includes('?') ? '&' : '?';
 						// const paginationUrl = `${prev}${separator}page=${page}&size=${limit}`;
 						const statusFilter2 = statusFilter.join(',');
-        				const paginationUrl = `${prev}${separator}page=${page}&size=${limit}&status=${statusFilter2}`;
+        		const paginationUrl = `${prev}${separator}page=${page}&size=${limit}&status=${statusFilter2}`;
 						return paginationUrl;
 					}
 				}
