@@ -46,15 +46,20 @@ def get_clients(request):
 
 def get_orders(request):
     search_query = request.GET.get('search', '')
+    status_filter = request.GET.get('status', '')
 
-    # Définir la base de la requête
+    # base de la requête
+    orders_query = Order.objects.all()
+    
     if search_query:
         orders_query = Order.objects.filter(
             Q(customer__last_name__icontains=search_query) |
             Q(customer__first_name__icontains=search_query) 
         )
-    else:
-        orders_query = Order.objects.all()
+        
+    if status_filter:
+        status_filter_list = status_filter.split(',')
+        orders_query = orders_query.filter(status__in=status_filter_list)
 
     # Calculer le total avant la pagination
     total = orders_query.count()
