@@ -3,12 +3,13 @@ from django.conf.urls.static import static
 from django.urls import path
 from django.contrib.auth.views import LoginView, LogoutView
 
+
 # Liste des vues
-from .views.other_views import WebappHome, Dashboard
+from .views.other_views import WebappHome, Dashboard, CustomerView, EditCustomer, CreateCustomer
 from .views.order_views import CreateOrder, EditOrder, DeleteOrder, SearchOrder
 from .views.product_views import AddProductsToOrder, DeleteProduct, EditProduct, product_order_list
 from .views.api_views import DeleteOrderAttachment, get_clients, \
-    get_canvas, get_orders, save_attachment
+    get_canvas, get_customers, get_orders, save_attachment, deactivate_customer
 
 app_name = 'webapp'
 
@@ -16,7 +17,6 @@ urlpatterns = [
     # Identification Routes
     path('login', LoginView.as_view(template_name='webapp/login.html'), name='login'),
     path('logout/', LogoutView.as_view(next_page='webapp:login'), name='logout'),
-
 
     # Primary Routes
     path('', LoginView.as_view(template_name='webapp/login.html'), name='login'),
@@ -45,6 +45,13 @@ urlpatterns = [
     path('get_canvas/<int:pk>', get_canvas, name='get_canvas'),
     path('get_orders/', get_orders, name='get_orders'),
     path('product_order_list/<int:order_id>/', product_order_list, name='product_order_list'),
+    path('get_customers/', get_customers, name='get_customers'),
+    path('deactivate_customer/<int:pk>', deactivate_customer, name='deactivate_customer'),
+
+    # Customers Routes
+    path('customers/', CustomerView.as_view(), name='customer'),
+    path('customers/<int:pk>/edit/', EditCustomer.as_view(), name='customer-edit'),
+    path('customers/create/', CreateCustomer.as_view(), name='customer-create'),
 
 ]
 

@@ -1,11 +1,12 @@
 from typing import Any
 from django.core.paginator import Paginator
 from django.db.models import Q, Prefetch
+from django.urls import reverse_lazy
 from django.views.generic import (
-    ListView,
+    ListView, UpdateView, CreateView
 )
 from ..models import Order, Customer, OrderAttachment
-
+from ..forms import NewCustomerForm
 
 class WebappHome(ListView):
     model = Order
@@ -26,6 +27,26 @@ class WebappHome(ListView):
             Prefetch('attachments', queryset=attachments)
         ).order_by("-created_at")[:20]
         return queryset
+
+
+class CustomerView(ListView):
+    model = Customer
+    template_name = "webapp/customers/customer.html"
+    context_object_name = "customers"
+    
+
+class EditCustomer(UpdateView):
+    model = Customer
+    form_class = NewCustomerForm
+    template_name = "webapp/customers/customer-edit.html"
+    success_url = reverse_lazy("webapp:customer")
+    
+    
+class CreateCustomer(CreateView):
+    model = Customer
+    form_class = NewCustomerForm
+    template_name = "webapp/customers/customer-create.html"
+    success_url = reverse_lazy("webapp:customer")
 
 
 class Dashboard(ListView):

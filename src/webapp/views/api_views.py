@@ -20,7 +20,8 @@ from .utils import delete_file_from_s3
 def get_clients(request):
     query = request.GET.get("term", "")
     clients = Customer.objects.filter(
-        Q(first_name__icontains=query) | Q(last_name__icontains=query)
+        (Q(first_name__icontains=query) | Q(last_name__icontains=query))
+        & Q(active=True)
     ).values(
         "id", "first_name", "last_name", "phone_number", "address", "mail", "comments"
     )[
@@ -42,6 +43,48 @@ def get_clients(request):
         results.append(client_dict)
 
     return JsonResponse(results, safe=False)
+
+
+
+
+def get_customers(request):
+    search_query = request.GET.get('search', '')
+
+    # base de la requête
+    customers_query = Customer.objects.filter(active=True)
+    
+    if search_query:
+        customers_query = Customer.objects.filter(
+            Q(last_name__icontains=search_query) |
+            Q(first_name__icontains=search_query) 
+        )
+
+    # Calculer le total avant la pagination
+    total = customers_query.count()
+
+    # Pagination
+    page = int(request.GET.get('page', 1))
+    size = int(request.GET.get('size', 20))
+    offset = size * page
+    customers_query = customers_query.order_by("-id")[offset:offset + size]
+
+    # Construction de la liste de résultats
+    order_list = [
+        {
+            "last_name": str(customer.last_name),
+            "first_name": str(customer.first_name),
+            "phone_number": str(customer.formatted_phone_number()),
+            "mail": str(customer.mail),
+            "url": str(reverse("webapp:customer-edit", kwargs={"pk": customer.pk})),
+        } for customer in customers_query
+    ]
+
+    data = {
+        "results": order_list,
+        "total": total,
+    }
+
+    return JsonResponse(data)
 
 
 def get_orders(request):
@@ -210,6 +253,24 @@ def get_canvas(request, pk):
         return JsonResponse({"exit": True, "json_file": file_json})
     return HttpResponse(False)
 
+
+def deactivate_customer(request, pk):
+    if request.method != "POST":
+        return JsonResponse({"status": "error", "message": "Méthode non autorisée"}, status=405)
+
+    try:
+        customer = Customer.objects.get(pk=pk)
+        customer.active = False
+        customer.save()
+        
+        return JsonResponse({"status": "success", "message": "Client désactivé avec succès"}) 
+        
+    except Customer.DoesNotExist:
+        return JsonResponse({"status": "error", "message": "Client non trouvé"}, status=404)
+    except PermissionDenied:
+        return JsonResponse({"status": "error", "message": "Permission refusée"}, status=403)
+    except Exception as e:
+        return JsonResponse({"status": "error", "message": "Erreur interne du serveur"}, status=500)
 
 class DeleteOrderAttachment(DeleteView):
     """
