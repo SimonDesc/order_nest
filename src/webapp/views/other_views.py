@@ -1,31 +1,39 @@
 from typing import Any
+from django.db.models import Sum
 from django.core.paginator import Paginator
-from django.db.models import Q, Prefetch
+from django.db.models import Q, Prefetch, Count
 from django.urls import reverse_lazy
-from django.views.generic import (
-    ListView, UpdateView, CreateView
-)
+from django.views.generic import ListView, UpdateView, CreateView
 from ..models import Order, Customer, OrderAttachment
 from ..forms import NewCustomerForm
+
 
 class WebappHome(ListView):
     model = Order
     template_name = "webapp/home.html"
     context_object_name = "orders"
-    
+
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context['verbose_names'] = {field.name: field.verbose_name for field in Order._meta.get_fields() if hasattr(field, 'verbose_name')}
-        context['customer_verbose_names'] = {field.name: field.verbose_name for field in Customer._meta.get_fields() if hasattr(field, 'verbose_name')}
+        context["verbose_names"] = {
+            field.name: field.verbose_name
+            for field in Order._meta.get_fields()
+            if hasattr(field, "verbose_name")
+        }
+        context["customer_verbose_names"] = {
+            field.name: field.verbose_name
+            for field in Customer._meta.get_fields()
+            if hasattr(field, "verbose_name")
+        }
         return context
 
     def get_queryset(self):
         attachments = OrderAttachment.objects.all()
-        queryset = Order.objects.filter(
-            Q(status="En cours") | Q(status="Urgent")
-        ).prefetch_related(
-            Prefetch('attachments', queryset=attachments)
-        ).order_by("-created_at")[:20]
+        queryset = (
+            Order.objects.filter(Q(status="En cours") | Q(status="Urgent"))
+            .prefetch_related(Prefetch("attachments", queryset=attachments))
+            .order_by("-created_at")[:20]
+        )
         return queryset
 
 
@@ -33,15 +41,29 @@ class CustomerView(ListView):
     model = Customer
     template_name = "webapp/customers/customer.html"
     context_object_name = "customers"
-    
+
 
 class EditCustomer(UpdateView):
     model = Customer
     form_class = NewCustomerForm
     template_name = "webapp/customers/customer-edit.html"
     success_url = reverse_lazy("webapp:customer")
-    
-    
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        customer = self.get_object()
+        
+        # Compter les orders selon leur statut
+        orders_summary = Order.objects.filter(customer=customer).aggregate(
+            total_in_progress=Count('pk', filter=Q(status__in=['En cours', 'En attente', 'Urgent'])),
+            total_ended=Count('pk', filter=Q(status__in=['Terminée', 'Annulée'])),
+            total_invoice=Count('pk', filter=Q(status='Facturée'))
+        )
+
+        context.update(orders_summary)
+        return context
+
+
 class CreateCustomer(CreateView):
     model = Customer
     form_class = NewCustomerForm
@@ -80,13 +102,12 @@ class Dashboard(ListView):
 
         urgent_objects = Order.objects.filter(status="Urgent")
         count_urgent = urgent_objects.count()
-        
+
         payment_objects = Order.objects.filter(payment="Réglé")
         count_urgent = urgent_objects.count()
-        
+
         count_all = Paginator(all_objects, element_by_page)
         context["total_obj"] = count_all.count
-
 
         accumulated_objects = (page_number - 1) * element_by_page + len(
             context["page_obj"]
@@ -99,8 +120,7 @@ class Dashboard(ListView):
         context["count_invoice"] = count_invoice
         context["count_canceled"] = count_canceled
         context["count_urgent"] = count_urgent
-        
-        context["count_payment"] = count_urgent
 
+        context["count_payment"] = count_urgent
 
         return context

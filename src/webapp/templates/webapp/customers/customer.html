@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block title %}
+
 <title>Liste des clients</title>
 <script src="https://cdn.jsdelivr.net/npm/gridjs/dist/gridjs.umd.js"></script>
 <script src="{% static 'js/grid_customer.js' %}"></script>
@@ -11,35 +12,45 @@
 
 {% block content %}
 
-<div class="titre flex justify-center text-3xl font-bold ">
-	<h1 class="title text-slate-500 mt-5">Liste des clients</h1>
+<div class="flex justify-center align-middle text-3xl font-bold bg-slate-200 bg-opacity-50 ">
+	<h1 class="title-text-top my-5">Liste des clients</h1>
 </div>
 
 <div class="min-h-screen justify-center gap-5 p-5">
+	<!-- Nouveau Client  -->
 
 
 
-	<!-- Dashboard -->
+
+	
+	<!-- Chargement des classes tailwind utilisées dans le script js -->
 	<div class="hidden bg-sky-900 blue-color border-blue-500 text-blue-600 border-gray-300"></div>
-	<div class="flex justify-center pt-5">
+	
+
+	<div class="flex justify-center">
 		<div class="w-full max-w-5xl">
+
+			<!-- New Customer -->
+			<div class="flex justify-end mb-5 mr-10">
+				<a href="{% url 'webapp:customer-create' %}">
+					<div class="rounded-2xl current-page
+				cursor-pointer transition-all hover:-translate-y-[1px] active:border-b-[2px]
+				active:brightness-90 active:translate-y-[2px] ">
+						<img src="{% static 'img/new_user.svg' %}" alt="Accueil" width="50" height="40">
+					</div>
+				</a>
+			</div>
+
+			<!-- Dashboard -->
 			<div class="flex justify-center pt-5">
 				<div class="w-full max-w-5xl">
-					<ul class="flex font-medium text-center ">
-						<li class="me-2">
-							<a id="default-tab" class="bg-white
-					  inline-block p-4
-					  rounded-t-lg hover:border-gray-300
-					  border" href="{% url 'webapp:customer-create' %}">Créer un client</a>
-						</li>
-					</ul>
-					
 					<div id="wrapperCustomer"
 						class="tab-content bg-white rounded-b-lg pt-5 pb-10 mb-10 shadow-xl ring-1 ring-gray-900/5 px-6"></div>
 				</div>
 			</div>
+
 		</div>
 	</div>
+	
 </div>
-
 {% endblock %}

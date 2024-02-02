@@ -11,8 +11,8 @@
 
 {% block content %}
 
-<div class="titre flex justify-center text-3xl font-bold ">
-	<h1 class="title text-slate-500 mt-5">Toutes les commandes</h1>
+<div class="flex justify-center align-middle text-3xl font-bold bg-slate-200 bg-opacity-50 ">
+	<h1 class="title-text-top my-5">Liste des commandes</h1>
 </div>
 
 <div class="min-h-screen justify-center gap-5 p-5">
@@ -78,22 +78,31 @@
 					<!-- Onglets -->
 					<ul class="flex font-medium text-center ">
 						<li class="me-2">
-							<a id="default-tab" class="bg-white
-					  inline-block p-4
-					  rounded-t-lg hover:border-gray-300
-					  border" href="#" onclick="openTab(event, 'wrapper')">En Attente | En cours | Urgent</a>
+							<a id="default-tab" class="bg-white inline-block p-4
+							rounded-t-lg hover:border-gray-300 border relative" href="#" onclick="openTab(event, 'wrapper')">En Attente | En cours | Urgent
+					 	{% if count_waiting|add:count_urgent|add:count_progress %}
+							<div class="absolute -top-2 inline-flex items-center justify-center w-6 h-6 text-xs font-bold
+							text-white bg-red-500 border-2 border-white rounded-full">
+								{{ count_waiting|add:count_urgent|add:count_progress }}
+							</div>
+				  		{% endif %}
+					</a>
 						</li>
 						<li class="me-2">
 							<a class="bg-white
 					  inline-block p-4
 					  rounded-t-lg hover:border-gray-300
-					  border" href="#" onclick="openTab(event, 'wrapperEnCours')">Terminées | Annulées</a>
+					  border" href="#" onclick="openTab(event, 'wrapperEnCours')">
+					  Terminées | Annulées ({{ count_ended|add:count_canceled }})
+					</a>
 						</li>
 						<li class="me-2">
 							<a class="bg-white
 					  inline-block p-4 
 					  rounded-t-lg hover:border-gray-300
-					  border" href="#" onclick="openTab(event, 'wrapperFacture')">Facturées</a>
+					  border" href="#" onclick="openTab(event, 'wrapperFacture')">
+					  Facturées ({{ count_invoice }})
+					</a>
 						</li>
 					</ul>
 

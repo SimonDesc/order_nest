@@ -90,6 +90,7 @@ def get_customers(request):
 def get_orders(request):
     search_query = request.GET.get('search', '')
     status_filter = request.GET.get('status', '')
+    customer_id = request.GET.get('customerId', '')
 
     # base de la requête
     orders_query = Order.objects.all()
@@ -104,6 +105,9 @@ def get_orders(request):
         status_filter_list = status_filter.split(',')
         orders_query = orders_query.filter(status__in=status_filter_list)
 
+    if customer_id:
+        orders_query = orders_query.filter(customer__id=customer_id)
+        
     # Calculer le total avant la pagination
     total = orders_query.count()
 
