@@ -1,5 +1,5 @@
 from typing import Any
-from django.db.models import Sum
+from django.db.models import Case, When, Value, IntegerField
 from django.core.paginator import Paginator
 from django.db.models import Q, Prefetch, Count
 from django.urls import reverse_lazy
@@ -30,9 +30,17 @@ class WebappHome(ListView):
     def get_queryset(self):
         attachments = OrderAttachment.objects.all()
         queryset = (
-            Order.objects.filter(Q(status="En cours") | Q(status="Urgent"))
+            Order.objects
+            .annotate(
+                priority=Case(
+                    When(status="Urgent", then=Value(1)),
+                    default=Value(2),
+                    output_field=IntegerField(),
+                )
+            )
+            .filter(Q(status="En cours") | Q(status="Urgent"))
             .prefetch_related(Prefetch("attachments", queryset=attachments))
-            .order_by("-created_at")[:20]
+            .order_by("priority", "-created_at")[:20]
         )
         return queryset
 

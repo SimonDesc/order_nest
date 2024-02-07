@@ -64,11 +64,14 @@
 						alt="Tableau de bord" width="50" height="40">
 				</div>
 			</a>
+
+
+			
 		</div>
 
 		<!-- Bouton de déconnexion aligné à droite, en dehors du conteneur central -->
-		<div class="absolute right-0 top-0 mt-3 mr-2">
-			<div style="background-color: #dd6e42; border: 0.5rem solid #dd6e42;" class="rounded-xl">
+		<div class="absolute top-8" style="right: 7%;"> 
+			<div style="background-color: #FF4E27; border: 0.5rem solid #FF4E27;" class="rounded-xl">
 				{% if user.is_authenticated %}
 				<form method="post" action="{% url 'webapp:logout' %}">
 					{% csrf_token %}

@@ -777,12 +777,8 @@ select{
   top: -0.5rem;
 }
 
-.right-0{
-  right: 0px;
-}
-
-.top-0{
-  top: 0px;
+.top-8{
+  top: 2rem;
 }
 
 .z-10{
@@ -1082,12 +1078,12 @@ select{
   width: 2rem;
 }
 
-.w-full{
-  width: 100%;
-}
-
 .w-\[122px\]{
   width: 122px;
+}
+
+.w-full{
+  width: 100%;
 }
 
 .max-w-2xl{
@@ -1154,6 +1150,14 @@ select{
 
 .grid-rows-2{
   grid-template-rows: repeat(2, minmax(0, 1fr));
+}
+
+.grid-rows-3{
+  grid-template-rows: repeat(3, minmax(0, 1fr));
+}
+
+.grid-rows-4{
+  grid-template-rows: repeat(4, minmax(0, 1fr));
 }
 
 .flex-col{
@@ -1489,19 +1493,14 @@ select{
   padding-bottom: 1rem;
 }
 
-.py-8{
-  padding-top: 2rem;
-  padding-bottom: 2rem;
-}
-
 .py-5{
   padding-top: 1.25rem;
   padding-bottom: 1.25rem;
 }
 
-.py-1{
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
+.py-8{
+  padding-top: 2rem;
+  padding-bottom: 2rem;
 }
 
 .pb-10{
@@ -1526,10 +1525,6 @@ select{
 
 .pt-10{
   padding-top: 2.5rem;
-}
-
-.pt-3{
-  padding-top: 0.75rem;
 }
 
 .pt-4{
@@ -1794,6 +1789,18 @@ select{
 
 body {
   font-family: 'Poppins', sans-serif;
+}
+
+/* Cards Home */
+
+.shadow-urgent {
+  box-shadow: 0 10px 15px -3px rgba(255, 1, 1, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(208, 0, 0, 0.05);
+}
+
+/* Style d'ombre pour les statuts normaux */
+
+.shadow-normal {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(17, 24, 39, 0.05);
 }
 
 /* Background */

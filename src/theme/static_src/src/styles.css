@@ -9,6 +9,17 @@ body {
 	font-family: 'Poppins', sans-serif;
 }
 
+/* Cards Home */
+.shadow-urgent {
+    box-shadow: 0 10px 15px -3px rgba(255, 1, 1, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(208, 0, 0, 0.05);
+}
+
+/* Style d'ombre pour les statuts normaux */
+.shadow-normal {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(17, 24, 39, 0.05);
+
+}
+
 
 /* Background */
 
