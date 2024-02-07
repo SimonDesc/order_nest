@@ -37,9 +37,10 @@ $(document).ready(function () {
 			},
 
 		});
-
+		console.log($("#progressBar"))
 		$("#progressBar").width('50%')
 		$("#progressNumber").text('50%')
+
 
 		// Envoi de l'image au serveur
 		async function sendPicture(formData) {
