@@ -21,8 +21,8 @@
 {% endblock %}
 {% block content %}
 
-<div class="titre flex justify-center text-3xl font-bold mb-9">
-	<h1 class="title text-slate-500 mt-5">Modification</h1>
+<div class="flex justify-center align-middle text-3xl font-bold bg-slate-200 bg-opacity-50 ">
+	<h1 class="title-text-top my-5">Modifier commande</h1>
 </div>
 
 <input type="hidden" id="orderPk" value="{{ order_form.instance.pk }}">
@@ -30,14 +30,13 @@
 
 	<div class="w-full max-w-5xl">
 
-		<div class="bg-white px-6 rounded-xl pt-10 shadow-xl ring-1 ring-gray-900/5 px-14">
+		<div class="bg-white px-6 rounded-xl py-5 shadow-xl ring-1 ring-gray-900/5 px-14 mt-5">
 
 			<form method="POST" class="">
 				{% csrf_token %}
 				<!-- Titre -->
 				<div class="subtitle infosorder mb-5">
 					<p>N°{{ order_form.instance.id }}</p>
-					<p>Créée le: {% now "j F Y" %}</p>
 				</div>
 				<div class="border-b"></div>
 				<!-- libellé et status  -->
@@ -147,12 +146,13 @@
 						</a>
 					</div>
 					<div class="btnok">
-						<button type="submit" class="blue-button div-ombre-button-edit py-2 px-6 text-sm text-white text-gray-900
-					focus:outline-none rounded-xl focus:z-10 focus:ring-4 focus:ring-gray-200 mb-8"
+						<button type="submit" class="w-[122px] blue-button div-ombre-button-edit py-2 px-6 mb-2 text-sm text-white text-gray-900
+						focus:outline-none rounded-xl focus:z-10 focus:ring-4 focus:ring-gray-200
+						cursor-pointer transition-all   hover:-translate-y-[1px]  active:border-b-[2px]
+						active:brightness-90 active:translate-y-[2px]"
 							value="Update">Enregistrer</button>
 					</div>
 				</div>
-				<hr>
 			</form>
 		</div>
 
@@ -161,11 +161,11 @@
 
 		<!-- Conteneur pour la liste des produits -->
 		<div class="titre flex justify-left text-2xl font-bold mt-5 mb-3">
-			<h1 class="title text-slate-500 mt-5">Produits</h1>
+			<h1 class="text-slate-500 mt-5">Produits</h1>
 
 		</div>
 
-		<div class="bg-white px-4 rounded-xl pt-1 shadow-xl ring-1 ring-gray-900/5">
+		<div class="bg-white px-6 rounded-xl py-5 shadow-xl ring-1 ring-gray-900/5 px-14 mt-5">
 
 
 			<div id="productOrderList" hx-get="{% url 'webapp:product_order_list' order_id=order.id %}"
@@ -176,10 +176,11 @@
 			<!-- Conteneur pour le bouton, aligné en bas à droite -->
 			<div class="flex justify-end mt-auto">
 				<button hx-get="{% url 'webapp:order-add-products' pk=order_form.instance.id %}" hx-target="#dialog"
-					class="blue-button div-ombre-button-edit rounded-xl w-32 text-sm div-ombre-button-edit py-2 px-4 mb-2 text-sm text-white
-					focus:outline-none
-				   focus:z-10 focus:ring-4 focus:ring-gray-200 mb-8">
-					Ajouter Produit
+					class="w-[122px] blue-button div-ombre-button-edit py-2 px-6 mb-2 text-sm text-white text-gray-900
+					focus:outline-none rounded-xl focus:z-10 focus:ring-4 focus:ring-gray-200
+					cursor-pointer transition-all   hover:-translate-y-[1px]  active:border-b-[2px]
+					active:brightness-90 active:translate-y-[2px]">
+					Nouveau
 				</button>
 			</div>
 
@@ -194,10 +195,10 @@
 
 		<!-- Liste des photos -->
 		<div class="titre flex justify-left text-2xl font-bold mt-5 mb-3">
-			<h1 class="title text-slate-500 mt-5">Photos</h1>
+			<h1 class="text-slate-500 mt-5">Photos</h1>
 		</div>
 
-		<div class="bg-white px-4 rounded-xl pt-3 shadow-xl ring-1 ring-gray-900/5">
+		<div class="bg-white px-6 rounded-xl py-5 shadow-xl ring-1 ring-gray-900/5 px-14 mt-5">
 
 			<div>
 				<div id="pictureList">
@@ -231,12 +232,12 @@
 
 
 			<!-- Bouton pour ouvrir le modal Joindre photo -->
-			<div class="flex justify-end">
-				<button id="openModalPictureButton" class="blue-button div-ombre-button-edit rounded-xl
-			w-32 text-sm div-ombre-button-edit py-2 px-4 mb-8 mt-8 text-sm text-white
-			focus:outline-none
-		   focus:z-10 focus:ring-4 focus:ring-gray-200">
-					Joindre photo
+			<div class="flex justify-end align-bottom">
+				<button id="openModalPictureButton" class="w-[122px] blue-button div-ombre-button-edit py-2 px-6 mb-2 text-sm text-white text-gray-900
+				focus:outline-none rounded-xl focus:z-10 focus:ring-4 focus:ring-gray-200
+				cursor-pointer transition-all   hover:-translate-y-[1px]  active:border-b-[2px]
+				active:brightness-90 active:translate-y-[2px]">
+					Joindre
 				</button>
 			</div>
 
@@ -245,7 +246,7 @@
 
 		<hr>
 		<div class="titre flex justify-left text-2xl font-bold mt-2 ">
-			<h1 class="title text-slate-500 mt-5">Croquis</h1>
+			<h1 class="text-slate-500 mt-5">Croquis</h1>
 		</div>
 
 		<!-- Bouton gomme et supprimer -->
@@ -269,10 +270,10 @@
 		</div>
 
 		<div class="flex justify-end">
-			<button id="bt_saveDrawing" class="blue-button div-ombre-button-edit rounded-xl
-			w-32 text-sm div-ombre-button-edit py-2 px-4 mb-2 mt-2 text-sm text-white
-				focus:outline-none
-			focus:z-10 focus:ring-4 focus:ring-gray-200">
+			<button id="bt_saveDrawing" class="w-[122px] blue-button div-ombre-button-edit py-2 mb-2 mt-5 text-sm text-white text-gray-900
+			focus:outline-none rounded-xl focus:z-10 focus:ring-4 focus:ring-gray-200
+			cursor-pointer transition-all   hover:-translate-y-[1px]  active:border-b-[2px]
+			active:brightness-90 active:translate-y-[2px]">
 				Sauvegarder
 			</button>
 		</div>
@@ -335,19 +336,20 @@
 
 		<!-- Conteneur du bouton 'Parcourir' -->
 		<div class="flex justify-end inline-block">
-			<button id="closeModalPictureButton" style="background-color: #FF4E27; border-radius: 10px;" class="w-32 text-lg div-ombre-button-navbar-logout py-2 px-4 mr-5 mb-2 text-sm text-white 
-			focus:outline-none
-		   focus:z-10 focus:ring-4 focus:ring-gray-200">
+			<button id="closeModalPictureButton" style="background-color: #FF4E27; border-radius: 10px;" class="w-[122px] 
+			blue-button div-ombre-button-navbar-logout py-2 px-6 mb-2 mr-5 text-sm text-white text-gray-900
+			focus:outline-none rounded-xl focus:z-10 focus:ring-4 focus:ring-gray-200
+			cursor-pointer transition-all   hover:-translate-y-[1px]  active:border-b-[2px]
+			active:brightness-90 active:translate-y-[2px]">
 				Fermer
 			</button>
 
 			<input class="hidden" type="file" accept="image/*" id="photoCaptureInput" capture="camera">
 			<!-- Label personnalisé servant de bouton -->
-			<label for="photoCaptureInput" type="submit" class="blue-button div-ombre-button-edit rounded-xl
-			cursor-pointer w-32 text-lg div-ombre-button-edit py-2 px-4 mb-2 text-sm text-white
-			focus:outline-none
-			focus:z-10 focus:ring-4 focus:ring-gray-200
-			text-center
+			<label for="photoCaptureInput" type="submit" class="w-[122px] blue-button div-ombre-button-edit py-2 px-6 mb-2 text-sm text-white text-gray-900
+			focus:outline-none rounded-xl focus:z-10 focus:ring-4 focus:ring-gray-200
+			cursor-pointer transition-all   hover:-translate-y-[1px]  active:border-b-[2px]
+			active:brightness-90 active:translate-y-[2px]
 			">
 				Parcourir
 			</label>

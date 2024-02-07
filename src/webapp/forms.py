@@ -64,6 +64,7 @@ class NewCustomerForm(ModelForm):
             "mail",
             "comments",
         )
+        
 
 
 class AddProductsToOrder(ModelForm):

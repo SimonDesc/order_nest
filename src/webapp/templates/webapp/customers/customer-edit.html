@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+
+<title>Modifier Client</title>
+
+<!-- Jquery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+
+<!-- GridJs -->
+<script src="https://cdn.jsdelivr.net/npm/gridjs/dist/gridjs.umd.js"></script>
+<script src="{% static 'js/grid_customer_history.js' %}"></script>
+<link href="https://cdn.jsdelivr.net/npm/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
+
+<!-- Delete button -->
+<script src="{% static 'js/customer_delete.js' %}"></script>
+
+
+{% endblock %}
+{% block content %}
+
+<div class="flex justify-center align-middle text-3xl font-bold bg-slate-200 bg-opacity-50 ">
+	<h1 class="title-text-top my-5">Modifier client</h1>
+</div>
+
+<div class="min-h-screen flex content-start justify-center gap-5 ">
+
+
+	<div class="w-full max-w-5xl">
+
+		<div class="bg-white px-6 rounded-xl pt-10 shadow-xl ring-1 ring-gray-900/5 px-14 mt-5">
+
+			<form method="POST" class="">
+				{% csrf_token %}
+				<div id="id_customer" class="hidden" value="{{ form.instance.id }}">{{ form.instance.id }}</div>
+				<!-- Clients -->
+				<div class="client flex flex-no-wrap gap-8">
+					<div class="nom w-4/12">
+						{{ form.last_name.label_tag }}
+						<div class="mt-2"></div>
+						{{ form.last_name }}
+					</div>
+					<div class="prenom w-4/12">
+						{{ form.first_name.label_tag }}
+						<div class="mt-2"></div>
+						{{ form.first_name }}
+					</div>
+					<div class="tel w-3/12 ml-auto">
+						{{ form.phone_number.label_tag }}
+						<div class="mt-2"></div>
+						{{ form.phone_number }}
+					</div>
+				</div>
+				<!-- Coordonées : adresse & mail -->
+				<div class="mailadress flex flex-no-wrap pb-4 mt-3">
+					<div class="adress w-6/12 mr-10">
+						{{ form.address.label_tag }}
+						<div class="mt-2"></div>
+						<div>{{ form.address }}</div>
+					</div>
+					<div class="mail w-6/12 ml-auto">
+						{{ form.mail.label_tag }}
+						<div class="mt-2"></div>
+						<div>{{ form.mail }}</div>
+					</div>
+				</div>
+
+				<div class="border-b mb-5 mt-5"></div>
+
+				{% if form.errors %}
+				<div class="alert alert-danger">
+					<ul>
+						{% for field, errors in form.errors.items %}
+						{% for error in errors %}
+						<li>{{ field }}: {{ error }}</li>
+						{% endfor %}
+						{% endfor %}
+					</ul>
+				</div>
+				{% endif %}
+
+
+				<div class="buttons flex justify-end">
+					<div class="btndelete">
+						<a href="#">
+							<button style="background-color: #FF4E27; border-radius: 10px;" type="button" class="w-32 text-lg div-ombre-button-navbar-logout py-2 px-4 mr-7 mb-2 text-sm text-white 
+						focus:outline-none
+					   focus:z-10 focus:ring-4 focus:ring-gray-200" value="Delete">Supprimer</button>
+						</a>
+					</div>
+					<div class="btnok">
+						<button type="submit" class="blue-button div-ombre-button-edit py-2 px-6 text-sm text-white text-gray-900
+					focus:outline-none rounded-xl focus:z-10 focus:ring-4 focus:ring-gray-200 mb-8"
+							value="Update">Enregistrer</button>
+					</div>
+				</div>
+				<hr>
+			</form>
+
+
+
+		</div>
+
+		<!-- Historique clients -->
+		<div class="titre flex justify-left text-2xl font-bold mt-5 mb-3">
+			<h1 class="text-slate-500 mt-5">Historique du client</h1>
+		</div>
+		
+
+		<div class="bg-white px-4 rounded-xl pt-1 shadow-xl ring-1 ring-gray-900/5">
+			
+				<!-- Cards  -->
+
+			
+			<div class="w-full max-w-5xl mt-5">
+				<!-- Onglets -->
+				<ul class="flex font-medium text-center ">
+					<li class="me-2">
+						<a id="default-tab"
+						class="bg-white inline-block p-4 rounded-t-lg hover:border-gray-300 border relative"
+						href="#"
+				  onclick="openTab(event, 'wrapper')">
+						En Attente | En cours | Urgent
+						{% if total_in_progress %}
+							<div class="absolute -top-2 inline-flex items-center justify-center w-6 h-6 text-xs font-bold
+							text-white bg-red-500 border-2 border-white rounded-full">
+							{{ total_in_progress }}
+							</div>
+						{% endif %}
+					</a>
+					</li>
+					<li class="me-2">
+						<a class="bg-white inline-block p-4 rounded-t-lg hover:border-gray-300 border relative"
+						href="#" onclick="openTab(event, 'wrapperEnCours')">
+						Terminées | Annulées ({{ total_ended }})
+					</a>
+					</li>
+					<li class="me-2">
+						<a class="bg-white inline-block p-4 rounded-t-lg hover:border-gray-300 border relative"
+						href="#" onclick="openTab(event, 'wrapperFacture')">
+						Facturées ({{ total_invoice }})
+					</a>
+					</li>
+				</ul>
+
+				<!-- Contenu des onglets -->
+				<div id="wrapper"
+					class="tab-content bg-white rounded-b-lg pt-5 pb-10 mb-10 shadow-xl ring-1 ring-gray-900/5 px-6"></div>
+				<div id="wrapperEnCours"
+					class="tab-content bg-white rounded-b-lg pt-5 pb-10 mb-10 shadow-xl ring-1 ring-gray-900/5 px-6"></div>
+				<div id="wrapperFacture"
+					class="tab-content bg-white rounded-b-lg pt-5 pb-10 mb-10 shadow-xl ring-1 ring-gray-900/5 px-6"></div>
+			</div>
+		</div>
+
+{% endblock %}

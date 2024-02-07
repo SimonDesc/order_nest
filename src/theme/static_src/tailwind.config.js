@@ -45,7 +45,7 @@ module.exports = {
     theme: {
         extend: {
             fontFamily:{
-                'sans': ['"Roboto"', ...defaultTheme.fontFamily.sans],
+				sans: ['Poppins', 'sans-serif'],
             }
         },
     },

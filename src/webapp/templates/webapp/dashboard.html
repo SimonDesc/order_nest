@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}
-<title>Tableau de bord</title>
+<title>Toutes les commandes</title>
 <script src="https://cdn.jsdelivr.net/npm/gridjs/dist/gridjs.umd.js"></script>
 <script src="{% static 'js/grid.js' %}"></script>
 <link href="https://cdn.jsdelivr.net/npm/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
@@ -11,17 +11,17 @@
 
 {% block content %}
 
-<div class="titre flex justify-center text-3xl font-bold ">
-	<h1 class="title text-slate-500 mt-5">Toutes les commandes</h1>
+<div class="flex justify-center align-middle text-3xl font-bold bg-slate-200 bg-opacity-50 ">
+	<h1 class="title-text-top my-5">Liste des commandes</h1>
 </div>
 
 <div class="min-h-screen justify-center gap-5 p-5">
 
 
-
+	<!-- Cards  -->
 	<div class="container max-w-6xl px-5 mx-auto">
 		<div class="flex justify-center">
-			<div class="grid gap-7 sm:grid-cols-2 lg:grid-cols-3 max-w-4xl">
+			<div class="grid gap-7 sm:grid-cols-3 lg:grid-cols-3 max-w-4xl">
 
 				<!-- Carte 1 : En attente -->
 				<div class="p-5 bg-white rounded shadow-sm">
@@ -43,7 +43,7 @@
 							<img width="25" height="20" src="/static/img/in-progress.svg">
 						</div>
 						<div>
-							<div class="text-gray-400">En cours</div>
+							<div class="text-gray-600">En cours</div>
 							<div class="text-2xl font-bold text-gray-900">{{ count_progress }}</div>
 						</div>
 					</div>
@@ -56,7 +56,7 @@
 							<img width="25" height="20" src="/static/img/urgent.svg">
 						</div>
 						<div>
-							<div class="text-gray-400">Urgent</div>
+							<div class="text-gray-600">Urgent</div>
 							<div class="text-2xl font-bold text-gray-900">{{ count_urgent }}</div>
 						</div>
 					</div>
@@ -69,12 +69,6 @@
 
 
 
-
-
-
-
-
-
 	<!-- Dashboard -->
 	<div class="hidden bg-sky-900 blue-color border-blue-500 text-blue-600 border-gray-300"></div>
 	<div class="flex justify-center pt-5">
@@ -84,32 +78,41 @@
 					<!-- Onglets -->
 					<ul class="flex font-medium text-center ">
 						<li class="me-2">
-							<a id="default-tab" class="bg-white
-					  inline-block p-4
-					  rounded-t-lg hover:border-gray-300
-					  border" href="#" onclick="openTab(event, 'wrapper')">En Attente | En cours | Urgent</a>
+							<a id="default-tab" class="bg-white inline-block p-4
+							rounded-t-lg hover:border-gray-300 border relative" href="#" onclick="openTab(event, 'wrapper')">En Attente | En cours | Urgent
+					 	{% if count_waiting|add:count_urgent|add:count_progress %}
+							<div class="absolute -top-2 inline-flex items-center justify-center w-6 h-6 text-xs font-bold
+							text-white bg-red-500 border-2 border-white rounded-full">
+								{{ count_waiting|add:count_urgent|add:count_progress }}
+							</div>
+				  		{% endif %}
+					</a>
 						</li>
 						<li class="me-2">
 							<a class="bg-white
 					  inline-block p-4
 					  rounded-t-lg hover:border-gray-300
-					  border" href="#" onclick="openTab(event, 'wrapperEnCours')">Terminées | Annulées</a>
+					  border" href="#" onclick="openTab(event, 'wrapperEnCours')">
+					  Terminées | Annulées ({{ count_ended|add:count_canceled }})
+					</a>
 						</li>
 						<li class="me-2">
 							<a class="bg-white
 					  inline-block p-4 
 					  rounded-t-lg hover:border-gray-300
-					  border" href="#" onclick="openTab(event, 'wrapperFacture')">Facturées</a>
+					  border" href="#" onclick="openTab(event, 'wrapperFacture')">
+					  Facturées ({{ count_invoice }})
+					</a>
 						</li>
 					</ul>
 
 					<!-- Contenu des onglets -->
 					<div id="wrapper"
-						class="tab-content rounded-b-lg pt-5 pb-10 mb-10 shadow-xl ring-1 ring-gray-900/5 px-6"></div>
+						class="tab-content bg-white rounded-b-lg pt-5 pb-10 mb-10 shadow-xl ring-1 ring-gray-900/5 px-6"></div>
 					<div id="wrapperEnCours"
-						class="tab-content rounded-b-lg pt-5 pb-10 mb-10 shadow-xl ring-1 ring-gray-900/5 px-6"></div>
+						class="tab-content bg-white rounded-b-lg pt-5 pb-10 mb-10 shadow-xl ring-1 ring-gray-900/5 px-6"></div>
 					<div id="wrapperFacture"
-						class="tab-content rounded-b-lg pt-5 pb-10 mb-10 shadow-xl ring-1 ring-gray-900/5 px-6"></div>
+						class="tab-content bg-white rounded-b-lg pt-5 pb-10 mb-10 shadow-xl ring-1 ring-gray-900/5 px-6"></div>
 				</div>
 			</div>
 		</div>
