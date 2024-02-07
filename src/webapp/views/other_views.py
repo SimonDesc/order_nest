@@ -8,6 +8,8 @@ from ..models import Order, Customer, OrderAttachment
 from ..forms import NewCustomerForm
 
 
+
+
 class WebappHome(ListView):
     model = Order
     template_name = "webapp/home.html"

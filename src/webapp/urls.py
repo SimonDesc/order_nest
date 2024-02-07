@@ -6,7 +6,7 @@ from django.contrib.auth.views import LoginView, LogoutView
 
 # Liste des vues
 from .views.other_views import WebappHome, Dashboard, CustomerView, EditCustomer, CreateCustomer
-from .views.order_views import CreateOrder, EditOrder, DeleteOrder, SearchOrder
+from .views.order_views import CreateOrder, EditOrder, DeleteOrder, SearchOrder, print_pdf
 from .views.product_views import AddProductsToOrder, DeleteProduct, EditProduct, product_order_list
 from .views.api_views import DeleteOrderAttachment, get_clients, \
     get_canvas, get_customers, get_orders, save_attachment, deactivate_customer
@@ -52,6 +52,9 @@ urlpatterns = [
     path('customers/', CustomerView.as_view(), name='customer'),
     path('customers/<int:pk>/edit/', EditCustomer.as_view(), name='customer-edit'),
     path('customers/create/', CreateCustomer.as_view(), name='customer-create'),
+    
+    # PDF generator
+    path('print_pdf/<int:pk>', print_pdf, name='print_pdf'),
 
 ]
 
