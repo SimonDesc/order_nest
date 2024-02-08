@@ -14,6 +14,59 @@ from django.conf import settings
 from django.db.models import Q
 from .api_views import DeleteOrderAttachment
 
+
+# PDF
+from reportlab.pdfgen import canvas
+import io
+from django.http import FileResponse, HttpResponse
+from reportlab.lib.units import inch
+from reportlab.lib.pagesizes import letter
+
+def print_pdf(request, pk):
+    # On vérifie si un identifiant de commande est fourni
+    if pk:
+        try:
+            # Tentative de récupération de la commande
+            order = Order.objects.get(pk=pk)
+        except Order.DoesNotExist:
+            # Si la commande n'existe pas, on retourne une erreur HTTP
+            return HttpResponse('<h1>Commande non trouvée</h1>')
+
+    # Création d'un tampon de flux en mémoire
+    buf = io.BytesIO()
+    # Création d'un canevas pour le PDF avec orientation de la page du bas vers le haut
+    c = canvas.Canvas(buf, pagesize=letter, bottomup=0)
+    # Initialisation d'un objet texte
+    textob = c.beginText()
+    textob.setTextOrigin(inch, 0.5 * inch)  # Définit l'origine du texte avec une marge
+    textob.setFont("Helvetica", 12)  # Choix de la police et taille
+
+    # Préparation des lignes à afficher
+    lines = [
+        f"ID Commande: {str(pk)}",
+        f"Libellé: {order.label}",
+        f"Prénom: {order.customer.first_name}",
+        f"Nom: {order.customer.last_name}",
+        f"Téléphone: {str(order.customer.formatted_phone_number())}",
+    ]
+
+    # Définition de l'espace entre les lignes
+    line_height = 14
+
+    for line in lines:
+        textob.textLine(line)  # Ajout de la ligne au document
+        textob.moveCursor(0, line_height)  # Déplacement du curseur pour l'espace entre les lignes
+
+    # Finalisation de l'écriture sur le document
+    c.drawText(textob)
+    c.showPage()
+    c.save()
+    buf.seek(0)
+
+    # Retourne le PDF comme réponse de fichier
+    return FileResponse(buf, as_attachment=True, filename="ticket.pdf")
+
+
 class CreateOrder(CreateView):
     form_class = NewOrderForm
     template_name = "webapp/orders/order-create.html"
@@ -31,7 +84,6 @@ class CreateOrder(CreateView):
         is_existing_customer = False
         customer = None
 
-        
         # On test l'id
         try:
             customer_id = int(customer_id)
@@ -53,8 +105,7 @@ class CreateOrder(CreateView):
     def post(self, request, *args, **kwargs):
         order_form = NewOrderForm(request.POST)
         customer_form = NewCustomerForm(request.POST)
-       
-        
+
         if order_form.is_valid() and customer_form.is_valid():
             # On récupère l'id du champ caché
             customer_id = request.POST.get("id", None)
@@ -136,16 +187,18 @@ class EditOrder(UpdateView):
         context = self.get_context_data()
         context["customer_form"] = customer_form
         return self.render_to_response(context)
-    
-    
+
     def get(self, request, *args, **kwargs):
         # Sauvegarder le referer dans la session lors du premier chargement de la page
-        self.request.session['referer'] = self.request.META.get('HTTP_REFERER', reverse_lazy("webapp:dashboard"))
+        self.request.session["referer"] = self.request.META.get(
+            "HTTP_REFERER", reverse_lazy("webapp:dashboard")
+        )
         return super().get(request, *args, **kwargs)
 
     def get_success_url(self):
         # Utiliser l'URL de la session ou une URL par défaut
-        return self.request.session.get('referer', reverse_lazy("webapp:dashboard"))
+        return self.request.session.get("referer", reverse_lazy("webapp:dashboard"))
+
 
 class DeleteOrder(DeleteView):
     model = Order
@@ -164,12 +217,13 @@ class DeleteOrder(DeleteView):
             delete_attachment_view = DeleteOrderAttachment()
             delete_attachment_view.object = attachment
             delete_attachment_view.request = self.request
-            delete_attachment_view.kwargs = {'pk': attachment.pk}  # Passer l'identifiant de l'objet
-
+            delete_attachment_view.kwargs = {
+                "pk": attachment.pk
+            }  # Passer l'identifiant de l'objet
 
             # Appeler la méthode delete de DeleteOrderAttachment
             delete_attachment_view.delete(self.request)
-        
+
         response = super().form_valid(form)
         return response
 

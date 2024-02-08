@@ -18,6 +18,17 @@
 <script src="{% static 'js/autocomplete.js' %}"></script>
 <script src="{% static 'js/picture.js' %}"></script>
 
+<script>
+function printPDFFromAttribute(element) {
+    var orderId = element.getAttribute('data-order-id'); // Récupère l'ID stocké dans l'attribut `data-order-id`
+    var url = `/print_pdf/${orderId}`; // Construit l'URL dynamiquement
+
+    window.open(url); // Ouvre le PDF dans une nouvelle fenêtre/onglet
+}
+
+
+</script>
+
 {% endblock %}
 {% block content %}
 
@@ -35,9 +46,17 @@
 			<form method="POST" class="">
 				{% csrf_token %}
 				<!-- Titre -->
-				<div class="subtitle infosorder mb-5">
-					<p>N°{{ order_form.instance.id }}</p>
+				<div class="flex subtitle infosorder my-2 justify-between">
+					<div>
+						<p>N°{{ order_form.instance.id }}</p>
+					</div>
+					<div>
+						<img class="cursor-pointer" id="printpdf" width="35" height="40" src="{% static 'img/print.svg' %}"
+						data-order-id="{{ order_form.instance.id }}"
+						onclick="printPDFFromAttribute(this)">
+					</div>					
 				</div>
+
 				<div class="border-b"></div>
 				<!-- libellé et status  -->
 				<div class="labelstatus flex flex-no-wrap gap-5 mt-5">
@@ -149,8 +168,7 @@
 						<button type="submit" class="w-[122px] blue-button div-ombre-button-edit py-2 px-6 mb-2 text-sm text-white text-gray-900
 						focus:outline-none rounded-xl focus:z-10 focus:ring-4 focus:ring-gray-200
 						cursor-pointer transition-all   hover:-translate-y-[1px]  active:border-b-[2px]
-						active:brightness-90 active:translate-y-[2px]"
-							value="Update">Enregistrer</button>
+						active:brightness-90 active:translate-y-[2px]" value="Update">Enregistrer</button>
 					</div>
 				</div>
 			</form>

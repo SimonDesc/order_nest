@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
+
 import os
 from pathlib import Path
 import environ
@@ -30,12 +31,11 @@ SECRET_KEY = env('SECRET_KEY')
 DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
-CSRF_TRUSTED_ORIGINS = ['https://*.up.railway.app']
+CSRF_TRUSTED_ORIGINS = ['https://app.galerielibrecours.fr']
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',

@@ -19,6 +19,7 @@ pip = "*"
 install = "*"
 django-storages = "*"
 mysqlclient = "*"
+reportlab = "*"
 
 [dev-packages]
 mypy = "*"
