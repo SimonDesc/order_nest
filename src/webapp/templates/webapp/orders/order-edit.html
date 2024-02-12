@@ -17,6 +17,7 @@
 <script src="{% static 'js/canva.js' %}"></script>
 <script src="{% static 'js/autocomplete.js' %}"></script>
 <script src="{% static 'js/picture.js' %}"></script>
+<script src="{% static 'js/sms.js' %}"></script>
 
 <script>
 function printPDFFromAttribute(element) {
@@ -46,14 +47,22 @@ function printPDFFromAttribute(element) {
 			<form method="POST" class="">
 				{% csrf_token %}
 				<!-- Titre -->
-				<div class="flex subtitle infosorder my-2 justify-between">
+				<div class="flex subtitle infosorder my-2 justify-between mb-5">
 					<div>
 						<p>N°{{ order_form.instance.id }}</p>
 					</div>
 					<div>
-						<img class="cursor-pointer" id="printpdf" width="35" height="40" src="{% static 'img/print.svg' %}"
-						data-order-id="{{ order_form.instance.id }}"
-						onclick="printPDFFromAttribute(this)">
+						
+						<button style="background-color: #F7F7F7; border-radius: 10px;" type="button"
+						class="text-lg div-ombre-button-grey text-sm text-black 
+						focus:outline-none
+					focus:z-10 focus:ring-4 focus:ring-gray-200
+					p-2" value="PRINT"
+					data-order-id="{{ order_form.instance.id }}"
+					onclick="printPDFFromAttribute(this)">
+						<img
+						id="printpdf" width="25" height="30" src="{% static 'img/print.svg' %}">
+					</button>
 					</div>					
 				</div>
 
@@ -155,22 +164,34 @@ function printPDFFromAttribute(element) {
 				</div>
 				{% endif %}
 
-
-				<div class="buttons flex justify-end">
+				<div class="flex justify-between">
+					<!-- SMS Button -->
 					<div class="btncnc">
-						<a href="{% url 'webapp:order-delete' pk=order_form.instance.id %}">
-							<button style="background-color: #FF4E27; border-radius: 10px;" type="button" class="w-32 text-lg div-ombre-button-navbar-logout py-2 px-4 mr-7 mb-2 text-sm text-white 
-						focus:outline-none
-					   focus:z-10 focus:ring-4 focus:ring-gray-200" value="Delete">Supprimer</button>
-						</a>
+							<button
+							style="background-color: #F7F7F7; border-radius: 10px;"
+							type="button"
+							class="w-32 text-lg div-ombre-button-grey py-2 px-4 mr-7 mb-2 text-sm text-black focus:outline-none focus:z-10 focus:ring-4 focus:ring-gray-200
+							transition-all hover:-translate-y-[1px] active:border-b-[2px] active:brightness-90 active:translate-y-[2px]"
+							value="SMS"
+							hx-get="{% url 'webapp:modal_sms' pk=order_form.instance.id %}"
+							hx-target="#dialog"
+							>SMS</button>
 					</div>
-					<div class="btnok">
-						<button type="submit" class="w-[122px] blue-button div-ombre-button-edit py-2 px-6 mb-2 text-sm text-white text-gray-900
-						focus:outline-none rounded-xl focus:z-10 focus:ring-4 focus:ring-gray-200
-						cursor-pointer transition-all   hover:-translate-y-[1px]  active:border-b-[2px]
-						active:brightness-90 active:translate-y-[2px]" value="Update">Enregistrer</button>
+
+					
+				
+					<div class="flex justify-end gap-x-4">
+						<div class="btncnc">
+							<a href="{% url 'webapp:order-delete' pk=order_form.instance.id %}">
+								<button style="background-color: #FF4E27; border-radius: 10px;" type="button" class="w-32 text-lg div-ombre-button-navbar-logout py-2 px-4 mr-7 mb-2 text-sm text-white focus:outline-none focus:z-10 focus:ring-4 focus:ring-gray-200" value="Delete">Supprimer</button>
+							</a>
+						</div>
+						<div class="btnok">
+							<button type="submit" class="w-[122px] blue-button div-ombre-button-edit py-2 px-6 mb-2 text-sm text-white text-gray-900 focus:outline-none rounded-xl focus:z-10 focus:ring-4 focus:ring-gray-200 cursor-pointer transition-all hover:-translate-y-[1px] active:border-b-[2px] active:brightness-90 active:translate-y-[2px]" value="Update">Enregistrer</button>
+						</div>
 					</div>
 				</div>
+				
 			</form>
 		</div>
 
@@ -381,7 +402,7 @@ function printPDFFromAttribute(element) {
 
 
 
-<!-- Le placeholder pour la modal -->
+<!-- MODAL nouveau produit -->
 <div id="modal" class="fixed inset-0 flex items-center justify-center z-50 hidden" aria-labelledby="modal-title"
 	role="dialog" aria-modal="true">
 	<!-- Le fond semi-transparent de la modal -->
@@ -392,7 +413,6 @@ function printPDFFromAttribute(element) {
 		<!-- Le contenu de la modal sera injecté ici -->
 	</div>
 </div>
-
 
 
 

@@ -9,7 +9,7 @@ from .views.other_views import WebappHome, Dashboard, CustomerView, EditCustomer
 from .views.order_views import CreateOrder, EditOrder, DeleteOrder, SearchOrder, print_pdf
 from .views.product_views import AddProductsToOrder, DeleteProduct, EditProduct, product_order_list
 from .views.api_views import DeleteOrderAttachment, get_clients, \
-    get_canvas, get_customers, get_orders, save_attachment, deactivate_customer
+    get_canvas, get_customers, get_orders, save_attachment, deactivate_customer, modal_sms, send_sms
 
 app_name = 'webapp'
 
@@ -46,15 +46,20 @@ urlpatterns = [
     path('get_orders/', get_orders, name='get_orders'),
     path('product_order_list/<int:order_id>/', product_order_list, name='product_order_list'),
     path('get_customers/', get_customers, name='get_customers'),
-    path('deactivate_customer/<int:pk>', deactivate_customer, name='deactivate_customer'),
+    path('deactivate_customer/<int:pk>', deactivate_customer, name='deactivate_customer'),   
+    
+    # PDF generator
+    path('print_pdf/<int:pk>', print_pdf, name='print_pdf'),
+    # SMS Sender
+    path('send_sms/<int:pk>', send_sms, name='send_sms'),
+    path('modal_sms/<int:pk>', modal_sms, name='modal_sms'),
+
 
     # Customers Routes
     path('customers/', CustomerView.as_view(), name='customer'),
     path('customers/<int:pk>/edit/', EditCustomer.as_view(), name='customer-edit'),
     path('customers/create/', CreateCustomer.as_view(), name='customer-create'),
-    
-    # PDF generator
-    path('print_pdf/<int:pk>', print_pdf, name='print_pdf'),
+
 
 ]
 

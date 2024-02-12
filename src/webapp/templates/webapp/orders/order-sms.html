@@ -1,0 +1,159 @@
+{% load static %}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+
+<script src="{% static 'js/sms.js' %}"></script>
+
+	
+<script>
+	$(document).ready(function () {
+		$('#sms-input').smsArea({
+			maxSmsNum: 2,
+			counters: {
+				message: $('#smsCount'),
+				character: $('#smsLength')
+			}
+		});
+	});
+
+	// Gestion des retours
+	document.body.addEventListener('htmx:afterOnLoad', function(event) {
+		var response = event.detail.xhr.response; 
+		var target = event.detail.elt;
+
+		if (target.id === "sms-send") { 
+			try {
+				var data = JSON.parse(response); 
+				if (data.message) {
+					displayMessage(data.message);
+				} else if (data.errors && typeof data.errors === 'object') {
+					Object.keys(data.errors).forEach(function(key) {
+						displayMessage(data.errors[key]);
+					});
+				}
+			} catch (e) {
+				console.error("Erreur lors du parsing de la réponse JSON", e);
+			}
+		}
+	});
+
+	function displayMessage(message) {
+		var messageContainer = document.getElementById("messageContainer");
+		if (!messageContainer) {
+			messageContainer = document.createElement('div');
+			messageContainer.id = "messageContainer";
+			document.body.appendChild(messageContainer);
+		}
+		$('#messageContainer').show();
+		$("#messageContainer").text(message);
+		$("#messageContainer").addClass('pictureError');
+		$("#messageContainer").css({"background-color": "#fef2f2", "color": "#b91c1c", "border": "1px solid #dc2626"});
+	}
+</script>
+
+
+<div class="titre flex justify-left text-3xl font-bold">
+	<h1 class="title">Envoyer un SMS</h1>
+</div>
+
+<!-- Informations zone -->
+<div class="text-sm my-5">
+	<details>
+		<summary>Informations</summary>
+		<div class="ml-5">
+			<div class="font-semibold">Les SMS seront reportés lors des horaires suivantes :</div>
+			<ul class="list-disc ml-5">
+				<li>
+					Avant 8h, après 20h
+				</li>
+				<li>
+					Dimanche et jours fériés
+				</li>
+			</ul>
+			<div class="font-semibold">Coût du SMS :</div>
+			<ul class="list-disc ml-5">
+				<li>0.045 € / SMS</li>
+			</ul>
+			<div class="font-semibold">Caractèristiques :</div>
+			<ul class="list-disc ml-5">
+				<li>160 car. / SMS</li>
+				<li>2 SMS max / envoi.</li>
+				<li>Les caractères spéciaux (€, /, [, {, saut de ligne, ...) compte double.</li>
+			</ul>
+		</div>
+
+	</details>
+</div>
+
+<!-- Téléphone -->
+<div class="mb-6">
+	<label for="phone-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Téléphone du
+		client</label>
+	<input value="{{ order.customer.formatted_phone_number }}" type="text" id="phone-input"
+		class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+</div>
+
+<!-- SMS type -->
+<div id="id-commande" class="hidden">{{ order.id }}</div>
+<div id="name-commande" class="hidden">{{ order.customer.first_name }} {{ order.customer.last_name }}</div>
+
+<h3 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Message Type</h3>
+<ul class="items-center mb-5 w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg sm:flex dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+    <li class="w-full border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600">
+        <div class="flex items-center ps-3">
+            <input id="prise-en-charge-checkbox-list" type="checkbox" value="" class="exclusive-checkbox w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+            <label for="prise-en-charge-checkbox-list" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Prise en charge</label>
+        </div>
+    </li>
+    <li class="w-full border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600">
+        <div class="flex items-center ps-3">
+            <input id="commande-terminee-checkbox-list" type="checkbox" value="" class="exclusive-checkbox w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+            <label for="commande-terminee-checkbox-list" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Commande Terminée</label>
+        </div>
+    </li>
+    <li class="w-full border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600">
+        <div class="flex items-center ps-3">
+            <input id="autre-checkbox-list" type="checkbox" value="" class="exclusive-checkbox w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+            <label for="autre-checkbox-list" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Autre</label>
+        </div>
+    </li>
+</ul>
+
+
+<!-- Contenu du SMS -->
+<div class="mb-6">
+	<label for="sms-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Contenu du SMS</label>
+	<textarea maxlength="50" id="sms-input" rows="5" 
+		class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"></textarea>
+	
+	<div class="mt-3">
+		<b id="smsCount"></b> SMS (<b id="smsLength"></b> caractères restant)
+	</div>
+</div>
+
+<!-- Retour du serveur -->
+<div id="sms-response" class="hidden"></div>
+<div id="messageContainer" class="hidden"></div>
+
+<div class="modal-footer flex justify-end gap-4 mt-10">
+	<button style="background-color: #FF4E27; border-radius: 10px;" type="button" id="cancelButton"
+	class="w-32 text-lg div-ombre-button-navbar-logout py-2 px-4 mr-5 mb-2 text-sm text-white 
+	focus:outline-none
+   focus:z-10 focus:ring-4 focus:ring-gray-200
+   ">
+		Annuler
+	</button>
+	<a href="#"
+		id="sms-send"
+		hx-get="{% url 'webapp:send_sms' pk=order.pk %}"
+		hx-trigger="click"
+		hx-vals='javascript:{"content": document.getElementById("sms-input").value , "phone_number": document.getElementById("phone-input").value}'
+		hx-target="#sms-response">
+		<button 
+			class="w-[122px] blue-button div-ombre-button-edit py-2 px-6 mb-2 text-sm text-white text-gray-900 focus:outline-none rounded-xl focus:z-10 focus:ring-4 focus:ring-gray-200 cursor-pointer transition-all hover:-translate-y-[1px] active:border-b-[2px] active:brightness-90 active:translate-y-[2px]"
+			value="SMS">
+			Envoyer
+		</button>
+	</a>
+</div>

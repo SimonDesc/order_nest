@@ -3,11 +3,15 @@ import time
 import os.path
 import imghdr
 
+# SMS
+import http.client
+import json
 
 
 from django.conf import settings
 from django.db.models import Q
-from django.http import JsonResponse, HttpResponse
+from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views.generic import (
     DeleteView,
@@ -245,9 +249,6 @@ def save_attachment(request):
         return JsonResponse({"status": "error", "message": "Erreur interne du serveur"}, status=500)
     
 
-
-
-
 def get_canvas(request, pk):
     order = OrderAttachment.objects.filter(order_id=pk, type="canvas")[:50]
     for e in order.all():
@@ -323,3 +324,56 @@ class DeleteOrderAttachment(DeleteView):
 
 
 
+def send_sms(request, pk):
+    content = request.GET.get('content', '')
+    phone_number = request.GET.get('phone_number', '')
+    
+    
+    print("content :", content)
+    print("phone_number :", phone_number)
+    print("pk :" , pk)
+    if pk:
+        try:
+            # Tentative de récupération de la commande
+            order = Order.objects.get(pk=pk)
+        except Order.DoesNotExist:
+            # Si la commande n'existe pas, on retourne une erreur HTTP
+            return HttpResponse('<h1>Commande non trouvée</h1>')
+    
+    conn = http.client.HTTPSConnection("api.smspartner.fr")
+    
+    
+    payload = json.dumps({
+    "apiKey": "4b7ce0bc008e9415bc4e5e5a03ba9ccc3e2be6ec",
+    "phoneNumbers": phone_number,
+    "sender": "Libre Cours",
+    "gamme": 1,
+    "message": content,
+    "webhookUrl": "https://webhook.site/cc751c36-c958-4dc4-b006-2b8a537880ce"
+    })
+    
+    headers = {
+    'Content-Type': 'application/json',
+    'Content-Length': str(len(payload)),
+    'cache-control': 'no-cache'
+    }
+    
+    conn.request("POST", "/v1/send", payload, headers) #Une requête POST est envoyée au serveur SMSPartner avec le chemin d'URL "/v1/send"
+    
+    res = conn.getresponse() #La réponse est ensuite stockée dans la variable res.
+      # Lire et décoder le contenu de la réponse
+    data = res.read().decode('utf-8')
+
+    # Convertir la chaîne JSON en dictionnaire Python
+    data_dict = json.loads(data)
+
+    # Retourner une JsonResponse avec le dictionnaire
+    return JsonResponse(data_dict)
+
+
+def modal_sms(request, pk):
+    order = get_object_or_404(Order, pk=pk)
+    context = {'order': order}
+    return render(request, 'webapp/orders/order-sms.html', context)
+
+    
