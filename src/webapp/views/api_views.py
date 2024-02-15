@@ -128,7 +128,7 @@ def get_orders(request):
             "customer": str(order.customer.last_name + " " + order.customer.first_name)[:20] + "..." if len(str(order.customer.last_name + " " + order.customer.first_name)) > 19 else str(order.customer.last_name + " " + order.customer.first_name)[:20],
             "label": str(order.label)[:30],
             "status": str(order.status),
-            "created": order.created_at.strftime("%d/%m/%Y"),
+            "created": order.created_at.strftime("%Y-%m-%d"),
             "payment": str(order.payment),
             "url": str(reverse("webapp:order-edit", kwargs={"pk": order.pk})),
         } for order in orders_query

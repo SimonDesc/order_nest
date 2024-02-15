@@ -56,7 +56,15 @@ document.addEventListener("DOMContentLoaded", function () {
 			},
 		},
 
-		{ id: 'Creation', name: 'Création' },
+		{
+			id: 'Creation',
+			name: 'Création',
+			formatter: (cell) => {
+				const date = new Date(cell);
+				const formattedDate = date.toLocaleDateString('fr-FR');
+				return html(`<span>${formattedDate}</span>`);
+			},
+		},
 		{ id: 'Paiement', name: 'Paiement' },
 		{
 			id: 'Edit',
@@ -177,5 +185,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	// Pour afficher l'onglet par défaut au chargement
 	document.getElementById("default-tab").click();
+
 
 });
