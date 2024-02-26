@@ -7,6 +7,7 @@
 <!-- Jquery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+<script src="https://unpkg.com/htmx.org"></script>
 
 <!-- GridJs -->
 <script src="https://cdn.jsdelivr.net/npm/gridjs/dist/gridjs.umd.js"></script>
@@ -15,6 +16,13 @@
 
 <!-- Delete button -->
 <script src="{% static 'js/customer_delete.js' %}"></script>
+
+
+<!-- Modal -->
+<script src="{% static 'js/modal.js' %}"></script>
+
+<!-- Sms -->
+<script src="{% static 'js/sms.js' %}"></script>
 
 
 {% endblock %}
@@ -33,7 +41,7 @@
 
 			<form method="POST" class="">
 				{% csrf_token %}
-				<div id="id_customer" class="hidden" value="{{ form.instance.id }}">{{ form.instance.id }}</div>
+				<div id="id_customer" class="" value="{{ form.instance.id }}">{{ form.instance.id }}</div>
 				<!-- Clients -->
 				<div class="client flex flex-no-wrap gap-8">
 					<div class="nom w-4/12">
@@ -81,18 +89,34 @@
 				{% endif %}
 
 
-				<div class="buttons flex justify-end">
-					<div class="btndelete">
-						<a href="#">
-							<button style="background-color: #FF4E27; border-radius: 10px;" type="button" class="w-32 text-lg div-ombre-button-navbar-logout py-2 px-4 mr-7 mb-2 text-sm text-white 
+				<div class="flex justify-between">
+
+					<!-- SMS Button -->
+					<div class="btncnc">
+						<button
+						style="background-color: #F7F7F7; border-radius: 10px;"
+						type="button"
+						class="w-32 text-lg div-ombre-button-grey py-2 px-4 mr-7 mb-2 text-sm text-black focus:outline-none focus:z-10 focus:ring-4 focus:ring-gray-200
+						transition-all hover:-translate-y-[1px] active:border-b-[2px] active:brightness-90 active:translate-y-[2px]"
+						value="SMS"
+						hx-get="{% url 'webapp:modal_sms_customer' pk=form.instance.id %}"
+						hx-target="#dialog"
+						>SMS</button>
+					</div>
+
+					<div class="flex justify-end gap-x-4">
+						<div class="btndelete">
+							<a href="#">
+								<button style="background-color: #FF4E27; border-radius: 10px;" type="button" class="w-32 text-lg div-ombre-button-navbar-logout py-2 px-4 mr-7 mb-2 text-sm text-white 
 						focus:outline-none
 					   focus:z-10 focus:ring-4 focus:ring-gray-200" value="Delete">Supprimer</button>
-						</a>
-					</div>
-					<div class="btnok">
-						<button type="submit" class="blue-button div-ombre-button-edit py-2 px-6 text-sm text-white text-gray-900
+							</a>
+						</div>
+						<div class="btnok">
+							<button type="submit" class="blue-button div-ombre-button-edit py-2 px-6 text-sm text-white text-gray-900
 					focus:outline-none rounded-xl focus:z-10 focus:ring-4 focus:ring-gray-200 mb-8"
-							value="Update">Enregistrer</button>
+								value="Update">Enregistrer</button>
+						</div>
 					</div>
 				</div>
 				<hr>
@@ -106,41 +130,40 @@
 		<div class="titre flex justify-left text-2xl font-bold mt-5 mb-3">
 			<h1 class="text-slate-500 mt-5">Historique du client</h1>
 		</div>
-		
+
 
 		<div class="bg-white px-4 rounded-xl pt-1 shadow-xl ring-1 ring-gray-900/5">
-			
-				<!-- Cards  -->
 
-			
+			<!-- Cards  -->
+
+
 			<div class="w-full max-w-5xl mt-5">
 				<!-- Onglets -->
 				<ul class="flex font-medium text-center ">
 					<li class="me-2">
 						<a id="default-tab"
-						class="bg-white inline-block p-4 rounded-t-lg hover:border-gray-300 border relative"
-						href="#"
-				  onclick="openTab(event, 'wrapper')">
-						En Attente | En cours | Urgent
-						{% if total_in_progress %}
+							class="bg-white inline-block p-4 rounded-t-lg hover:border-gray-300 border relative"
+							href="#" onclick="openTab(event, 'wrapper')">
+							En Attente | En cours | Urgent
+							{% if total_in_progress %}
 							<div class="absolute -top-2 inline-flex items-center justify-center w-6 h-6 text-xs font-bold
 							text-white bg-red-500 border-2 border-white rounded-full">
-							{{ total_in_progress }}
+								{{ total_in_progress }}
 							</div>
-						{% endif %}
-					</a>
+							{% endif %}
+						</a>
 					</li>
 					<li class="me-2">
-						<a class="bg-white inline-block p-4 rounded-t-lg hover:border-gray-300 border relative"
-						href="#" onclick="openTab(event, 'wrapperEnCours')">
-						Terminées | Annulées ({{ total_ended }})
-					</a>
+						<a class="bg-white inline-block p-4 rounded-t-lg hover:border-gray-300 border relative" href="#"
+							onclick="openTab(event, 'wrapperEnCours')">
+							Terminées | Annulées ({{ total_ended }})
+						</a>
 					</li>
 					<li class="me-2">
-						<a class="bg-white inline-block p-4 rounded-t-lg hover:border-gray-300 border relative"
-						href="#" onclick="openTab(event, 'wrapperFacture')">
-						Facturées ({{ total_invoice }})
-					</a>
+						<a class="bg-white inline-block p-4 rounded-t-lg hover:border-gray-300 border relative" href="#"
+							onclick="openTab(event, 'wrapperFacture')">
+							Facturées ({{ total_invoice }})
+						</a>
 					</li>
 				</ul>
 
@@ -154,4 +177,17 @@
 			</div>
 		</div>
 
-{% endblock %}
+
+				<!-- MODAL nouveau produit -->
+		<div id="modal" class="fixed inset-0 flex items-center justify-center z-50 hidden" aria-labelledby="modal-title"
+		role="dialog" aria-modal="true">
+		<!-- Le fond semi-transparent de la modal -->
+			<div class="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-md"></div>
+			<!-- La boîte de dialogue (modal) -->
+			<div id="dialog" hx-target="this" class="bg-white p-6 rounded-lg border-2 z-10 m-auto"
+				style="max-width: 800px; width: 90%;">
+				<!-- Le contenu de la modal sera injecté ici -->
+			</div>
+		</div>
+
+		{% endblock %}

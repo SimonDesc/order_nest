@@ -101,35 +101,10 @@
 <div class="mb-6">
 	<label for="phone-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Téléphone du
 		client</label>
-	<input value="{{ order.customer.formatted_phone_number }}" type="text" id="phone-input"
+	<input value="{{ customer.formatted_phone_number }}" type="text" id="phone-input"
 		class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
 </div>
 
-<!-- SMS type -->
-<div id="id-commande" class="hidden">{{ order.id }}</div>
-<div id="name-commande" class="hidden">{{ order.customer.first_name }} {{ order.customer.last_name }}</div>
-
-<h3 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Message Type</h3>
-<ul class="items-center mb-5 w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg sm:flex dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-    <li class="w-full border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600">
-        <div class="flex items-center ps-3">
-            <input id="prise-en-charge-checkbox-list" type="checkbox" value="" class="exclusive-checkbox w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-            <label for="prise-en-charge-checkbox-list" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Prise en charge</label>
-        </div>
-    </li>
-    <li class="w-full border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600">
-        <div class="flex items-center ps-3">
-            <input id="commande-terminee-checkbox-list" type="checkbox" value="" class="exclusive-checkbox w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-            <label for="commande-terminee-checkbox-list" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Commande Terminée</label>
-        </div>
-    </li>
-    <li class="w-full border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600">
-        <div class="flex items-center ps-3">
-            <input id="autre-checkbox-list" type="checkbox" value="" class="exclusive-checkbox w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-            <label for="autre-checkbox-list" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Autre</label>
-        </div>
-    </li>
-</ul>
 
 
 <!-- Contenu du SMS -->

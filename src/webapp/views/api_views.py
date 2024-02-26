@@ -2,6 +2,7 @@ import re
 import time
 import os.path
 import imghdr
+import environ
 
 # SMS
 import http.client
@@ -19,6 +20,11 @@ from django.views.generic import (
 from ..models import Customer, Order, OrderAttachment
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from .utils import delete_file_from_s3
+
+import requests
+
+env = environ.Env()
+environ.Env.read_env()
 
 
 def get_clients(request):
@@ -49,28 +55,25 @@ def get_clients(request):
     return JsonResponse(results, safe=False)
 
 
-
-
 def get_customers(request):
-    search_query = request.GET.get('search', '')
+    search_query = request.GET.get("search", "")
 
     # base de la requête
     customers_query = Customer.objects.filter(active=True)
-    
+
     if search_query:
         customers_query = Customer.objects.filter(
-            Q(last_name__icontains=search_query) |
-            Q(first_name__icontains=search_query) 
+            Q(last_name__icontains=search_query) | Q(first_name__icontains=search_query)
         )
 
     # Calculer le total avant la pagination
     total = customers_query.count()
 
     # Pagination
-    page = int(request.GET.get('page', 1))
-    size = int(request.GET.get('size', 20))
+    page = int(request.GET.get("page", 1))
+    size = int(request.GET.get("size", 20))
     offset = size * page
-    customers_query = customers_query.order_by("-id")[offset:offset + size]
+    customers_query = customers_query.order_by("-id")[offset : offset + size]
 
     # Construction de la liste de résultats
     order_list = [
@@ -80,7 +83,8 @@ def get_customers(request):
             "phone_number": str(customer.formatted_phone_number()),
             "mail": str(customer.mail),
             "url": str(reverse("webapp:customer-edit", kwargs={"pk": customer.pk})),
-        } for customer in customers_query
+        }
+        for customer in customers_query
     ]
 
     data = {
@@ -92,46 +96,55 @@ def get_customers(request):
 
 
 def get_orders(request):
-    search_query = request.GET.get('search', '')
-    status_filter = request.GET.get('status', '')
-    customer_id = request.GET.get('customerId', '')
+    search_query = request.GET.get("search", "")
+    status_filter = request.GET.get("status", "")
+    customer_id = request.GET.get("customerId", "")
 
     # base de la requête
     orders_query = Order.objects.all()
-    
+
     if search_query:
         orders_query = Order.objects.filter(
-            Q(customer__last_name__icontains=search_query) |
-            Q(customer__first_name__icontains=search_query) 
+            Q(customer__last_name__icontains=search_query)
+            | Q(customer__first_name__icontains=search_query)
         )
-        
+
     if status_filter:
-        status_filter_list = status_filter.split(',')
+        status_filter_list = status_filter.split(",")
         orders_query = orders_query.filter(status__in=status_filter_list)
 
     if customer_id:
         orders_query = orders_query.filter(customer__id=customer_id)
-        
+
     # Calculer le total avant la pagination
     total = orders_query.count()
 
     # Pagination
-    page = int(request.GET.get('page', 1))
-    size = int(request.GET.get('size', 20))
+    page = int(request.GET.get("page", 1))
+    size = int(request.GET.get("size", 20))
     offset = size * page
-    orders_query = orders_query.order_by("-id")[offset:offset + size]
+    orders_query = orders_query.order_by("-id")[offset : offset + size]
 
     # Construction de la liste de résultats
     order_list = [
         {
             "IDorder": str(order.pk),
-            "customer": str(order.customer.last_name + " " + order.customer.first_name)[:20] + "..." if len(str(order.customer.last_name + " " + order.customer.first_name)) > 19 else str(order.customer.last_name + " " + order.customer.first_name)[:20],
+            "customer": (
+                str(order.customer.last_name + " " + order.customer.first_name)[:20]
+                + "..."
+                if len(str(order.customer.last_name + " " + order.customer.first_name))
+                > 19
+                else str(order.customer.last_name + " " + order.customer.first_name)[
+                    :20
+                ]
+            ),
             "label": str(order.label)[:30],
             "status": str(order.status),
             "created": order.created_at.strftime("%Y-%m-%d"),
             "payment": str(order.payment),
             "url": str(reverse("webapp:order-edit", kwargs={"pk": order.pk})),
-        } for order in orders_query
+        }
+        for order in orders_query
     ]
 
     data = {
@@ -142,12 +155,11 @@ def get_orders(request):
     return JsonResponse(data)
 
 
-
 def is_allowed_extension(filename):
     """
     Vérifie si l'extension du fichier est autorisée.
     """
-    allowed_extensions = {'.jpg', '.jpeg', '.png', '.gif'}
+    allowed_extensions = {".jpg", ".jpeg", ".png", ".gif"}
     _, ext = os.path.splitext(filename)
     return ext.lower() in allowed_extensions
 
@@ -158,7 +170,7 @@ def clean_filename(filename):
     """
     name, ext = os.path.splitext(filename)
     # Remplacer tous les caractères non alphanumériques (sauf le point de l'extension) par des underscores
-    name = re.sub(r'[^\w]', '_', name)
+    name = re.sub(r"[^\w]", "_", name)
     return f"{name}{ext}"
 
 
@@ -168,9 +180,8 @@ def unique_file_name(original_name, order_id):
     """
     basename, ext = os.path.splitext(original_name)
     timestamp = time.strftime("%Y%m%d-%H%M%S")
-    
-    return f"{basename}_{order_id}_{timestamp}{ext}"
 
+    return f"{basename}_{order_id}_{timestamp}{ext}"
 
 
 def save_attachment(request):
@@ -179,40 +190,44 @@ def save_attachment(request):
     Gère les fichiers 'canvas' et 'picture'.
     """
     if request.method != "POST":
-        return JsonResponse({"status": "error", "message": "Méthode non autorisée"}, status=405)
+        return JsonResponse(
+            {"status": "error", "message": "Méthode non autorisée"}, status=405
+        )
 
     try:
-        
-        order_id = request.POST.get('orderId')
+
+        order_id = request.POST.get("orderId")
         if not order_id:
             raise ValueError("L'ID de commande est requis.")
 
         try:
             order = Order.objects.get(pk=order_id)
         except ObjectDoesNotExist:
-            return JsonResponse({"status": "error", "message": "Commande introuvable"}, status=404)
+            return JsonResponse(
+                {"status": "error", "message": "Commande introuvable"}, status=404
+            )
 
-        file = request.FILES.get('img')
+        file = request.FILES.get("img")
         if file:
             # Nettoyer le nom de fichier
             cleaned_name = clean_filename(file.name)
-            
+
             # Vérification de la taille du fichier
             max_size = 5 * 1024 * 1024  # 5MB
             if file.size > max_size:
                 raise ValueError("Le fichier est trop volumineux.")
 
             # Vérification du type de fichier
-            if imghdr.what(file) not in ['jpeg', 'jpg', 'png', 'gif']:
+            if imghdr.what(file) not in ["jpeg", "jpg", "png", "gif"]:
                 raise ValueError("Type de fichier non pris en charge.")
-     
+
             # Vérifier l'extension autorisée
             if not is_allowed_extension(cleaned_name):
                 raise ValueError("Type de fichier non autorisé.")
 
             unique_name = unique_file_name(cleaned_name, order_id)
-            
-            drawing_data = request.POST.get('drawingData')
+
+            drawing_data = request.POST.get("drawingData")
             attachment = OrderAttachment(order=order)
             if drawing_data:
                 attachment.canvas_json = drawing_data
@@ -244,10 +259,14 @@ def save_attachment(request):
     except ValueError as e:
         return JsonResponse({"status": "error", "message": str(e)}, status=400)
     except PermissionDenied:
-        return JsonResponse({"status": "error", "message": "Permission refusée"}, status=403)
+        return JsonResponse(
+            {"status": "error", "message": "Permission refusée"}, status=403
+        )
     except Exception as e:
-        return JsonResponse({"status": "error", "message": "Erreur interne du serveur"}, status=500)
-    
+        return JsonResponse(
+            {"status": "error", "message": "Erreur interne du serveur"}, status=500
+        )
+
 
 def get_canvas(request, pk):
     order = OrderAttachment.objects.filter(order_id=pk, type="canvas")[:50]
@@ -261,21 +280,32 @@ def get_canvas(request, pk):
 
 def deactivate_customer(request, pk):
     if request.method != "POST":
-        return JsonResponse({"status": "error", "message": "Méthode non autorisée"}, status=405)
+        return JsonResponse(
+            {"status": "error", "message": "Méthode non autorisée"}, status=405
+        )
 
     try:
         customer = Customer.objects.get(pk=pk)
         customer.active = False
         customer.save()
-        
-        return JsonResponse({"status": "success", "message": "Client désactivé avec succès"}) 
-        
+
+        return JsonResponse(
+            {"status": "success", "message": "Client désactivé avec succès"}
+        )
+
     except Customer.DoesNotExist:
-        return JsonResponse({"status": "error", "message": "Client non trouvé"}, status=404)
+        return JsonResponse(
+            {"status": "error", "message": "Client non trouvé"}, status=404
+        )
     except PermissionDenied:
-        return JsonResponse({"status": "error", "message": "Permission refusée"}, status=403)
+        return JsonResponse(
+            {"status": "error", "message": "Permission refusée"}, status=403
+        )
     except Exception as e:
-        return JsonResponse({"status": "error", "message": "Erreur interne du serveur"}, status=500)
+        return JsonResponse(
+            {"status": "error", "message": "Erreur interne du serveur"}, status=500
+        )
+
 
 class DeleteOrderAttachment(DeleteView):
     """
@@ -283,6 +313,7 @@ class DeleteOrderAttachment(DeleteView):
     Cette vue est utilisée pour supprimer des fichiers liés à un OrderAttachment,
     que ce soit un 'Canvas' ou une 'Picture'.
     """
+
     model = OrderAttachment
 
     def get_success_url(self):
@@ -298,10 +329,10 @@ class DeleteOrderAttachment(DeleteView):
         Surcharge la méthode delete pour supprimer le fichier associé
         à l'objet OrderAttachment avant de supprimer l'objet lui-même.
         """
-        try :
+        try:
             self.object = self.get_object()
             file_key = self.object.file.name
-            
+
             if delete_file_from_s3(file_key):
                 self.object.delete()
                 return JsonResponse({"status": "success"})
@@ -317,52 +348,87 @@ class DeleteOrderAttachment(DeleteView):
             # self.object.delete()
 
             # Retourne une réponse JSON indiquant le succès de l'opération
-            
-        
+
         except OrderAttachment.DoesNotExist:
             return JsonResponse({"status": "Pièce jointe non trouvée"})
 
 
+def get_credit_sms(request):
+    API_KEY = env("SMS_API")
+    URL = "https://api.smspartner.fr/v1"
 
-def send_sms(request, pk):
-    content = request.GET.get('content', '')
-    phone_number = request.GET.get('phone_number', '')
+    url = URL + "/me?apiKey=" + API_KEY
+    r = requests.get(url)
+    r_json = r.json()
+
+    if r_json.get("success") == True:
+        response = JsonResponse({"success": True, "data": r_json})
+    else:
+        response = JsonResponse(
+            {"success": False, "error": "Une erreur s'est produite."}
+        )
+
+    return response
+
+"""
+todo: the api of sms partner doesn't permit to retrieve sms by phone number
+I need to create a new table for storage all number and message id
+"""
+# def get_history_sms(request):
+#     phone_number = request.GET.get("phone_number", "")
+#     API_KEY = env("SMS_API")
+#     URL = "https://api.smspartner.fr/v1"
+
+#     # url = URL + "/message-status?apiKey=" + API_KEY + "&phoneNumber=" + phone_number 
     
+#     data = {"apiKey":API_KEY,"SMSStatut_List":[{"phoneNumber":'0669171357'}]}
+#     url = URL + '/multi-status'
     
-    print("content :", content)
-    print("phone_number :", phone_number)
-    print("pk :" , pk)
-    if pk:
-        try:
-            # Tentative de récupération de la commande
-            order = Order.objects.get(pk=pk)
-        except Order.DoesNotExist:
-            # Si la commande n'existe pas, on retourne une erreur HTTP
-            return HttpResponse('<h1>Commande non trouvée</h1>')
+#     r = requests.post(url, data=json.dumps(data), verify=False)
+#     r_json = r.json()
+#     print("R =====", r)
+#     print(url)
+
+#     if r_json.get("success") == True:
+#         response = JsonResponse({"success": True, "data": r_json})
+#     else:
+#         response = JsonResponse(
+#             {"success": False, "error": "Une erreur s'est produite."}
+#         )
+
+#     return response
+
+def send_sms(request):
+    content = request.GET.get("content", "")
+    phone_number = request.GET.get("phone_number", "")
     
+   
     conn = http.client.HTTPSConnection("api.smspartner.fr")
-    
-    
-    payload = json.dumps({
-    "apiKey": "4b7ce0bc008e9415bc4e5e5a03ba9ccc3e2be6ec",
-    "phoneNumbers": phone_number,
-    "sender": "Libre Cours",
-    "gamme": 1,
-    "message": content,
-    "webhookUrl": "https://webhook.site/cc751c36-c958-4dc4-b006-2b8a537880ce"
-    })
-    
+
+    payload = json.dumps(
+        {
+            "apiKey": env("SMS_API"),
+            "phoneNumbers": phone_number,
+            "sender": "Libre Cours",
+            "gamme": 1,
+            "message": content+':br:',
+            "webhookUrl": env("WEB_HOOK"),
+        }
+    )
+
     headers = {
-    'Content-Type': 'application/json',
-    'Content-Length': str(len(payload)),
-    'cache-control': 'no-cache'
+        "Content-Type": "application/json",
+        "Content-Length": str(len(payload)),
+        "cache-control": "no-cache",
     }
-    
-    conn.request("POST", "/v1/send", payload, headers) #Une requête POST est envoyée au serveur SMSPartner avec le chemin d'URL "/v1/send"
-    
-    res = conn.getresponse() #La réponse est ensuite stockée dans la variable res.
-      # Lire et décoder le contenu de la réponse
-    data = res.read().decode('utf-8')
+
+    conn.request(
+        "POST", "/v1/send", payload, headers
+    )  # Une requête POST est envoyée au serveur SMSPartner avec le chemin d'URL "/v1/send"
+
+    res = conn.getresponse()  # La réponse est ensuite stockée dans la variable res.
+    # Lire et décoder le contenu de la réponse
+    data = res.read().decode("utf-8")
 
     # Convertir la chaîne JSON en dictionnaire Python
     data_dict = json.loads(data)
@@ -373,7 +439,11 @@ def send_sms(request, pk):
 
 def modal_sms(request, pk):
     order = get_object_or_404(Order, pk=pk)
-    context = {'order': order}
-    return render(request, 'webapp/orders/order-sms.html', context)
+    context = {"order": order}
+    return render(request, "webapp/orders/order-sms.html", context)
 
-    
+
+def modal_sms_customer(request, pk):
+    customer = get_object_or_404(Customer, pk=pk)
+    context = {"customer": customer}
+    return render(request, "webapp/orders/order-sms-customer.html", context)
