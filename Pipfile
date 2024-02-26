@@ -20,6 +20,8 @@ install = "*"
 django-storages = "*"
 mysqlclient = "*"
 reportlab = "*"
+idna = "*"
+certifi = "*"
 
 [dev-packages]
 mypy = "*"

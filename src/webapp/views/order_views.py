@@ -14,8 +14,8 @@ from django.conf import settings
 from django.db.models import Q
 from .api_views import DeleteOrderAttachment
 
-
 # PDF
+from django.contrib.staticfiles import finders
 from reportlab.pdfgen import canvas
 import io
 from django.http import FileResponse, HttpResponse
@@ -23,25 +23,34 @@ from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import letter
 
 def print_pdf(request, pk):
-    # On vérifie si un identifiant de commande est fourni
+    # Vérification et récupération de la commande
     if pk:
         try:
-            # Tentative de récupération de la commande
             order = Order.objects.get(pk=pk)
         except Order.DoesNotExist:
-            # Si la commande n'existe pas, on retourne une erreur HTTP
             return HttpResponse('<h1>Commande non trouvée</h1>')
 
-    # Création d'un tampon de flux en mémoire
     buf = io.BytesIO()
-    # Création d'un canevas pour le PDF avec orientation de la page du bas vers le haut
-    c = canvas.Canvas(buf, pagesize=letter, bottomup=0)
-    # Initialisation d'un objet texte
-    textob = c.beginText()
-    textob.setTextOrigin(inch, 0.5 * inch)  # Définit l'origine du texte avec une marge
-    textob.setFont("Helvetica", 12)  # Choix de la police et taille
-
-    # Préparation des lignes à afficher
+    page_width, page_height = 155, 160  # Dimensions ajustées de la page
+    c = canvas.Canvas(buf)
+    c.setPageSize((page_width, page_height))
+    
+    # HEADER
+    logo_path = finders.find('img/logo_galerie.jpg')
+    logo_height = 30  # Hauteur du logo
+    logo_width = 50  # Largeur du logo
+    c.drawImage(logo_path, 10, page_height - logo_height - 10, width=logo_width, height=logo_height)
+    
+    # TITLE
+    title_y_position = page_height - logo_height - 0
+    c.setFont("Helvetica-Bold", 9)
+    c.drawString(64, title_y_position, "Galerie Libre Cours")
+    
+    # BODY
+    text_start_y_position = title_y_position - 22
+    textob = c.beginText(10, text_start_y_position)
+    c.setFont("Helvetica", 9)
+    
     lines = [
         f"ID Commande: {str(pk)}",
         f"Libellé: {order.label}",
@@ -50,20 +59,30 @@ def print_pdf(request, pk):
         f"Téléphone: {str(order.customer.formatted_phone_number())}",
     ]
 
-    # Définition de l'espace entre les lignes
-    line_height = 14
+    line_height = 3  # espace entre les lignes
 
     for line in lines:
-        textob.textLine(line)  # Ajout de la ligne au document
-        textob.moveCursor(0, line_height)  # Déplacement du curseur pour l'espace entre les lignes
+        textob.textLine(line)
+        textob.moveCursor(0, line_height)
 
-    # Finalisation de l'écriture sur le document
     c.drawText(textob)
+    
+    # FOOTER
+    footer_text_line1 = "50 Rue de Dreuilhe, 31250 Revel"
+    footer_text_line2 = "05 62 18 91 84"
+    footer_text_x_position = 10 
+    footer_text_y_position = 30
+    c.setFont("Helvetica", 7) 
+    c.drawString(footer_text_x_position, footer_text_y_position, footer_text_line1)
+    line_height = 10
+    footer_text_y_position2 = footer_text_y_position - line_height
+    c.drawString(footer_text_x_position, footer_text_y_position2, footer_text_line2)
+
+    
     c.showPage()
     c.save()
     buf.seek(0)
 
-    # Retourne le PDF comme réponse de fichier
     return FileResponse(buf, as_attachment=True, filename="ticket.pdf")
 
 

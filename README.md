@@ -22,6 +22,10 @@ It's been used in a small company since December 2023 and continues to evolve.
 ## Latest Updates 🔄
 
 ### 02/2024
+- **Feature:** Creation of a ticket printing option (generate a pdf). Creation of an option to send sms to the customer with default sms and/or message personalization.
+- **Bug Fixes:** Sorting by creation date was not correctly performed in the dashboard.
+
+### 02/2024
 - **Feature:** Creation of a customer creation/search/consultation menu, including customer history by customer.
 - **Design:** New background, minor styling tweaks, new font.
 - **Bug Fixes:** The deposit now correctly deducts from the total amount of the order.

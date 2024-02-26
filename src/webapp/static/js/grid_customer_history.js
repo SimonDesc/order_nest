@@ -58,7 +58,15 @@ document.addEventListener("DOMContentLoaded", function () {
 			},
 		},
 
-		{ id: 'Creation', name: 'Création' },
+		{
+			id: 'Creation',
+			name: 'Création',
+			formatter: (cell) => {
+				const date = new Date(cell);
+				const formattedDate = date.toLocaleDateString('fr-FR');
+				return html(`<span>${formattedDate}</span>`);
+			},
+		},
 		{ id: 'Paiement', name: 'Paiement' },
 		{
 			id: 'Edit',
