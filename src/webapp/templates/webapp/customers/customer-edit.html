@@ -41,7 +41,7 @@
 
 			<form method="POST" class="">
 				{% csrf_token %}
-				<div id="id_customer" class="" value="{{ form.instance.id }}">{{ form.instance.id }}</div>
+				<div id="id_customer" class="hidden" value="{{ form.instance.id }}">{{ form.instance.id }}</div>
 				<!-- Clients -->
 				<div class="client flex flex-no-wrap gap-8">
 					<div class="nom w-4/12">
