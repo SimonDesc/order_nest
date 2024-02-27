@@ -21,18 +21,19 @@ It's been used in a small company since December 2023 and continues to evolve.
 
 ## Latest Updates 🔄
 
-### 02/2024
-- 🌟**Feature:** Creation of a ticket printing option (generate a pdf). Creation of an option to send sms to the customer with default sms and/or message personalization.
+### 02/2024 (2)
+- 🌟**Features:** Creation of a ticket printing option (generate a pdf). Creation of an option to send sms to the customer with default sms and/or message personalization.
 - 🐛**Bug Fixes:** Sorting by creation date was not correctly performed in the dashboard.
+- 🔧**Small Changes:** New access to customer form from the order page.
 
-### 02/2024
-- 🌟**Feature:** Creation of a customer creation/search/consultation menu, including customer history by customer.
+### 02/2024 (1)
+- 🌟**Features:** Creation of a customer creation/search/consultation menu, including customer history by customer.
 - 🎨**Design:** New background, minor styling tweaks, new font.
 - 🐛**Bug Fixes:** The deposit now correctly deducts from the total amount of the order.
 - 🔧**Small Changes:** New card order management (urgent cards are now highlighted).
 
 ### 01/2024
-- 🌟**Feature:** Redesign of dashboard to categorize order status, addition of a consultation button in cards, addition of a "Down payment" field, addition of an order completed button, addition of a "payment status" column.
+- 🌟**Features:** Redesign of dashboard to categorize order status, addition of a consultation button in cards, addition of a "Down payment" field, addition of an order completed button, addition of a "payment status" column.
 - 🎨**Design:** Redesign of cards.
 - 🔧**Small Changes:** New background, centering of certain elements, default status "In progress", display of down payment calculation.
 
