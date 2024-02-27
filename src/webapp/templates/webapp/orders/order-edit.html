@@ -26,7 +26,14 @@ function printPDFFromAttribute(element) {
 
     window.open(url); // Ouvre le PDF dans une nouvelle fenêtre/onglet
 }
-
+function redirectToCustomerEdit(element) {
+    const url = element.getAttribute('data-url');
+    if (url) {
+        window.location.href = url;
+    } else {
+        console.error('URL manquante');
+    }
+}
 
 </script>
 
@@ -47,21 +54,35 @@ function printPDFFromAttribute(element) {
 			<form method="POST" class="">
 				{% csrf_token %}
 				<!-- Titre -->
-				<div class="flex subtitle infosorder my-2 justify-between mb-5">
+				<div class="flex subtitle infosorder my-2 justify-between mb-5 items-center">
 					<div>
-						<p>N° {{ order_form.instance.id }}</p>
+						<p class="align-middle text-xl">N° {{ order_form.instance.id }}</p>
 					</div>
+				
+							
 					<div>
-						
 						<button style="background-color: #F7F7F7; border-radius: 10px;" type="button"
 						class="text-lg div-ombre-button-grey text-sm text-black 
 						focus:outline-none
-					focus:z-10 focus:ring-4 focus:ring-gray-200
-					p-2" value="PRINT"
-					data-order-id="{{ order_form.instance.id }}"
-					onclick="printPDFFromAttribute(this)">
-						<img
-						id="printpdf" width="25" height="30" src="{% static 'img/print.svg' %}">
+						focus:z-10 focus:ring-4 focus:ring-gray-200
+						p-2
+						mr-10" 
+						value="PRINT"
+						data-customer-id="{{ order_form.customer.id }}"
+						data-url="{% url 'webapp:customer-edit' pk=customer_form.instance.id %}"
+						onclick="redirectToCustomerEdit(this)">
+							<img id="customer" width="25" height="30" src="{% static 'img/users_grey.svg' %}">
+						</button>
+				
+					<button style="background-color: #F7F7F7; border-radius: 10px;" type="button"
+						class="text-lg div-ombre-button-grey text-sm text-black 
+						focus:outline-none
+						focus:z-10 focus:ring-4 focus:ring-gray-200
+						p-2" value="PRINT"
+						data-order-id="{{ order_form.instance.id }}"
+						onclick="printPDFFromAttribute(this)">
+							<img
+							id="printpdf" width="25" height="30" src="{% static 'img/print.svg' %}">
 					</button>
 					</div>					
 				</div>

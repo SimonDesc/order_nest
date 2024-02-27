@@ -1580,6 +1580,10 @@ select{
   text-align: right;
 }
 
+.align-baseline{
+  vertical-align: baseline;
+}
+
 .align-top{
   vertical-align: top;
 }
