@@ -1,21 +1,41 @@
+# Imports standard de Python
 from typing import Any
-from django.db.models import Case, When, Value, IntegerField
+
+# Imports Django
 from django.core.paginator import Paginator
-from django.db.models import Q, Prefetch, Count
+from django.db.models import Case, When, Value, IntegerField, Q, Prefetch, Count
 from django.urls import reverse_lazy
 from django.views.generic import ListView, UpdateView, CreateView
-from ..models import Order, Customer, OrderAttachment
+
+# Imports relatifs à l'application
 from ..forms import NewCustomerForm
-
-
+from ..models import Order, Customer, OrderAttachment
 
 
 class WebappHome(ListView):
+    """
+    The `WebappHome` class in the Python code snippet retrieves and displays a list of orders with
+    specific statuses, annotated with priority values and prefetched attachments, for a web application
+    home page.
+    """
     model = Order
     template_name = "webapp/home.html"
     context_object_name = "orders"
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        """
+        The `get_context_data` method in the Python code snippet retrieves context data including verbose
+        names for fields in Order and Customer models.
+        
+        :param : The `get_context_data` method is used to add additional context data to be used in the
+        template rendering process. In this case, it is adding verbose names for fields in the `Order` and
+        `Customer` models
+        :type : Any
+        :return: The `get_context_data` method is returning a dictionary containing two key-value pairs:
+        1. "verbose_names": A dictionary mapping field names to their verbose names for the `Order` model.
+        2. "customer_verbose_names": A dictionary mapping field names to their verbose names for the
+        `Customer` model.
+        """
         context = super().get_context_data(**kwargs)
         context["verbose_names"] = {
             field.name: field.verbose_name
@@ -30,6 +50,15 @@ class WebappHome(ListView):
         return context
 
     def get_queryset(self):
+        """
+        The function `get_queryset` retrieves a queryset of orders with specific statuses, annotated with
+        priority values and prefetched attachments, ordered by priority and creation date.
+        :return: The `get_queryset` method is returning a queryset of Order objects with the following
+        criteria:
+        1. Annotating each Order object with a priority field based on the status field. If the status is
+        "Urgent", priority is set to 1, otherwise default priority is set to 2.
+        2. Filtering the Order objects to include only those with status "En cours" or "U
+        """
         attachments = OrderAttachment.objects.all()
         queryset = (
             Order.objects
@@ -48,18 +77,38 @@ class WebappHome(ListView):
 
 
 class CustomerView(ListView):
+    """
+    The `CustomerView` class is a list view for displaying customer data in a web application.
+    """
     model = Customer
     template_name = "webapp/customers/customer.html"
     context_object_name = "customers"
 
 
 class EditCustomer(UpdateView):
+    """
+    This Python class `EditCustomer` extends `UpdateView` to edit customer details and includes a method
+    to calculate and display a summary of orders based on their status.
+    """
     model = Customer
     form_class = NewCustomerForm
     template_name = "webapp/customers/customer-edit.html"
     success_url = reverse_lazy("webapp:customer")
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        """
+        The function `get_context_data` retrieves context data for a customer object and calculates the
+        summary of orders based on their status.
+        
+        :param : In the provided code snippet, a method `get_context_data` is defined within a class. This
+        method is used to retrieve additional context data for a view in a Django application. Here's an
+        explanation of the code:
+        :type : Any
+        :return: The `get_context_data` method is returning a dictionary `context` that contains the summary
+        of orders for a specific customer. The summary includes the counts of orders based on different
+        statuses such as 'En cours', 'En attente', 'Urgent', 'Terminée', 'Annulée', and 'Facturée'. These
+        counts are stored in the `orders_summary` dictionary and
+        """
         context = super().get_context_data(**kwargs)
         customer = self.get_object()
         
@@ -74,14 +123,12 @@ class EditCustomer(UpdateView):
         return context
 
 
-class CreateCustomer(CreateView):
-    model = Customer
-    form_class = NewCustomerForm
-    template_name = "webapp/customers/customer-create.html"
-    success_url = reverse_lazy("webapp:customer")
-
-
 class Dashboard(ListView):
+    """
+    The `Dashboard` class in Python defines a ListView for displaying orders with pagination and
+    calculates various counts related to different statuses and payments of orders for display in a
+    context dictionary.
+    """
     paginate_by = 20
     model = Order
     template_name = "webapp/dashboard.html"
@@ -89,6 +136,14 @@ class Dashboard(ListView):
     ordering = ["-id"]
 
     def get_context_data(self, **kwargs):
+        """
+        The function `get_context_data` retrieves and calculates various counts related to different
+        statuses of orders for display in a context dictionary.
+        :return: The `get_context_data` method is returning a context dictionary containing various counts
+        and information related to different statuses and payments of orders. The context includes the total
+        number of objects, the number of objects in different statuses such as "En cours", "Terminée", "En
+        attente", "Facturée", "Annulée", "Urgent", and the number of objects with payment
+        """
         context = super().get_context_data(**kwargs)
         page_number = context["page_obj"].number
         element_by_page = self.paginate_by
