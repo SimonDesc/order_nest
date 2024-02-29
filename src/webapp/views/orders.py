@@ -1,28 +1,43 @@
-from django.views.generic import (
-    ListView,
-    CreateView,
-    UpdateView,
-    DeleteView,
-)
+# Imports standard de Python
+import io
+import os.path
 
-from ..forms import NewOrderForm, NewCustomerForm
-from ..models import Customer, Order, OrderHasProduct, OrderAttachment
+# Imports Django
+from django.conf import settings
+from django.contrib.staticfiles import finders
+from django.db.models import Q
+from django.http import FileResponse, HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-import os.path
-from django.conf import settings
-from django.db.models import Q
-from .api_views import DeleteOrderAttachment
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
-# PDF
-from django.contrib.staticfiles import finders
+# Bibliothèques tierces
 from reportlab.pdfgen import canvas
-import io
-from django.http import FileResponse, HttpResponse
 from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import letter
 
+# Imports relatifs à l'application
+from ..forms import NewOrderForm, NewCustomerForm
+from ..models import Customer, Order, OrderHasProduct, OrderAttachment
+from .api import DeleteOrderAttachment
+
+
 def print_pdf(request, pk):
+    """
+    The function `print_pdf` generates a PDF ticket with order details and a company logo, and then
+    returns it as a downloadable file.
+    
+    :param request: The `request` parameter in the `print_pdf` function is typically used to handle
+    incoming HTTP requests in Django views. It contains metadata about the request, such as headers,
+    user information, and the requested URL. In this specific function, the `request` parameter is not
+    being used directly, but
+    :param pk: The `pk` parameter in the `print_pdf` function is used to identify a specific order by
+    its primary key (pk) in the database. This primary key is used to retrieve the order details and
+    generate a PDF ticket for that particular order
+    :return: The code is returning a PDF file as an attachment named "ticket.pdf" containing the details
+    of a specific order from the database. The PDF includes a header with a logo and title, a body
+    section with information about the order, and a footer with contact details.
+    """
     # Vérification et récupération de la commande
     if pk:
         try:
@@ -87,11 +102,22 @@ def print_pdf(request, pk):
 
 
 class CreateOrder(CreateView):
+    """
+    The `CreateOrder` class in Python defines a view for creating orders and associated customers,
+    handling form data validation and processing.
+    """
     form_class = NewOrderForm
     template_name = "webapp/orders/order-create.html"
     success_url = "/dashboard"
 
     def get_context_data(self, **kwargs):
+        """
+        The function `get_context_data` returns a dictionary containing instances of `NewOrderForm` and
+        `NewCustomerForm`.
+        :return: A dictionary named `context` is being returned, which contains two key-value pairs. The
+        keys are "order_form" and "customer_form", and the values are instances of the `NewOrderForm` and
+        `NewCustomerForm` classes, respectively.
+        """
         context = {
             "order_form": NewOrderForm(),
             "customer_form": NewCustomerForm(),
@@ -100,6 +126,20 @@ class CreateOrder(CreateView):
         return context
 
     def get_or_create_customer(self, customer_id, customer_form):
+        """
+        The function `get_or_create_customer` takes a customer ID and a customer form, attempts to retrieve
+        an existing customer based on the ID, and creates a new customer if no existing customer is found.
+        
+        :param customer_id: The `customer_id` parameter is the unique identifier for a customer. It is used
+        to retrieve an existing customer from the database if it exists, or to create a new customer if no
+        customer with that ID is found
+        :param customer_form: The `customer_form` parameter in the `get_or_create_customer` method is likely
+        an instance of a form class that is used to create or update customer information. This form would
+        typically contain fields and validation rules for customer data such as name, email, address, etc.
+        When calling the `save
+        :return: The function `get_or_create_customer` returns a tuple containing two values: the customer
+        object and a boolean indicating whether the customer is an existing customer or a newly created one.
+        """
         is_existing_customer = False
         customer = None
 
@@ -122,6 +162,16 @@ class CreateOrder(CreateView):
         return customer, is_existing_customer
 
     def post(self, request, *args, **kwargs):
+        """
+        This Python function processes form data to create or update an order and its associated customer.
+        
+        :param request: The `request` parameter in the `post` method is an HttpRequest object that
+        represents the HTTP request made by the user. It contains information about the request, such as the
+        request method (GET, POST, etc.), headers, user data, and any data sent in the request body (e.g
+        :return: If both the order form and customer form are valid, the code returns a redirect to the edit
+        page for the newly created order. If the forms are not valid, it returns a render of the current
+        page with the order form, customer form, and customer ID in the context.
+        """
         order_form = NewOrderForm(request.POST)
         customer_form = NewCustomerForm(request.POST)
 

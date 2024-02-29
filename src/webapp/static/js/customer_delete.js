@@ -6,7 +6,7 @@ $(document).ready(function () {
 			let id = $("#id_customer").attr("value");
 			const csrfToken = $("[name=csrfmiddlewaretoken]").val();
 
-			fetch(`/deactivate_customer/${id}`, {
+			fetch(`/deactivate_customer/${id}/`, {
 				method: 'POST',
 				headers: {
 					'X-CSRFToken': csrfToken,

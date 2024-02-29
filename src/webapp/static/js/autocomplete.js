@@ -1,6 +1,6 @@
 $(function() {
     $("#id_last_name").autocomplete({
-        source: "/get_clients/",
+        source: "/autocomplete/",
         minLength: 2,
         open: function() {
 
