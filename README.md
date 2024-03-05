@@ -70,6 +70,8 @@ python manage.py tailwind start
 - Adding photos
 - Adding sketches
 - Status Management (In Progress, Invoiced, Urgent, etc.)
+- Printing system
+- Automated SMS to customer
 
 ## Technologies Used 💻
 
