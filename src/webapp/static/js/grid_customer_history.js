@@ -11,14 +11,14 @@ function openTab(evt, tabName) {
 	// Enlève la classe "active" de tous les éléments avec la classe "tablink"
 	tablinks = document.querySelectorAll(".flex ul li a");
 	tablinks.forEach(function (link) {
-		link.classList.remove("blue-color", "border-gray-300", "text-white");
+		link.classList.remove("blue-color-text", "border-gray-300", "text-white");
 		link.classList.add("grey-color");
 	});
 
 	// Affiche le contenu de l'onglet courant et ajoute la classe "active"
 	document.getElementById(tabName).classList.remove("hidden");
 	evt.currentTarget.classList.remove("grey-color");
-	evt.currentTarget.classList.add("border-b-2", "blue-color", "border-gray-300", "text-white");
+	evt.currentTarget.classList.add("border-b-2", "blue-color-text", "border-gray-300", "text-white");
 }
 
 document.addEventListener("DOMContentLoaded", function () {
