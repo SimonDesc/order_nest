@@ -8,91 +8,142 @@
 	<title>Login</title>
 	{% endblock %}
 	{% tailwind_css %}
+	<script defer>
+        document.addEventListener('DOMContentLoaded', function() {
+			const burger_btn = document.getElementById('burger-btn')
+            burger_btn.addEventListener('click', function() {
+                const sidebar = document.getElementById('default-sidebar');
+				const burger_btn_div = document.getElementById('burger-btn-div')
+            // Basculer entre les transformations pour afficher/cacher la barre latérale.
+            sidebar.classList.toggle('-translate-x-full');
+            sidebar.classList.toggle('translate-x-0');
+            // Basculer l'opacité et la couleur de fond via le style directement.
+            if (sidebar.style.backgroundColor === 'rgba(255, 255, 255, 0.55)') {
+                sidebar.style.backgroundColor = 'rgba(255, 255, 255, 1)'; // Changer pour le noir avec opacité
+                sidebar.classList.add('mt-12'); // Ajouter une marge en haut pour décaler le menu vers le bas
+            } else {
+                sidebar.style.backgroundColor = 'rgba(255, 255, 255, 0.55)'; // Revenir à l'original
+                
+            }
+			if (burger_btn_div.style.backgroundColor) {
+				burger_btn_div.style.removeProperty('background-color');
+			}
+			else {
+				burger_btn_div.style.backgroundColor = '#4674F8';
+			}
+			
+            });
+        });
+    </script>
 </head>
 {% url 'webapp:home' as home_url %}
 {% url 'webapp:order-create' as order_create_url %}
 {% url 'webapp:dashboard' as dashboard_url %}
 {% url 'webapp:customer' as customer_url %}
+{% url 'webapp:logout' as logout_url %}
 
 <body class="primary-background flex flex-col min-h-screen">
+    <!-- Bouton Burger pour les écrans < xl -->
+	<div id="burger-btn-div" class="flex items-center justify-center fixed top-0 left-0 xl:hidden w-20">
+		<button id="burger-btn" class="p-4">
+			<svg class="w-6 h-6 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+			</svg>
+		</button>
+	</div>
+	
+	
+<div class="flex-container" >
+	<aside id="default-sidebar"
+	class="fixed top-0 left-0 w-20 h-screen transition-transform -translate-x-full xl:translate-x-0 xl:translate-x-0 z-10"
+	aria-label="Sidebar"
+		style="background-color:rgba(255, 255, 255, 0.55);">
+		<div class="h-full py-4 overflow-y-auto">
+			<ul class="space-y-6 font-medium">
+				<li {% if request.path == home_url %}class="border-l-2" style="border-color: #4674F8;"{% else %}{% endif %} >
+					<!-- Élément Accueil -->
+					<a href="{{ home_url }}"
+						class="flex items-center  justify-center  rounded-lg dark:text-white  group">
+						<div class=" 
+						cursor-pointer ">
 
-	<nav class="flex items-center justify-center p-2 mb-3 mt-3">
-		<!-- Conteneur central pour les éléments de la barre de navigation -->
-		<div class="flex justify-center items-center space-x-24">
-			<!-- Élément Accueil -->
-			<a href="{{ home_url }}">
-				<div class="rounded-2xl {% if request.path == home_url %}current-page{% else %}other-page{% endif %}
-								cursor-pointer transition-all hover:-translate-y-[1px] active:border-b-[2px]
-								active:brightness-90 active:translate-y-[2px]">
+							<img src="{% if request.path == home_url %}{% static 'img/home.svg' %}{% else %}{% static 'img/home_grey.svg' %}{% endif %}"
+								alt="Accueil" width="40" height="40">
+						</div>
+						
+					</a>
+				</li>
+				<li {% if request.path == order_create_url %}class="border-l-2" style="border-color: #4674F8;"{% else %}{% endif %} >
+					<!-- Élément Nouvelle Commande -->
+					<a href="{{ order_create_url }}"
+					class="flex items-center justify-center p-2 text-gray-900 rounded-lg dark:text-white  group">
+						<div class="
+								cursor-pointer ">
 
-					<img src="{% if request.path == home_url %}{% static 'img/home.svg' %}{% else %}{% static 'img/home_grey.svg' %}{% endif %}"
-						alt="Accueil" width="50" height="40">
+							<img src="{% if request.path == order_create_url %}{% static 'img/neworder.svg' %}{% else %}{% static 'img/neworder_grey.svg' %}{% endif %}"
+								alt="Nouvelle commande" width="45" height="45">
+						</div>
+						
+					</a>
+				</li>
+				<li {% if request.path == dashboard_url %}class="border-l-2" style="border-color: #4674F8;"{% else %}{% endif %} >
+					<!-- Élément Tableau de Bord -->
+					<a href="{{ dashboard_url }}"
+					class="flex items-center p-2 justify-center text-gray-900 rounded-lg dark:text-white  group">
+						<div class=" 
+								cursor-pointer ">
 
-				</div>
-			</a>
+							<img src="{% if request.path == dashboard_url %}{% static 'img/dashboard.svg' %}{% else %}{% static 'img/dashboard_grey.svg' %}{% endif %}"
+								alt="Tableau de bord" width="40" height="40">
+						</div>
+						
+					</a>
+				</li>
+				<li {% if request.path == customer_url %}class="border-l-2" style="border-color: #4674F8;"{% else %}{% endif %} >
+					<!-- Élément Clients -->
+					<a href="{{ customer_url }}"
+					class="flex items-center p-2 justify-center text-gray-900 rounded-lg dark:text-white  group">
+						<div class="
+								cursor-pointer ">
 
-			<!-- Élément Nouvelle Commande -->
-			<a href="{{ order_create_url }}">
-				<div class="rounded-2xl {% if request.path == order_create_url %}current-page{% else %}other-page{% endif %}
-								cursor-pointer transition-all hover:-translate-y-[1px] active:border-b-[2px]
-								active:brightness-90 active:translate-y-[2px]">
-
-					<img src="{% if request.path == order_create_url %}{% static 'img/neworder.svg' %}{% else %}{% static 'img/neworder_grey.svg' %}{% endif %}"
-						alt="Nouvelle commande" width="50" height="40">
-
-				</div>
-			</a>
-
-			<!-- Élément Tableau de Bord -->
-			<a href="{{ dashboard_url }}">
-				<div class="rounded-2xl {% if request.path == dashboard_url %}current-page{% else %}other-page{% endif %}
-								cursor-pointer transition-all hover:-translate-y-[1px] active:border-b-[2px]
-								active:brightness-90 active:translate-y-[2px]">
-
-					<img src="{% if request.path == dashboard_url %}{% static 'img/dashboard.svg' %}{% else %}{% static 'img/dashboard_grey.svg' %}{% endif %}"
-						alt="Tableau de bord" width="50" height="40">
-				</div>
-			</a>
-
-			<!-- Élément Clients -->
-			<a href="{{ customer_url }}">
-				<div class="rounded-2xl {% if request.path == customer_url %}current-page{% else %}other-page{% endif %}
-								cursor-pointer transition-all hover:-translate-y-[1px] active:border-b-[2px]
-								active:brightness-90 active:translate-y-[2px]">
-
-					<img src="{% if request.path == customer_url %}{% static 'img/users.svg' %}{% else %}{% static 'img/users_grey.svg' %}{% endif %}"
-						alt="Clients" width="50" height="40">
-				</div>
-			</a>
-
-
-			
-		</div>
-
+							<img src="{% if request.path == customer_url %}{% static 'img/users.svg' %}{% else %}{% static 'img/users_grey.svg' %}{% endif %}"
+								alt="Clients" width="40" height="40">
+						</div>
+						
+					</a>
+				</li>
+				<li>
 		<!-- Bouton de déconnexion aligné à droite, en dehors du conteneur central -->
-		<div class="absolute top-8" style="right: 7%;"> 
-			<div style="background-color: #FF4E27; border: 0.5rem solid #FF4E27;" class="rounded-xl">
+			<div class="flex items-center p-2  justify-center rounded-lg dark:text-white  group">
 				{% if user.is_authenticated %}
+				<div class="
+				cursor-pointer ">
 				<form method="post" action="{% url 'webapp:logout' %}">
 					{% csrf_token %}
 					<button type="submit" style="display: flex; justify-content: center; align-items: center;">
-						<img src="/static/img/logout.svg" alt="Se déconnecter" width="30" height="20">
+						<img src="/static/img/logout.svg" alt="Se déconnecter" width="40" height="40">
 					</button>
 				</form>
+				</div>
 				{% endif %}
 			</div>
+				</li>
+
+
+			</ul>
 		</div>
-	</nav>
+	</aside>
 
 
 
-	<section class="secondary-background " id="webapp">
+	<section class="flex justify-center align-middle secondary-background grow" id="webapp">
 		{% block content %}
 		{% endblock %}
 	</section>
-	<footer class="mt-auto text-white text-center p-4 max-h-2.5">
+	<footer class="mt-auto text-black text-center p-4 max-h-2.5">
 		<p>© {% now "Y" %} OrderNest. Tous droits réservés.</p>
 	</footer>
+</div>
 </body>
 
 </html>
