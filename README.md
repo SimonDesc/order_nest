@@ -21,6 +21,10 @@ It's been used in a small company since December 2023 and continues to evolve.
 
 ## Latest Updates 🔄
 
+### 03/2024
+- 🎨**Design:** Changes to the navbar -> now in vertical for aesthetic and better visualization.
+- 🔧**Small Changes:** Ticket printing now have prices and date.
+
 ### 02/2024 (2)
 - 🌟**Features:** Creation of a ticket printing option (generate a pdf). Creation of an option to send sms to the customer with default sms and/or message personalization.
 - 🐛**Bug Fixes:** Sorting by creation date was not correctly performed in the dashboard.
