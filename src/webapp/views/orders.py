@@ -26,7 +26,7 @@ def print_pdf(request, pk):
     """
     The function `print_pdf` generates a PDF ticket with order details and a company logo, and then
     returns it as a downloadable file.
-    
+
     :param request: The `request` parameter in the `print_pdf` function is typically used to handle
     incoming HTTP requests in Django views. It contains metadata about the request, such as headers,
     user information, and the requested URL. In this specific function, the `request` parameter is not
@@ -43,57 +43,78 @@ def print_pdf(request, pk):
         try:
             order = Order.objects.get(pk=pk)
         except Order.DoesNotExist:
-            return HttpResponse('<h1>Commande non trouvée</h1>')
+            return HttpResponse("<h1>Commande non trouvée</h1>")
 
     buf = io.BytesIO()
     page_width, page_height = 155, 160  # Dimensions ajustées de la page
     c = canvas.Canvas(buf)
     c.setPageSize((page_width, page_height))
-    
+
     # HEADER
-    logo_path = finders.find('img/logo_galerie.jpg')
+    logo_path = finders.find("img/logo_galerie.jpg")
     logo_height = 30  # Hauteur du logo
     logo_width = 50  # Largeur du logo
-    c.drawImage(logo_path, 10, page_height - logo_height - 10, width=logo_width, height=logo_height)
-    
+    c.drawImage(
+        logo_path,
+        10,
+        page_height - logo_height - 10,
+        width=logo_width,
+        height=logo_height,
+    )
+
     # TITLE
     title_y_position = page_height - logo_height - 0
     c.setFont("Helvetica-Bold", 9)
     c.drawString(64, title_y_position, "Galerie Libre Cours")
-    
+
     # BODY
     text_start_y_position = title_y_position - 22
     textob = c.beginText(10, text_start_y_position)
     c.setFont("Helvetica", 9)
-    
-    lines = [
-        f"ID Commande: {str(pk)}",
-        f"Libellé: {order.label}",
-        f"Prénom: {order.customer.first_name}",
-        f"Nom: {order.customer.last_name}",
-        f"Téléphone: {str(order.customer.formatted_phone_number())}",
-    ]
 
-    line_height = 3  # espace entre les lignes
+    # Calculer le total pour chaque produit
+    product_order = OrderHasProduct.objects.filter(order=pk)
+    for product in product_order:
+        product.total = product.product.selling_price_unit * 1
+    total_order = sum(product.total for product in product_order)
+
+    if total_order != 0:
+        lines = [
+            f"Date de création: {order.created_at.strftime('%d/%m/%Y')}",
+            f"Commande: {str(pk)}",
+            f"Libellé: {order.label}",
+            f"Client: {order.customer.first_name} {order.customer.last_name}",
+            f"Téléphone: {str(order.customer.formatted_phone_number())}",
+            f"Prix: {total_order} €",
+        ]
+    else:
+        lines = [
+            f"Date de création: {order.created_at.strftime('%d/%m/%Y')}",
+            f"Commande: {str(pk)}",
+            f"Libellé: {order.label}",
+            f"Client: {order.customer.first_name} {order.customer.last_name}",
+            f"Téléphone: {str(order.customer.formatted_phone_number())}",
+        ]
+
+    line_height = 2  # espace entre les lignes
 
     for line in lines:
         textob.textLine(line)
         textob.moveCursor(0, line_height)
 
     c.drawText(textob)
-    
+
     # FOOTER
     footer_text_line1 = "50 Rue de Dreuilhe, 31250 Revel"
     footer_text_line2 = "05 62 18 91 84"
-    footer_text_x_position = 10 
+    footer_text_x_position = 10
     footer_text_y_position = 30
-    c.setFont("Helvetica", 7) 
+    c.setFont("Helvetica", 7)
     c.drawString(footer_text_x_position, footer_text_y_position, footer_text_line1)
     line_height = 10
     footer_text_y_position2 = footer_text_y_position - line_height
     c.drawString(footer_text_x_position, footer_text_y_position2, footer_text_line2)
 
-    
     c.showPage()
     c.save()
     buf.seek(0)
@@ -106,6 +127,7 @@ class CreateOrder(CreateView):
     The `CreateOrder` class in Python defines a view for creating orders and associated customers,
     handling form data validation and processing.
     """
+
     form_class = NewOrderForm
     template_name = "webapp/orders/order-create.html"
     success_url = "/dashboard"
@@ -129,7 +151,7 @@ class CreateOrder(CreateView):
         """
         The function `get_or_create_customer` takes a customer ID and a customer form, attempts to retrieve
         an existing customer based on the ID, and creates a new customer if no existing customer is found.
-        
+
         :param customer_id: The `customer_id` parameter is the unique identifier for a customer. It is used
         to retrieve an existing customer from the database if it exists, or to create a new customer if no
         customer with that ID is found
@@ -164,7 +186,7 @@ class CreateOrder(CreateView):
     def post(self, request, *args, **kwargs):
         """
         This Python function processes form data to create or update an order and its associated customer.
-        
+
         :param request: The `request` parameter in the `post` method is an HttpRequest object that
         represents the HTTP request made by the user. It contains information about the request, such as the
         request method (GET, POST, etc.), headers, user data, and any data sent in the request body (e.g
