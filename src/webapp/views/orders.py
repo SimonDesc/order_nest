@@ -100,7 +100,11 @@ def print_pdf(request, pk):
 
     c.drawText(textob)
 
-    # FOOTER
+    # FOOTER 
+    footer_text_line0 = "Encadrement - Restauration de tableaux"
+    c.setFont("Helvetica-Bold", 7)
+    c.drawString(10, 45, footer_text_line0)
+    
     footer_text_line1 = "50 Rue de Dreuilhe, 31250 Revel"
     footer_text_line2 = "05 62 18 91 84 / 06 50 80 77 23"
     footer_text_x_position = 10

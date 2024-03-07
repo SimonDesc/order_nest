@@ -137,8 +137,10 @@ Suivi et info: 05 62 18 91 84
 `);
 			}
 			else if ($(this).attr('id') === 'commande-terminee-checkbox-list') {
-				$("#sms-input").val(`Bonjour, votre commande est prête à la galerie Libre Cours à Revel.
+				$("#sms-input").val(`Bonjour,
+votre commande est prête à la galerie Libre Cours à Revel.
 A bientôt.
+Encadrement - Restauration de tableaux
 Infos: 06.50.80.77.23
 `);
 			}
