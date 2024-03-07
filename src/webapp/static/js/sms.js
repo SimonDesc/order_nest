@@ -42,7 +42,7 @@ $(document).ready(function () {
 					},
 
 					lengths: {
-						ascii: [151, 306, 459],
+						ascii: [160, 306, 459],
 						unicode: [70, 134, 201]
 					}
 				}, options);
@@ -141,7 +141,7 @@ Suivi et info: 05 62 18 91 84
 
 Votre commande est disponible à la galerie Libre Cours à Revel.
 Bien cordialement
-Encadrement-Restauration de tableaux
+Encadrement - Restauration de tableaux
 Infos: 06.50.80.77.23
 `);
 			}

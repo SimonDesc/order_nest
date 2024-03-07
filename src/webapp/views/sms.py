@@ -71,7 +71,7 @@ def send_sms(request):
             "phoneNumbers": phone_number,
             "sender": "Libre Cours",
             "gamme": 1,
-            "message": content+':br:',
+            "message": content,
             "webhookUrl": env("WEB_HOOK"),
         }
     )
