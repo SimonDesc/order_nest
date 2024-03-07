@@ -137,9 +137,9 @@ Suivi et info: 05 62 18 91 84
 `);
 			}
 			else if ($(this).attr('id') === 'commande-terminee-checkbox-list') {
-				$("#sms-input").val(`Votre commande numéro ${orderId} est prête !
-Horaire d'ouverture : du Mardi au Samedi de 09h30 à 12h30 et de 15h à 19h.
-05 62 18 91 84
+				$("#sms-input").val(`Bonjour, votre commande est prête à la galerie Libre Cours à Revel.
+A bientôt.
+Infos: 06.50.80.77.23
 `);
 			}
 			else if ($(this).attr('id') === 'autre-checkbox-list') {

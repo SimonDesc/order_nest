@@ -82,21 +82,17 @@ def print_pdf(request, pk):
         lines = [
             f"Date de création: {order.created_at.strftime('%d/%m/%Y')}",
             f"Commande: {str(pk)}",
-            f"Libellé: {order.label}",
             f"Client: {order.customer.first_name} {order.customer.last_name}",
-            f"Téléphone: {str(order.customer.formatted_phone_number())}",
             f"Prix: {total_order} €",
         ]
     else:
         lines = [
             f"Date de création: {order.created_at.strftime('%d/%m/%Y')}",
             f"Commande: {str(pk)}",
-            f"Libellé: {order.label}",
             f"Client: {order.customer.first_name} {order.customer.last_name}",
-            f"Téléphone: {str(order.customer.formatted_phone_number())}",
         ]
 
-    line_height = 2  # espace entre les lignes
+    line_height = 3  # espace entre les lignes
 
     for line in lines:
         textob.textLine(line)
@@ -106,7 +102,7 @@ def print_pdf(request, pk):
 
     # FOOTER
     footer_text_line1 = "50 Rue de Dreuilhe, 31250 Revel"
-    footer_text_line2 = "05 62 18 91 84"
+    footer_text_line2 = "05 62 18 91 84 / 06 50 80 77 23"
     footer_text_x_position = 10
     footer_text_y_position = 30
     c.setFont("Helvetica", 7)
