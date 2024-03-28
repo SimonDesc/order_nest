@@ -6,29 +6,28 @@
 			<table class="w-full text-left">
 				<thead class="text-base text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 ">
 					<tr>
-
-						<th scope="col" class="px-5 py-3">
+						<th scope="col" class="px-5 py-3" style="min-width: 200px;">
 							Libellé
 						</th>
-						<th scope="col" class="px-1 py-3">
+						<th scope="col" class="px-1 py-3" style="min-width: 50px;">
 							Taille
 						</th>
-						<th scope="col" class="px-1 py-3">
+						<th scope="col" class="px-1 py-3" >
 							Baguette
 						</th>
-						<th scope="col" class="px-1 py-3">
+						<th scope="col" class="px-1 py-3" >
 							Verre
 						</th>
-						<th scope="col" class="px-1 py-3">
+						<th scope="col" class="px-1 py-3" >
 							Passe-partout
 						</th>
-						<th scope="col" class="px-1 py-3">
+						<th scope="col" class="px-1 py-3" >
 							Filet
 						</th>
-						<th scope="col" class="px-1 py-3">
+						<th scope="col" class="px-1 py-3" >
 							Prix
 						</th>
-						<th scope="col" class="px-1 py-3">
+						<th scope="col" class="px-1 py-3" >
 						</th>
 						<th scope="col" class="px-1 py-3">
 						</th>
@@ -55,24 +54,21 @@
 						<td class="px-1 py-4">
 							{{ product.product.mesh }}
 						</td>
-						<td class="px-1 py-4">
+						<td class="px-1 py-4" style="width: 100px;">
 							{{ product.product.selling_price_unit }}
 						</td>
-
-						<td>
-							<a hx-get="{% url 'webapp:product-edit' pk=product.product.id %}" hx-target="#dialog">
-								<img width="25" height="20" src="{% static '/img/edit.svg' %}">
+						<td style="width: 40px;">
+							<a hx-get="{% url 'webapp:product-edit' pk=product.product.id %}" hx-target="#dialog" class="cursor-pointer hover:opacity-75">
+								<img height="10" src="{% static '/img/edit.svg' %}"></td>
 							</a>
 						</td>
-
-						<td>
-							<a hx-get="{% url 'webapp:product-delete' pk=product.product.id %}" hx-target="#dialog">
-								<img width="25" height="20" src="{% static '/img/delete.svg' %}">
+						<td style="width: 40px;">
+							<a hx-get="{% url 'webapp:product-delete' pk=product.product.id %}" hx-target="#dialog" class="cursor-pointer hover:opacity-75">
+								<img height="10" src="{% static '/img/delete.svg' %}"></td>
 							</a>
 						</td>
 					</tr>
 					{% endfor %}
-
 				</tbody>
 			</table>
 		</div>
