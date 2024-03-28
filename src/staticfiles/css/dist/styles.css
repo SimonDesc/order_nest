@@ -1274,10 +1274,6 @@ select{
   border-radius: 0.25rem;
 }
 
-.rounded-2xl{
-  border-radius: 1rem;
-}
-
 .rounded-full{
   border-radius: 9999px;
 }
@@ -1551,10 +1547,6 @@ select{
 
 .text-right{
   text-align: right;
-}
-
-.align-baseline{
-  vertical-align: baseline;
 }
 
 .align-top{
@@ -2066,6 +2058,10 @@ tr.status-active td {
 
 .hover\:underline:hover{
   text-decoration-line: underline;
+}
+
+.hover\:opacity-75:hover{
+  opacity: 0.75;
 }
 
 .hover\:shadow-2xl:hover{
