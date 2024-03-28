@@ -176,13 +176,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	customerId = $("#id_customer").attr("value");
 	console.log(customerId)
-	const gridEncours = createStatusTable(['En cours', 'Urgent', 'En attente'], customerId);
+	const gridEncours = createStatusTable(['En cours', 'Urgent', 'En attente', 'Devis'], customerId);
 	gridEncours.render(document.getElementById("wrapper"));
 
 	const gridTermines = createStatusTable(['Terminée', 'Annulée'], customerId);
 	gridTermines.render(document.getElementById("wrapperEnCours"));
 
-	const gridFacture = createStatusTable(['Facturée'], customerId);
+	const gridFacture = createStatusTable(['Facturée', 'Archivée'], customerId);
 	gridFacture.render(document.getElementById("wrapperFacture"));
 
 	// Pour afficher l'onglet par défaut au chargement

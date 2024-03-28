@@ -64,15 +64,15 @@ class Product(models.Model):
     active = models.BooleanField(default=True)
 
     def __str__(self):
-        return f'{self.reference} {self.label}'
+        return f'{self.wand} {self.label}'
 
 
 class Order(models.Model):
     STATUS = (
-        ('En attente', 'En attente'),
+        ('Devis', 'Devis'),
         ('En cours', 'En cours'),
         ('Terminée', 'Terminée'),
-        ('Facturée', 'Facturée'),
+        ('Archivée', 'Archivée'),
         ('Annulée', 'Annulée'),
         ('Urgent', 'Urgent'),
     )

@@ -3,6 +3,7 @@
 <html lang="fr">
 
 <head>
+	<link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.png' %}" >
 	<meta charset="UTF-8">
 	{% block title %}
 	<title>Login</title>
@@ -42,7 +43,7 @@
 {% url 'webapp:customer' as customer_url %}
 {% url 'webapp:logout' as logout_url %}
 
-<body class="primary-background flex flex-col min-h-screen">
+<body class="flex flex-col min-h-screen">
     <!-- Bouton Burger pour les écrans < xl -->
 	<div id="burger-btn-div" class="flex items-center justify-center fixed top-0 left-0 xl:hidden w-20">
 		<button id="burger-btn" class="p-4">
@@ -140,7 +141,7 @@
 		{% block content %}
 		{% endblock %}
 	</section>
-	<footer class="mt-auto text-black text-center p-4 max-h-2.5">
+	<footer class="mt-auto bg-transparent text-black text-center p-4 max-h-2.5">
 		<p>© {% now "Y" %} OrderNest. Tous droits réservés.</p>
 	</footer>
 </div>

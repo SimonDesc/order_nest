@@ -7,6 +7,12 @@
 <script src="{% static 'js/grid.js' %}"></script>
 <link href="https://cdn.jsdelivr.net/npm/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
 
+<script>
+	function printPDFFromAttribute(element) {
+		var url = `/print_wand/`; 
+		window.open(url);
+	}
+</script>
 {% endblock %}
 
 {% block content %}
@@ -20,47 +26,86 @@
 
 	<!-- Dashboard -->
 	<div class="hidden bg-sky-900 blue-color-text border-blue-500 text-blue-600 border-gray-300"></div>
+
+	<div class="btnok flex justify-end">
+		<button type="submit" class="align-right blue-button div-ombre-button-edit py-2 px-6 mb-2 text-sm text-white text-gray-900
+			focus:outline-none rounded-xl focus:z-10 focus:ring-4 focus:ring-gray-200
+			cursor-pointer transition-all hover:-translate-y-[1px] active:border-b-[2px]
+			active:brightness-90 active:translate-y-[2px]
+			"
+			value="PRINT"
+			onclick="printPDFFromAttribute(this)">
+				Liste des baguettes
+		</button>
+	</div>
 	<div class="flex justify-center pt-5">
 		<div class="w-full max-w-5xl">
 			<div class="flex justify-center pt-5">
 				<div class="w-full max-w-5xl">
+					
 					<!-- Onglets -->
 					<ul class="flex font-medium text-center ">
 						<li class="me-2">
 							<a id="default-tab" class="bg-white inline-block p-4
-							rounded-t-lg hover:border-gray-300 border relative" href="#" onclick="openTab(event, 'wrapper')">En Attente | En cours | Urgent
-					 	{% if count_waiting|add:count_urgent|add:count_progress %}
-							<div class="absolute -top-2 inline-flex items-center justify-center w-6 h-6 text-xs font-bold
-							text-white bg-red-500 border-2 border-white rounded-full">
-								{{ count_waiting|add:count_urgent|add:count_progress }}
-							</div>
-				  		{% endif %}
-					</a>
+							rounded-t-lg hover:border-gray-300 border relative" href="#" onclick="openTab(event, 'wrapperEnCours')">En cours
+						 	{% if count_progress %}
+								<div class="absolute -top-2 inline-flex items-center justify-center w-6 h-6 text-xs font-bold
+								text-white bg-red-500 border-2 border-white rounded-full">
+									{{ count_progress }}
+								</div>
+					  		{% endif %}
+							</a>
+						</li>
+
+						<li class="me-2">
+							<a id="default-tab" class="bg-white inline-block p-4
+							rounded-t-lg hover:border-gray-300 border relative" href="#" onclick="openTab(event, 'wrapperUrgent')">Urgent
+						 	{% if count_urgent %}
+								<div class="absolute -top-2 inline-flex items-center justify-center w-6 h-6 text-xs font-bold
+								text-white bg-red-500 border-2 border-white rounded-full">
+									{{ count_urgent }}
+								</div>
+					  		{% endif %}
+							</a>
+						</li>
+
+						<li class="me-2">
+							<a id="default-tab" class="bg-white inline-block p-4
+							rounded-t-lg hover:border-gray-300 border relative" href="#" onclick="openTab(event, 'wrapperDevis')">Devis ({{ count_waiting }})
+							</a>
+						</li>
+
+						<li class="me-2">
+							<a id="default-tab" class="bg-white inline-block p-4
+							rounded-t-lg hover:border-gray-300 border relative" href="#" onclick="openTab(event, 'wrapperTerminee')">Terminée ({{ count_ended }})
+							</a>
 						</li>
 						<li class="me-2">
-							<a class="bg-white
-					  inline-block p-4
-					  rounded-t-lg hover:border-gray-300
-					  border" href="#" onclick="openTab(event, 'wrapperEnCours')">
-					  Terminées | Annulées ({{ count_ended|add:count_canceled }})
-					</a>
+							<a id="default-tab" class="bg-white inline-block p-4
+							rounded-t-lg hover:border-gray-300 border relative" href="#" onclick="openTab(event, 'wrapperArchivee')">Archivée ({{ count_archive }})
+							</a>
 						</li>
 						<li class="me-2">
-							<a class="bg-white
-					  inline-block p-4 
-					  rounded-t-lg hover:border-gray-300
-					  border" href="#" onclick="openTab(event, 'wrapperFacture')">
-					  Facturées ({{ count_invoice }})
-					</a>
+							<a id="default-tab" class="bg-white inline-block p-4
+							rounded-t-lg hover:border-gray-300 border relative" href="#" onclick="openTab(event, 'wrapperAnnulee')">Annulée ({{ count_canceled }})
+							</a>
 						</li>
+
 					</ul>
 
+
 					<!-- Contenu des onglets -->
-					<div id="wrapper"
+					<div id="wrapperUrgent"
 						class="tab-content bg-white rounded-b-lg pt-5 pb-10 mb-10 shadow-xl ring-1 ring-gray-900/5 px-6"></div>
 					<div id="wrapperEnCours"
 						class="tab-content bg-white rounded-b-lg pt-5 pb-10 mb-10 shadow-xl ring-1 ring-gray-900/5 px-6"></div>
-					<div id="wrapperFacture"
+					<div id="wrapperDevis"
+						class="tab-content bg-white rounded-b-lg pt-5 pb-10 mb-10 shadow-xl ring-1 ring-gray-900/5 px-6"></div>
+					<div id="wrapperTerminee"
+						class="tab-content bg-white rounded-b-lg pt-5 pb-10 mb-10 shadow-xl ring-1 ring-gray-900/5 px-6"></div>
+					<div id="wrapperAnnulee"
+						class="tab-content bg-white rounded-b-lg pt-5 pb-10 mb-10 shadow-xl ring-1 ring-gray-900/5 px-6"></div>
+					<div id="wrapperArchivee"
 						class="tab-content bg-white rounded-b-lg pt-5 pb-10 mb-10 shadow-xl ring-1 ring-gray-900/5 px-6"></div>
 				</div>
 			</div>

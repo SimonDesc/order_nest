@@ -18,8 +18,59 @@ from reportlab.lib.pagesizes import letter
 
 # Imports relatifs à l'application
 from ..forms import NewOrderForm, NewCustomerForm
-from ..models import Customer, Order, OrderHasProduct, OrderAttachment
+from ..models import Customer, Order, OrderHasProduct, OrderAttachment, Product
 from .api import DeleteOrderAttachment
+import re
+
+
+
+
+def print_wand(request):
+    """
+    Print all the wand to work with
+    for all the in progress or Urgent orders
+    """
+    # Retrieve all the products with a wand for the in progress or urgent orders
+    orders = Order.objects.filter(status='En cours') | Order.objects.filter(status='Urgent')
+    orders_has_product = OrderHasProduct.objects.filter(order__in=orders)
+    products =  Product.objects.filter(orderhasproduct__in=orders_has_product) & Product.objects.exclude(wand='')
+    products = list(products)
+    
+    # Ticket construction
+    buf = io.BytesIO()
+    page_width = 155
+    ## Calculating the height required for the ticket
+    page_height = len(products) * 50
+    c = canvas.Canvas(buf)
+    c.setPageSize((page_width, page_height))
+    
+    # Text parameters
+    textob = c.beginText(0, page_height-10)
+    line_height = 3
+    c.setFont("Helvetica", 7)
+    
+    # Body Construct
+    lines = []
+    for product in products:
+        line_wand = re.sub(r'[^\w\s\-_|/:]', '', 'B: ' + str(product.wand))
+        lines.append(line_wand)
+        line_size = re.sub(r'[^\w\s\-_|/:]', '', 'T: ' + str(product.size))
+        lines.append(line_size)
+        line_label = re.sub(r'[^\w\s\-_|/:]', '', 'R: ' + str(product.label))
+        lines.append(line_label)
+        lines.append(" ")
+    
+    # Write the lines
+    for line in lines:
+        textob.textLine(line)
+        textob.moveCursor(0, line_height)
+    
+    c.drawText(textob)
+    c.showPage()
+    c.save()
+    buf.seek(0)
+
+    return FileResponse(buf, as_attachment=True, filename="ticket_wand.pdf")
 
 
 def print_pdf(request, pk):
@@ -78,12 +129,13 @@ def print_pdf(request, pk):
         product.total = product.product.selling_price_unit * 1
     total_order = sum(product.total for product in product_order)
 
+
     if total_order != 0:
         lines = [
             f"Date de création: {order.created_at.strftime('%d/%m/%Y')}",
             f"Commande: {str(pk)}",
             f"Client: {order.customer.first_name} {order.customer.last_name}",
-            f"Prix: {total_order} €",
+            f"Prix: {total_order} €" if order.payment == "En attente" else f"Prix: {total_order} € - RÉGLÉ",
         ]
     else:
         lines = [
