@@ -4,7 +4,7 @@ from django.urls import path
 from django.contrib.auth.views import LoginView, LogoutView
 
 # Importations des vues
-from .views.orders import CreateOrder, EditOrder, DeleteOrder, SearchOrder, print_pdf
+from .views.orders import CreateOrder, EditOrder, DeleteOrder, SearchOrder, print_pdf, print_wand
 from .views.products import AddProductsToOrder, DeleteProduct, EditProduct, product_order_list
 from .views.customers import autocomplete, get_customers, CreateCustomer
 from .views.other_views import WebappHome, Dashboard, CustomerView, EditCustomer
@@ -35,6 +35,7 @@ urlpatterns = [
     path('products/<int:pk>/edit/', EditProduct.as_view(), name='product-edit'),
     path('products/<int:pk>/delete/', DeleteProduct.as_view(), name='product-delete'),  
     path('product_order_list/<int:order_id>/', product_order_list, name='product_order_list'),
+    path('print_wand/', print_wand, name='print_wand'),
 
     # Clients
     path('customers/', CustomerView.as_view(), name='customer'),

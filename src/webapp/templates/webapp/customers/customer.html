@@ -24,14 +24,17 @@
 		<div class="w-full max-w-5xl">
 
 			<!-- New Customer -->
-			<div class="flex justify-end mb-5 mr-10">
-				<a href="{% url 'webapp:customer-create' %}">
-					<div class="rounded-2xl current-page
-				cursor-pointer transition-all hover:-translate-y-[1px] active:border-b-[2px]
-				active:brightness-90 active:translate-y-[2px] ">
-						<img src="{% static 'img/new_user.svg' %}" alt="Accueil" width="50" height="40">
-					</div>
-				</a>
+
+			<div class="btnok flex justify-end">
+				<button type="submit" class="align-right blue-button div-ombre-button-edit py-2 px-6 mb-2 text-sm text-white text-gray-900
+					focus:outline-none rounded-xl focus:z-10 focus:ring-4 focus:ring-gray-200
+					cursor-pointer transition-all hover:-translate-y-[1px] active:border-b-[2px]
+					active:brightness-90 active:translate-y-[2px]
+					"
+					value="PRINT"
+					onclick="window.location.href = '{% url 'webapp:customer-create' %}';">
+						Créer un client
+				</button>
 			</div>
 
 			<!-- Dashboard -->

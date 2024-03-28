@@ -156,11 +156,11 @@ class Dashboard(ListView):
         ended_orders = Order.objects.filter(status="Terminée")
         count_ended = ended_orders.count()
 
-        waiting_objects = Order.objects.filter(status="En attente")
+        waiting_objects = Order.objects.filter(Q(status="Devis") | Q(status="En attente"))
         count_waiting = waiting_objects.count()
 
-        invoice_objects = Order.objects.filter(status="Facturée")
-        count_invoice = invoice_objects.count()
+        archive = Order.objects.filter(Q(status="Archivée") | Q(status="Facturée"))
+        count_archive = archive.count()
 
         canceled_objects = Order.objects.filter(status="Annulée")
         count_canceled = canceled_objects.count()
@@ -169,7 +169,7 @@ class Dashboard(ListView):
         count_urgent = urgent_objects.count()
 
         payment_objects = Order.objects.filter(payment="Réglé")
-        count_urgent = urgent_objects.count()
+        count_payment = payment_objects.count()
 
         count_all = Paginator(all_objects, element_by_page)
         context["total_obj"] = count_all.count
@@ -182,10 +182,10 @@ class Dashboard(ListView):
         context["count_progress"] = count_progress
         context["count_ended"] = count_ended
         context["count_waiting"] = count_waiting
-        context["count_invoice"] = count_invoice
+        context["count_archive"] = count_archive
         context["count_canceled"] = count_canceled
         context["count_urgent"] = count_urgent
 
-        context["count_payment"] = count_urgent
+        context["count_payment"] = count_payment
 
         return context

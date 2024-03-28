@@ -171,14 +171,24 @@ document.addEventListener("DOMContentLoaded", function () {
 		});
 	}
 
-	const gridEncours = createStatusTable(['En cours', 'Urgent', 'En attente']);
-	gridEncours.render(document.getElementById("wrapper"));
+	const gridEncours = createStatusTable(['En cours']);
+	gridEncours.render(document.getElementById("wrapperEnCours"));
 
-	const gridTermines = createStatusTable(['Terminée', 'Annulée']);
-	gridTermines.render(document.getElementById("wrapperEnCours"));
+	const gridUrgent = createStatusTable(['Urgent']);
+	gridUrgent.render(document.getElementById("wrapperUrgent"));
 
-	const gridFacture = createStatusTable(['Facturée']);
-	gridFacture.render(document.getElementById("wrapperFacture"));
+	const gridDevis = createStatusTable(['Devis', 'En attente']);
+	gridDevis.render(document.getElementById("wrapperDevis"));
+
+	const gridTerminee = createStatusTable(['Terminée']);
+	gridTerminee.render(document.getElementById("wrapperTerminee"));
+
+	const gridArchivée = createStatusTable(['Archivée', 'Facturée']);
+	gridArchivée.render(document.getElementById("wrapperArchivee"));
+
+	const gridAnnulée = createStatusTable(['Annulée']);
+	gridAnnulée.render(document.getElementById("wrapperAnnulee"));
+
 
 
 
