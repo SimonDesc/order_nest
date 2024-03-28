@@ -22,6 +22,7 @@ mysqlclient = "*"
 reportlab = "*"
 idna = "*"
 certifi = "*"
+requests = "*"
 
 [dev-packages]
 mypy = "*"
