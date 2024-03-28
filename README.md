@@ -31,6 +31,11 @@ It's been used in a small company since December 2023 and continues to evolve.
 
 ## Latest Updates 🔄
 
+### 03/2024 (2)
+- 🌟**Features:** In the dashboard, modification of tab navigation. Now one tab for each status. Some status labels changed. New label to print all baguettes to be prepared.
+- 🎨**Design:** New icon set for improved homegeinity. Add a favicon of the OrderNest Logo.
+- 🔧**Small Changes:** paid information added on the order ticket.
+
 ### 03/2024
 - 🎨**Design:** Changes to the navbar -> now in vertical for aesthetic and better visualization.
 - 🔧**Small Changes:** Ticket printing now have prices and date.
