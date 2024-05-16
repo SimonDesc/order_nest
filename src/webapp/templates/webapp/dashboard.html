@@ -12,6 +12,8 @@
 		var url = `/print_wand/`; 
 		window.open(url);
 	}
+	
+
 </script>
 {% endblock %}
 
@@ -22,6 +24,120 @@
 
 
 <div class="min-h-screen justify-center align-middle gap-5 p-5">
+
+				<!-- Modal -->
+				<div id="popup" class="hidden fixed z-10 inset-0 overflow-y-auto">
+					<div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+	
+						<!-- Overlay -->
+						<div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+	
+						<!-- Modal content -->
+						<span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+						<div
+							class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all
+							sm:my-8 sm:align-middle sm:max-w-3xl w-4/5">
+						
+							<!-- Modal header -->
+							<div class="flex items-center justify-between p-2 border-b">
+								<h3 class="text-lg font-medium leading-6 text-gray-900">Listes des commandes</h3>
+							<div class="flex justify-end p-4 ">
+								<button type="button" onclick="closePopup()"
+									class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
+									<svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+										viewBox="0 0 14 14">
+										<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+											stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+									</svg>
+									<span class="sr-only">Close modal</span>
+								</button>
+							</div>
+							</div>
+
+							
+						
+
+								<!-- Modal body -->
+								<div class="p-2">
+									<!-- Modal body -->
+									<div class="p-2 md:p-3">
+											<!-- Liste des checkbox -->
+											
+											<div class="flex flex-col">
+												<div class="flex mb-1">
+													<!-- En-têtes -->
+													<div class="w-1/12 font-bold text-gray-900 text-left"> </div>
+													<div class="w-1/12 font-bold text-gray-900 text-left">ID</div>
+													<div class="w-4/12 font-bold text-gray-900 text-left">Client</div>
+													<div class="w-2/12 flex-grow font-bold text-gray-900 text-left">Libellé</div>
+													<div class="flex-grow font-bold text-gray-900 text-left">Statut</div>
+												</div>
+
+
+												{% for order in urgent_objects %}
+												<!-- Utilisation d'un label pour englober toute la ligne -->
+												<label for="default-{{ order.pk }}" class="flex items-center mb-2 order-row cursor-pointer">
+													<div class="w-1/12 ">
+														<input checked id="default-{{ order.pk }}" type="checkbox"
+															class="order-checkbox text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+													</div>
+													<div class="w-1/12 text-sm font-medium text-gray-900 dark:text-gray-300 border-y-2 border-indigo-500">{{ order.id }}</div>
+													<div class="w-4/12 text-sm font-medium text-gray-900 dark:text-gray-300 border-y-2 border-indigo-500">{{ order.customer.first_name }} {{ order.customer.last_name }}</div>
+													<div class="w-2/12 flex-grow text-sm font-medium text-gray-900 dark:text-gray-300 border-y-2 border-indigo-500">{{ order.label }}</div>
+													<div class="flex-grow text-sm font-medium text-gray-900 dark:text-gray-300 border-y-2 border-indigo-500">{{ order.status }}</div>
+												</label>
+												{% endfor %}
+												
+												{% for order in progress_objects %}
+												<!-- Utilisation d'un label pour englober toute la ligne -->
+												<label for="default-{{ order.pk }}" class="flex items-center mb-2 order-row cursor-pointer">
+													<div class="w-1/12 ">
+														<input checked id="default-{{ order.pk }}" type="checkbox"
+															class="order-checkbox text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+													</div>
+													<div class="w-1/12 text-sm font-medium text-gray-900 dark:text-gray-300 border-y-2 border-indigo-500">{{ order.id }}</div>
+													<div class="w-4/12 text-sm font-medium text-gray-900 dark:text-gray-300 border-y-2 border-indigo-500">{{ order.customer.first_name }} {{ order.customer.last_name }}</div>
+													<div class="w-2/12 flex-grow text-sm font-medium text-gray-900 dark:text-gray-300 border-y-2 border-indigo-500">{{ order.label }}</div>
+													<div class="flex-grow text-sm font-medium text-gray-900 dark:text-gray-300 border-y-2 border-indigo-500">{{ order.status }}</div>
+												</label>
+												{% endfor %}
+												
+												
+											</div>
+											
+											
+											
+									</div>
+								</div>
+
+
+								
+
+							
+
+							<!-- Modal footer -->
+
+							<div class="flex justify-end p-4 border-t">
+								<button onclick="closePopup()" class="grey-button div-ombre-button-edit py-2 px-6 mb-2 text-sm text-white text-gray-900
+								focus:outline-none rounded-xl focus:z-10 focus:ring-4 focus:ring-gray-200
+								cursor-pointer transition-all border-b-[4px]  hover:-translate-y-[1px]  active:border-b-[2px]
+								active:brightness-90 active:translate-y-[2px]">
+									Fermer
+								</button>
+								<a href="{% url 'webapp:print_wand' %}">
+									<button type="button" class="blue-button div-ombre-button-edit py-2 px-6 mb-2 ml-4 text-sm text-white text-gray-900
+										focus:outline-none rounded-xl focus:z-10 focus:ring-4 focus:ring-gray-200
+										cursor-pointer transition-all   hover:-translate-y-[1px]  active:border-b-[2px]
+										active:brightness-90 active:translate-y-[2px]">
+										Imprimer
+									</button>
+								</a>
+							</div>
+						</div>
+					
+				</div>
+				
+				</div>
 
 
 	<!-- Dashboard -->
@@ -34,8 +150,12 @@
 			active:brightness-90 active:translate-y-[2px]
 			"
 			value="PRINT"
-			onclick="printPDFFromAttribute(this)">
-				Liste des baguettes
+			data-modal-target="popup"
+			data-modal-toggle="popup" href="javascript:void(0);"
+			
+			onclick="openPopup()">
+			
+			Liste des baguettes
 		</button>
 	</div>
 	<div class="flex justify-center pt-5">
@@ -111,6 +231,25 @@
 			</div>
 		</div>
 	</div>
+
+
 </div>
+
+<script>
+		function openPopup() {
+		var popup = document.getElementById('popup');
+		console.log(popup)
+		if (popup) {
+			popup.classList.remove('hidden');
+		}
+	}
+
+	function closePopup() {
+		var popup = document.getElementById('popup');
+		if (popup) {
+			popup.classList.add('hidden');
+		}
+	}
+</script>
 
 {% endblock %}
