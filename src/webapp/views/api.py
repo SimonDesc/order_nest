@@ -40,11 +40,18 @@ def get_orders(request):
     orders_query = Order.objects.all()
 
     if search_query:
-        orders_query = Order.objects.filter(
+        try:
+            search_query_int = int(search_query)
+            orders_query = Order.objects.filter(
             Q(customer__last_name__icontains=search_query)
             | Q(customer__first_name__icontains=search_query)
-            | Q(id__exact=search_query)
-        )
+            | Q(id__exact=search_query_int)
+            )
+        except ValueError:
+            orders_query = Order.objects.filter(
+            Q(customer__last_name__icontains=search_query)
+            | Q(customer__first_name__icontains=search_query)
+            )
 
     if status_filter:
         status_filter_list = status_filter.split(",")
