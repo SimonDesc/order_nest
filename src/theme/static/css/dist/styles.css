@@ -1086,6 +1086,38 @@ select{
   width: 100%;
 }
 
+.w-1\/6{
+  width: 16.666667%;
+}
+
+.w-1\/4{
+  width: 25%;
+}
+
+.w-2\/4{
+  width: 50%;
+}
+
+.w-1\/5{
+  width: 20%;
+}
+
+.w-2\/5{
+  width: 40%;
+}
+
+.w-1\/12{
+  width: 8.333333%;
+}
+
+.w-5\/12{
+  width: 41.666667%;
+}
+
+.w-2\/12{
+  width: 16.666667%;
+}
+
 .max-w-2xl{
   max-width: 42rem;
 }
@@ -1104,6 +1136,10 @@ select{
 
 .max-w-screen-xl{
   max-width: 1280px;
+}
+
+.flex-grow{
+  flex-grow: 1;
 }
 
 .grow{
@@ -1308,6 +1344,16 @@ select{
   border-width: 2px;
 }
 
+.border-y-4{
+  border-top-width: 4px;
+  border-bottom-width: 4px;
+}
+
+.border-y-2{
+  border-top-width: 2px;
+  border-bottom-width: 2px;
+}
+
 .border-b{
   border-bottom-width: 1px;
 }
@@ -1322,6 +1368,10 @@ select{
 
 .border-t{
   border-top-width: 1px;
+}
+
+.border-r-4{
+  border-right-width: 4px;
 }
 
 .border-dashed{
@@ -1356,6 +1406,11 @@ select{
 .border-zinc-300{
   --tw-border-opacity: 1;
   border-color: rgb(212 212 216 / var(--tw-border-opacity));
+}
+
+.border-indigo-500{
+  --tw-border-opacity: 1;
+  border-color: rgb(99 102 241 / var(--tw-border-opacity));
 }
 
 .bg-black{
@@ -1535,6 +1590,10 @@ select{
 
 .pt-5{
   padding-top: 1.25rem;
+}
+
+.pb-1{
+  padding-bottom: 0.25rem;
 }
 
 .text-left{
@@ -2206,6 +2265,10 @@ tr.status-active td {
 
   .dark\:ring-offset-gray-700{
     --tw-ring-offset-color: #374151;
+  }
+
+  .dark\:ring-offset-gray-800{
+    --tw-ring-offset-color: #1f2937;
   }
 
   .dark\:hover\:bg-gray-600:hover{

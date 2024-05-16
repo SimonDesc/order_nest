@@ -43,6 +43,7 @@ def get_orders(request):
         orders_query = Order.objects.filter(
             Q(customer__last_name__icontains=search_query)
             | Q(customer__first_name__icontains=search_query)
+            | Q(id__exact=search_query)
         )
 
     if status_filter:

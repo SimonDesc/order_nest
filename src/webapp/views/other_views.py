@@ -5,7 +5,7 @@ from typing import Any
 from django.core.paginator import Paginator
 from django.db.models import Case, When, Value, IntegerField, Q, Prefetch, Count
 from django.urls import reverse_lazy
-from django.views.generic import ListView, UpdateView, CreateView
+from django.views.generic import ListView, UpdateView, CreateView, DeleteView, DetailView, FormView, View, TemplateView
 
 # Imports relatifs à l'application
 from ..forms import NewCustomerForm
@@ -71,7 +71,7 @@ class WebappHome(ListView):
             )
             .filter(Q(status="En cours") | Q(status="Urgent"))
             .prefetch_related(Prefetch("attachments", queryset=attachments))
-            .order_by("priority", "-created_at")[:20]
+            .order_by("priority", "-created_at")[:99]
         )
         return queryset
 
@@ -145,12 +145,13 @@ class Dashboard(ListView):
         attente", "Facturée", "Annulée", "Urgent", and the number of objects with payment
         """
         context = super().get_context_data(**kwargs)
+        
         page_number = context["page_obj"].number
         element_by_page = self.paginate_by
 
         all_objects = Order.objects.all()
 
-        progress_objects = Order.objects.filter(status="En cours")
+        progress_objects = Order.objects.filter(status="En cours").order_by("-id")
         count_progress = progress_objects.count()
 
         ended_orders = Order.objects.filter(status="Terminée")
@@ -165,7 +166,7 @@ class Dashboard(ListView):
         canceled_objects = Order.objects.filter(status="Annulée")
         count_canceled = canceled_objects.count()
 
-        urgent_objects = Order.objects.filter(status="Urgent")
+        urgent_objects = Order.objects.filter(status="Urgent").order_by("-id")
         count_urgent = urgent_objects.count()
 
         payment_objects = Order.objects.filter(payment="Réglé")
@@ -187,5 +188,10 @@ class Dashboard(ListView):
         context["count_urgent"] = count_urgent
 
         context["count_payment"] = count_payment
+        
+        context["progress_objects"] = progress_objects
+        context["urgent_objects"] = urgent_objects
+        
+        
 
         return context

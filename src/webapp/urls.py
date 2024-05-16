@@ -52,6 +52,7 @@ urlpatterns = [
     path('delete_picture/<int:pk>/', DeleteOrderAttachment.as_view(), name='delete_picture'),
     path('get_canvas/<int:pk>/', get_canvas, name='get_canvas'),
     path('get_orders/', get_orders, name='get_orders'),
+    path('print_wand/', print_wand, name='print_wand'),
 
     # SMS
     path('modal_sms/<int:pk>/', modal_sms, name='modal_sms'),
