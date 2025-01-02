@@ -69,7 +69,7 @@ def send_sms(request):
         {
             "apiKey": env("SMS_API"),
             "phoneNumbers": phone_number,
-            "sender": "Libre Cours",
+            "sender": "LibreCours",
             "gamme": 1,
             "message": content,
             "webhookUrl": env("WEB_HOOK"),
