@@ -170,51 +170,53 @@
 			<div class="flex justify-center pt-5">
 				<div class="w-full max-w-5xl">
 					
+					<!-- Recherche globale -->
+					<div class="mb-4 relative">
+						<input type="text" id="global-search"
+							class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+							placeholder="Rechercher par nom, téléphone, intitulé, ID...">
+						<div id="search-indicator" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-400">
+							Recherche...
+						</div>
+					</div>
+
 					<!-- Onglets -->
 					<ul class="flex font-medium text-center ">
 						<li class="me-2">
 							<a id="default-tab" class="bg-white inline-block p-4
-							rounded-t-lg hover:border-gray-300 border relative" href="#" onclick="openTab(event, 'wrapperEnCours')">En cours
-						 	{% if count_progress %}
-								<div class="absolute -top-2 inline-flex items-center justify-center w-6 h-6 text-xs font-bold
-								text-white bg-red-500 border-2 border-white rounded-full">
-									{{ count_progress }}
-								</div>
-					  		{% endif %}
+							rounded-t-lg hover:border-gray-300 border relative" href="#" onclick="openTab(event, 'wrapperEnCours')">A faire
+								<span class="tab-badge absolute -top-2 inline-flex items-center justify-center w-6 h-6 text-xs font-bold
+								text-white bg-red-500 border-2 border-white rounded-full {% if not count_progress %}hidden{% endif %}" data-statuses="En cours">{{ count_progress|default:"0" }}</span>
 							</a>
 						</li>
 
 						<li class="me-2">
 							<a id="default-tab" class="bg-white inline-block p-4
 							rounded-t-lg hover:border-gray-300 border relative" href="#" onclick="openTab(event, 'wrapperUrgent')">Urgent
-						 	{% if count_urgent %}
-								<div class="absolute -top-2 inline-flex items-center justify-center w-6 h-6 text-xs font-bold
-								text-white bg-red-500 border-2 border-white rounded-full">
-									{{ count_urgent }}
-								</div>
-					  		{% endif %}
+								<span class="tab-badge absolute -top-2 inline-flex items-center justify-center w-6 h-6 text-xs font-bold
+								text-white bg-red-500 border-2 border-white rounded-full {% if not count_urgent %}hidden{% endif %}" data-statuses="Urgent">{{ count_urgent|default:"0" }}</span>
 							</a>
 						</li>
 
 						<li class="me-2">
 							<a id="default-tab" class="bg-white inline-block p-4
-							rounded-t-lg hover:border-gray-300 border relative" href="#" onclick="openTab(event, 'wrapperDevis')">Devis ({{ count_waiting }})
+							rounded-t-lg hover:border-gray-300 border relative" href="#" onclick="openTab(event, 'wrapperDevis')">Devis (<span class="tab-count" data-statuses="Devis,En attente">{{ count_waiting }}</span>)
 							</a>
 						</li>
 
 						<li class="me-2">
 							<a id="default-tab" class="bg-white inline-block p-4
-							rounded-t-lg hover:border-gray-300 border relative" href="#" onclick="openTab(event, 'wrapperTerminee')">Terminée ({{ count_ended }})
+							rounded-t-lg hover:border-gray-300 border relative" href="#" onclick="openTab(event, 'wrapperTerminee')">Terminée (<span class="tab-count" data-statuses="Terminée">{{ count_ended }}</span>)
 							</a>
 						</li>
 						<li class="me-2">
 							<a id="default-tab" class="bg-white inline-block p-4
-							rounded-t-lg hover:border-gray-300 border relative" href="#" onclick="openTab(event, 'wrapperArchivee')">Archivée ({{ count_archive }})
+							rounded-t-lg hover:border-gray-300 border relative" href="#" onclick="openTab(event, 'wrapperArchivee')">Archivée (<span class="tab-count" data-statuses="Archivée,Facturée">{{ count_archive }}</span>)
 							</a>
 						</li>
 						<li class="me-2">
 							<a id="default-tab" class="bg-white inline-block p-4
-							rounded-t-lg hover:border-gray-300 border relative" href="#" onclick="openTab(event, 'wrapperAnnulee')">Annulée ({{ count_canceled }})
+							rounded-t-lg hover:border-gray-300 border relative" href="#" onclick="openTab(event, 'wrapperAnnulee')">Annulée (<span class="tab-count" data-statuses="Annulée">{{ count_canceled }}</span>)
 							</a>
 						</li>
 

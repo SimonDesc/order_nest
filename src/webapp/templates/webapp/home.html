@@ -60,7 +60,7 @@
 										<label class="block text-sm font-medium text-gray-700">Status</label>
 										<div
 											class="mt-1 bg-gray-50 border border-gray-300 rounded-lg p-2 text-gray-900">
-											{{ order.status }}
+											{% if order.status == 'En cours' %}A faire{% else %}{{ order.status }}{% endif %}
 										</div>
 									</div>
 
@@ -222,7 +222,7 @@
 			<!-- DEBUT DES CARDS -->
 			<div id="card" style="background-color: #FFFFFF; width: 300px; height: 350px;"
 				class="flex flex-col justify-between p-5 mt-10 mr-5 bg-white px-6 rounded-xl pt-10 ring-1 ring-gray-900/5
-				{% if order.status == 'Urgent' %}shadow-urgent{% else %}shadow-normal{% endif %}">
+				{% if order.status == 'Urgent' %}shadow-urgent{% elif order.status == 'En cours' %}shadow-afaire{% else %}shadow-normal{% endif %}">
 				<!-- Libellé -->
 				<div class="libellé_id flex mb-6 border-b border-zinc-300 text-xl">
 					<h1 class="font-bold">{{ order.label }}</h1>
@@ -233,6 +233,14 @@
 					<div>Date de création</div>
 					<div>{{ order.created_at|date:"SHORT_DATE_FORMAT" }}</div>
 				</div>
+				{% if order.estimated_delivery_date %}
+				<!-- Date de livraison -->
+				<div style="color:#686868"
+					class="flex justify-between border-b border-zinc-300 dark:text-gray-400 mb-6">
+					<div>Date de livraison</div>
+					<div>{{ order.estimated_delivery_date|date:"SHORT_DATE_FORMAT" }}</div>
+				</div>
+				{% endif %}
 				<!-- Client -->
 				<div style="color:#686868" class="customer border-b border-zinc-300 mb-6">
 					<p class="font-normal dark:text-gray-400">{{ order.customer.first_name }}
@@ -250,7 +258,7 @@
 
 				<!-- Status -->
 				<div class="status">
-					<span class="status-{{ order.status|slugify }}">{{ order.status }}</span>
+					<span class="status-{{ order.status|slugify }}">{% if order.status == 'En cours' %}A faire{% else %}{{ order.status }}{% endif %}</span>
 				</div>
 				<div class="flex justify-between">
 					<div class="lg:mt-2">

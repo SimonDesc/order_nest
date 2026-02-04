@@ -8,7 +8,7 @@ from .views.orders import CreateOrder, EditOrder, DeleteOrder, SearchOrder, prin
 from .views.products import AddProductsToOrder, DeleteProduct, EditProduct, product_order_list
 from .views.customers import autocomplete, get_customers, CreateCustomer
 from .views.other_views import WebappHome, Dashboard, CustomerView, EditCustomer
-from .views.api import DeleteOrderAttachment, get_canvas, get_orders, save_attachment, deactivate_customer
+from .views.api import DeleteOrderAttachment, get_canvas, get_orders, get_orders_count, save_attachment, deactivate_customer
 from .views.sms import modal_sms, modal_sms_customer, send_sms, get_credit_sms
 from .views.export import export_orders_csv, export_orders_csv_filtered
 
@@ -55,6 +55,7 @@ urlpatterns = [
     path('delete_picture/<int:pk>/', DeleteOrderAttachment.as_view(), name='delete_picture'),
     path('get_canvas/<int:pk>/', get_canvas, name='get_canvas'),
     path('get_orders/', get_orders, name='get_orders'),
+    path('get_orders_count/', get_orders_count, name='get_orders_count'),
     path('print_wand/', print_wand, name='print_wand'),
 
     # SMS

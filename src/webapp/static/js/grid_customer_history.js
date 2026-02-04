@@ -30,8 +30,8 @@ document.addEventListener("DOMContentLoaded", function () {
 	function getStatusColorClass(status) {
 		if (status === 'En attente') {
 			return '#FF9E2D';
-		} else if (status === 'En cours') {
-			return '#0060EF';
+		} else if (status === 'En cours' || status === 'A faire') {
+			return '#16a34a';
 		} else if (status === 'Terminée') {
 			return '#8D8D8D';
 		} else if (status === 'Facturée') {
@@ -108,7 +108,7 @@ document.addEventListener("DOMContentLoaded", function () {
 				url: '/get_orders/',
 				then: data => data.results
 					.filter(order => statusFilter.some(status => order.status === status))
-					.map(order => [order.IDorder, order.customer, order.label, order.status, order.created, order.payment, order.url]),
+					.map(order => [order.IDorder, order.customer, order.label, order.status === 'En cours' ? 'A faire' : order.status, order.created, order.payment, order.url]),
 				total: data => {
 					return data.total;
 				}

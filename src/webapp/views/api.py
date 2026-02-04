@@ -7,7 +7,7 @@ import environ
 
 # Imports Django
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.http import JsonResponse, HttpResponse
 from django.urls import reverse
 from django.views.generic import DeleteView
@@ -20,17 +20,30 @@ env = environ.Env()
 environ.Env.read_env()
 
 
+def _build_search_filter(search_query):
+    """Construit le filtre Q pour la recherche."""
+    q_filter = (
+        Q(customer__last_name__icontains=search_query)
+        | Q(customer__first_name__icontains=search_query)
+        | Q(label__icontains=search_query)
+    )
+    # Normaliser le numéro de téléphone : 0669... → 669... pour matcher +33669...
+    phone_digits = search_query.replace(' ', '').replace('-', '').replace('.', '')
+    q_filter = q_filter | Q(customer__phone_number__icontains=phone_digits)
+    if phone_digits.startswith('0'):
+        q_filter = q_filter | Q(customer__phone_number__icontains=phone_digits[1:])
+    try:
+        search_query_int = int(search_query)
+        q_filter = q_filter | Q(id__exact=search_query_int)
+    except ValueError:
+        pass
+    return q_filter
+
+
 def get_orders(request):
     """
     The `get_orders` function retrieves and filters orders based on search query, status filter, and
     customer ID, then paginates the results and returns them in a JSON response.
-    
-    :param request: The `get_orders` function takes a `request` object as a parameter. This `request`
-    object typically contains information about an HTTP request made to the server, including data sent
-    via query parameters, form data, headers, etc
-    :return: A JSON response containing a list of orders with specific details such as order ID,
-    customer name, label, status, creation date, payment information, and URL for editing the order. The
-    response also includes the total count of orders that match the search criteria.
     """
     search_query = request.GET.get("search", "")
     status_filter = request.GET.get("status", "")
@@ -40,18 +53,7 @@ def get_orders(request):
     orders_query = Order.objects.all()
 
     if search_query:
-        try:
-            search_query_int = int(search_query)
-            orders_query = Order.objects.filter(
-            Q(customer__last_name__icontains=search_query)
-            | Q(customer__first_name__icontains=search_query)
-            | Q(id__exact=search_query_int)
-            )
-        except ValueError:
-            orders_query = Order.objects.filter(
-            Q(customer__last_name__icontains=search_query)
-            | Q(customer__first_name__icontains=search_query)
-            )
+        orders_query = orders_query.filter(_build_search_filter(search_query))
 
     if status_filter:
         status_filter_list = status_filter.split(",")
@@ -98,6 +100,18 @@ def get_orders(request):
 
     return JsonResponse(data)
 
+
+def get_orders_count(request):
+    """Retourne le nombre de commandes par statut, avec filtre de recherche optionnel."""
+    search_query = request.GET.get("search", "")
+    orders_query = Order.objects.all()
+
+    if search_query:
+        orders_query = orders_query.filter(_build_search_filter(search_query))
+
+    counts_qs = orders_query.values('status').annotate(count=Count('id'))
+    counts = {item['status']: item['count'] for item in counts_qs}
+    return JsonResponse(counts)
 
 
 def save_attachment(request):

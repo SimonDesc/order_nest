@@ -47,8 +47,8 @@ class Product(models.Model):
     )
         
     # reference = models.CharField(max_length=45, blank=True, verbose_name="référence")
-    label = models.CharField(max_length=45, verbose_name="libellé *")
-    size = models.CharField(max_length=45, blank=True, verbose_name="dimension")
+    label = models.CharField(max_length=45, verbose_name="descriptif")
+    size = models.CharField(max_length=45, blank=True, verbose_name="libellé")
     wand = models.CharField(max_length=45, blank=True, verbose_name="baguette")
     glass = models.CharField(max_length=45, choices=VERRE, default='Sans', verbose_name="verre")
     mat = models.CharField(max_length=45, blank=True, verbose_name="passe-partout")
@@ -56,6 +56,10 @@ class Product(models.Model):
     # brand = models.CharField(max_length=45, blank=True, verbose_name="marque")
     # supplier = models.CharField(max_length=45, blank=True, verbose_name="fournisseur")
     # purchase_price_unit = models.DecimalField(default=0, max_digits=10, decimal_places=2, verbose_name="prix d'achat")
+    artwork_width = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, verbose_name="largeur oeuvre")
+    artwork_height = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, verbose_name="longueur oeuvre")
+    margin = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, verbose_name="marge")
+    frame = models.CharField(max_length=45, blank=True, null=True, verbose_name="cadre")
     selling_price_unit = models.DecimalField(default=0, max_digits=10, decimal_places=2, verbose_name="prix de vente")
     status = models.BooleanField(default=False, verbose_name="fait")
     # quantity = models.PositiveIntegerField(default=1, blank=False, null=False, verbose_name="quantité")
@@ -70,7 +74,7 @@ class Product(models.Model):
 class Order(models.Model):
     STATUS = (
         ('Devis', 'Devis'),
-        ('En cours', 'En cours'),
+        ('En cours', 'A faire'),
         ('Terminée', 'Terminée'),
         ('Archivée', 'Archivée'),
         ('Annulée', 'Annulée'),

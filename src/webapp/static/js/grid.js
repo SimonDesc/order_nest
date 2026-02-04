@@ -28,8 +28,8 @@ document.addEventListener("DOMContentLoaded", function () {
 	function getStatusColorClass(status) {
 		if (status === 'En attente') {
 			return '#FF9E2D';
-		} else if (status === 'En cours') {
-			return '#0060EF';
+		} else if (status === 'En cours' || status === 'A faire') {
+			return '#16a34a';
 		} else if (status === 'Terminée') {
 			return '#8D8D8D';
 		} else if (status === 'Facturée') {
@@ -81,15 +81,6 @@ document.addEventListener("DOMContentLoaded", function () {
 	function createStatusTable(statusFilter) {
 		return new gridjs.Grid({
 			columns: columns,
-			search: {
-				server: {
-					url: (prev, keyword) => {
-						const separator = prev.includes('?') ? '&' : '?';
-						const searchUrl = `${prev}${separator}search=${keyword}`;
-						return searchUrl;
-					}
-				}
-			},
 			pagination: {
 				limit: 20,
 				server: {
@@ -106,7 +97,7 @@ document.addEventListener("DOMContentLoaded", function () {
 				url: '/get_orders/',
 				then: data => data.results
 					.filter(order => statusFilter.some(status => order.status === status))
-					.map(order => [order.IDorder, order.customer, order.label, order.status, order.created, order.payment, order.url]),
+					.map(order => [order.IDorder, order.customer, order.label, order.status === 'En cours' ? 'A faire' : order.status, order.created, order.payment, order.url]),
 				total: data => {
 					return data.total;
 				}
@@ -137,9 +128,6 @@ document.addEventListener("DOMContentLoaded", function () {
 				},
 			},
 			language: {
-				'search': {
-					'placeholder': 'Rechercher...'
-				},
 				'pagination': {
 					'previous': 'Précédent',
 					'next': 'Suivant',
@@ -171,23 +159,82 @@ document.addEventListener("DOMContentLoaded", function () {
 		});
 	}
 
-	const gridEncours = createStatusTable(['En cours']);
-	gridEncours.render(document.getElementById("wrapperEnCours"));
+	const grids = [];
 
-	const gridUrgent = createStatusTable(['Urgent']);
-	gridUrgent.render(document.getElementById("wrapperUrgent"));
+	function createAndRender(statusFilter, elementId) {
+		const grid = createStatusTable(statusFilter);
+		grid.render(document.getElementById(elementId));
+		grids.push({ grid, statusFilter });
+		return grid;
+	}
 
-	const gridDevis = createStatusTable(['Devis', 'En attente']);
-	gridDevis.render(document.getElementById("wrapperDevis"));
+	createAndRender(['En cours'], 'wrapperEnCours');
+	createAndRender(['Urgent'], 'wrapperUrgent');
+	createAndRender(['Devis', 'En attente'], 'wrapperDevis');
+	createAndRender(['Terminée'], 'wrapperTerminee');
+	createAndRender(['Archivée', 'Facturée'], 'wrapperArchivee');
+	createAndRender(['Annulée'], 'wrapperAnnulee');
 
-	const gridTerminee = createStatusTable(['Terminée']);
-	gridTerminee.render(document.getElementById("wrapperTerminee"));
+	// Mise à jour des compteurs d'onglets
+	function updateTabCounts(countsData) {
+		document.querySelectorAll('.tab-badge').forEach(badge => {
+			const statuses = badge.dataset.statuses.split(',');
+			const count = statuses.reduce((sum, s) => sum + (countsData[s.trim()] || 0), 0);
+			badge.textContent = count;
+			badge.classList.toggle('hidden', count === 0);
+		});
+		document.querySelectorAll('.tab-count').forEach(span => {
+			const statuses = span.dataset.statuses.split(',');
+			const count = statuses.reduce((sum, s) => sum + (countsData[s.trim()] || 0), 0);
+			span.textContent = count;
+		});
+	}
 
-	const gridArchivée = createStatusTable(['Archivée', 'Facturée']);
-	gridArchivée.render(document.getElementById("wrapperArchivee"));
+	// Recherche globale
+	let searchTimeout = null;
+	const searchInput = document.getElementById('global-search');
+	const searchIndicator = document.getElementById('search-indicator');
 
-	const gridAnnulée = createStatusTable(['Annulée']);
-	gridAnnulée.render(document.getElementById("wrapperAnnulee"));
+	if (searchInput) {
+		searchInput.addEventListener('input', function () {
+			clearTimeout(searchTimeout);
+			searchTimeout = setTimeout(() => {
+				const keyword = searchInput.value.trim();
+
+				// Afficher l'indicateur de recherche
+				if (searchIndicator) searchIndicator.classList.remove('hidden');
+
+				// Mettre à jour toutes les grilles
+				grids.forEach(({ grid, statusFilter }) => {
+					grid.updateConfig({
+						server: {
+							url: keyword
+								? `/get_orders/?search=${encodeURIComponent(keyword)}`
+								: '/get_orders/',
+							then: data => data.results
+								.filter(order => statusFilter.some(status => order.status === status))
+								.map(order => [order.IDorder, order.customer, order.label, order.status === 'En cours' ? 'A faire' : order.status, order.created, order.payment, order.url]),
+							total: data => data.total
+						}
+					}).forceRender();
+				});
+
+				// Mettre à jour les compteurs d'onglets
+				const countUrl = keyword
+					? `/get_orders_count/?search=${encodeURIComponent(keyword)}`
+					: '/get_orders_count/';
+				fetch(countUrl)
+					.then(res => res.json())
+					.then(data => {
+						updateTabCounts(data);
+						if (searchIndicator) searchIndicator.classList.add('hidden');
+					})
+					.catch(() => {
+						if (searchIndicator) searchIndicator.classList.add('hidden');
+					});
+			}, 300);
+		});
+	}
 
 
 
