@@ -143,7 +143,14 @@
 	<!-- Dashboard -->
 	<div class="hidden bg-sky-900 blue-color-text border-blue-500 text-blue-600 border-gray-300"></div>
 
-	<div class="btnok flex justify-end">
+	<div class="btnok flex justify-end gap-2">
+		<button type="button" class="align-right bg-green-600 hover:bg-green-700 div-ombre-button-edit py-2 px-6 mb-2 text-sm text-white
+			focus:outline-none rounded-xl focus:z-10 focus:ring-4 focus:ring-green-200
+			cursor-pointer transition-all hover:-translate-y-[1px] active:border-b-[2px]
+			active:brightness-90 active:translate-y-[2px]"
+			onclick="window.location.href='{% url 'webapp:export-orders-csv' %}'">
+			📊 Exporter toutes les commandes (CSV)
+		</button>
 		<button type="submit" class="align-right blue-button div-ombre-button-edit py-2 px-6 mb-2 text-sm text-white text-gray-900
 			focus:outline-none rounded-xl focus:z-10 focus:ring-4 focus:ring-gray-200
 			cursor-pointer transition-all hover:-translate-y-[1px] active:border-b-[2px]
@@ -152,9 +159,9 @@
 			value="PRINT"
 			data-modal-target="popup"
 			data-modal-toggle="popup" href="javascript:void(0);"
-			
+
 			onclick="openPopup()">
-			
+
 			Liste des baguettes
 		</button>
 	</div>
