@@ -18,7 +18,7 @@ import environ
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 env = environ.Env()
-environ.Env.read_env()
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 
 # Quick-start development settings - unsuitable for production
@@ -28,7 +28,7 @@ environ.Env.read_env()
 SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = env.bool('DEBUG', default=True)
 
 ALLOWED_HOSTS = ["*"]
 CSRF_TRUSTED_ORIGINS = ['https://app.galerielibrecours.fr']
@@ -87,15 +87,13 @@ WSGI_APPLICATION = 'order_nest.wsgi.application'
 
 DATABASES = {
     'default': {
-        'NAME': env('NAME'),
-        'ENGINE': 'django.db.backends.mysql',
-        'HOST': env('HOST'),
-        'PORT': env('PORT'),
-        'USER': env('USER'),
-        'PASSWORD': env('PASSWORD'),
-        'OPTIONS': {
-          'autocommit': True
-        },
+        'ENGINE': env('DB_ENGINE', default='django.db.backends.sqlite3'),
+        'NAME': env('DB_NAME', default=str(BASE_DIR / 'db.sqlite3')),
+        'HOST': env('DB_HOST', default=''),
+        'PORT': env('DB_PORT', default=''),
+        'USER': env('DB_USER', default=''),
+        'PASSWORD': env('DB_PASSWORD', default=''),
+        'OPTIONS': env.json('DB_OPTIONS', default={}),
     }
 }
 

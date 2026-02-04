@@ -8,20 +8,46 @@
 <div class="grid grid-cols-12 gap-4 mb-4">
 	<!-- Première ligne -->
 
-	<!-- Champ Libellé -->
+	<!-- Champ Descriptif -->
 	<div class="col-span-8">
 		{{ form.label.label_tag }}
 		{{ form.label }}
 	</div>
 
-	<!-- Champ Dimension -->
+	<!-- Champ Libellé -->
 	<div class="col-span-3">
 		{{ form.size.label_tag }}
 		{{ form.size }}
 	</div>
 </div>
 
+<div class="grid grid-cols-12 gap-4 mb-4">
+	<!-- Oeuvre -->
 
+	<!-- Champ Largeur oeuvre -->
+	<div class="col-span-3">
+		{{ form.artwork_width.label_tag }}
+		{{ form.artwork_width }}
+	</div>
+
+	<!-- Champ Longueur oeuvre -->
+	<div class="col-span-3">
+		{{ form.artwork_height.label_tag }}
+		{{ form.artwork_height }}
+	</div>
+
+	<!-- Champ Marge -->
+	<div class="col-span-3">
+		{{ form.margin.label_tag }}
+		{{ form.margin }}
+	</div>
+
+	<!-- Champ Cadre -->
+	<div class="col-span-3">
+		{{ form.frame.label_tag }}
+		{{ form.frame }}
+	</div>
+</div>
 
 <div class="grid grid-cols-12 gap-4 mb-4">
 	<!-- Deuxième ligne -->
@@ -89,3 +115,25 @@
 	focus:z-10 focus:ring-4 focus:ring-gray-200">Enregistrer</button>
 </div>
 </form>
+
+<script>
+(function() {
+	const width = document.getElementById('id_artwork_width');
+	const height = document.getElementById('id_artwork_height');
+	const margin = document.getElementById('id_margin');
+	const frame = document.getElementById('id_frame');
+
+	function computeFrame() {
+		const w = parseFloat(width.value);
+		const h = parseFloat(height.value);
+		const m = parseFloat(margin.value);
+		if (!isNaN(w) && !isNaN(h) && !isNaN(m)) {
+			frame.value = (w + m * 2) + ' * ' + (h + m * 2);
+		}
+	}
+
+	width.addEventListener('input', computeFrame);
+	height.addEventListener('input', computeFrame);
+	margin.addEventListener('input', computeFrame);
+})();
+</script>

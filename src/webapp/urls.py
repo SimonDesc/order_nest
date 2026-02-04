@@ -8,8 +8,9 @@ from .views.orders import CreateOrder, EditOrder, DeleteOrder, SearchOrder, prin
 from .views.products import AddProductsToOrder, DeleteProduct, EditProduct, product_order_list
 from .views.customers import autocomplete, get_customers, CreateCustomer
 from .views.other_views import WebappHome, Dashboard, CustomerView, EditCustomer
-from .views.api import DeleteOrderAttachment, get_canvas, get_orders, save_attachment, deactivate_customer
+from .views.api import DeleteOrderAttachment, get_canvas, get_orders, get_orders_count, save_attachment, deactivate_customer
 from .views.sms import modal_sms, modal_sms_customer, send_sms, get_credit_sms
+from .views.export import export_orders_csv, export_orders_csv_filtered
 
 
 app_name = 'webapp'
@@ -30,6 +31,8 @@ urlpatterns = [
     path('orders/search/', SearchOrder.as_view(), name='order-search'),
     path('orders/<int:pk>/add-products/', AddProductsToOrder.as_view(), name='order-add-products'),
     path('print_pdf/<int:pk>/', print_pdf, name='print_pdf'),
+    path('export/orders/csv/', export_orders_csv, name='export-orders-csv'),
+    path('export/orders/csv/filtered/', export_orders_csv_filtered, name='export-orders-csv-filtered'),
 
     # Produits
     path('products/<int:pk>/edit/', EditProduct.as_view(), name='product-edit'),
@@ -52,6 +55,7 @@ urlpatterns = [
     path('delete_picture/<int:pk>/', DeleteOrderAttachment.as_view(), name='delete_picture'),
     path('get_canvas/<int:pk>/', get_canvas, name='get_canvas'),
     path('get_orders/', get_orders, name='get_orders'),
+    path('get_orders_count/', get_orders_count, name='get_orders_count'),
     path('print_wand/', print_wand, name='print_wand'),
 
     # SMS

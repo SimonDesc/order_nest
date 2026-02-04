@@ -131,6 +131,75 @@
 				</li>
 
 
+			<li style="position:relative;">
+				<style>
+					.game-menu-btn {
+						display:flex; justify-content:center; align-items:center;
+						width:40px; height:40px; border-radius:50%;
+						background:none; border:2px solid #9ca3af; cursor:pointer;
+						font-size:20px; font-weight:700; color:#9ca3af;
+						position:relative; transition: border-color 0.3s, color 0.3s;
+					}
+					.game-menu-btn:hover { border-color:#fbbf24; color:#fbbf24; }
+					.game-popover {
+						display:none; position:fixed;
+						background:#1f2937; border:1px solid #374151;
+						border-radius:10px; padding:6px 0; min-width:180px;
+						box-shadow:0 8px 24px rgba(0,0,0,.4); z-index:9999;
+					}
+					.game-popover.open { display:block; }
+					.game-popover-item {
+						display:flex; align-items:center; gap:8px;
+						padding:8px 14px; color:#d1d5db; font-size:14px;
+						cursor:pointer; white-space:nowrap; border:none;
+						background:none; width:100%; text-align:left;
+					}
+					.game-popover-item:hover { background:#374151; color:#fbbf24; }
+					.game-popover-dot {
+						width:8px; height:8px; border-radius:50%;
+						background:#ef4444; flex-shrink:0; display:none;
+					}
+				</style>
+				<div class="flex items-center p-2 justify-center rounded-lg group">
+					<button class="game-menu-btn" id="game-menu-btn" title="Mini-jeux">
+						<span class="scratch-badge hidden" id="scratch-badge">1</span>
+						?
+					</button>
+					<div class="game-popover" id="game-popover">
+						<button class="game-popover-item" onclick="scratchCard.open(); document.getElementById('game-popover').classList.remove('open');">
+							🎟️ Ticket à gratter
+							<span class="game-popover-dot" id="scratch-popover-dot"></span>
+						</button>
+						<button class="game-popover-item" onclick="slotGame.open(); document.getElementById('game-popover').classList.remove('open');">
+							🎰 Machine à sous
+						</button>
+					</div>
+				</div>
+				<script>
+					(function(){
+						var btn = document.getElementById('game-menu-btn');
+						var pop = document.getElementById('game-popover');
+						btn.addEventListener('click', function(e){
+							e.stopPropagation();
+							if(pop.classList.contains('open')){ pop.classList.remove('open'); return; }
+							var r = btn.getBoundingClientRect();
+							pop.style.left = (r.right + 10) + 'px';
+							pop.style.top = (r.top + r.height/2) + 'px';
+							pop.style.transform = 'translateY(-50%)';
+							pop.classList.add('open');
+						});
+						document.addEventListener('click', function(){ pop.classList.remove('open'); });
+						pop.addEventListener('click', function(e){ e.stopPropagation(); });
+						/* Sync dot with badge visibility */
+						var badge = document.getElementById('scratch-badge');
+						var dot = document.getElementById('scratch-popover-dot');
+						if(badge && dot){
+							new MutationObserver(function(){ dot.style.display = badge.classList.contains('hidden') ? 'none' : 'inline-block'; }).observe(badge, {attributes:true, attributeFilter:['class']});
+							dot.style.display = badge.classList.contains('hidden') ? 'none' : 'inline-block';
+						}
+					})();
+				</script>
+			</li>
 			</ul>
 		</div>
 	</aside>
@@ -145,6 +214,8 @@
 		<p>© {% now "Y" %} OrderNest. Tous droits réservés.</p>
 	</footer>
 </div>
+{% include 'scratch-card.html' %}
+{% include 'slot-machine.html' %}
 </body>
 
 </html>

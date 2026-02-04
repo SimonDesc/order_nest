@@ -131,10 +131,9 @@ $(document).ready(function () {
 			orderName = $('#name-commande').text().trim();
 
 			if ($(this).attr('id') === 'prise-en-charge-checkbox-list') {
-				$("#sms-input").val(`Bonjour ${orderName}, commande numéro ${orderId} bien recue !
-Galerie Libre Cours vous remercie.
-Suivi et info: 05 62 18 91 84
-`);
+				$("#sms-input").val(`Bonjour ${orderName}, merci pour votre confiance !
+Laissez-nous un avis :
+https://g.page/r/CTvMPrHmNa1eEBM/review`);
 			}
 			else if ($(this).attr('id') === 'commande-terminee-checkbox-list') {
 				$("#sms-input").val(`Bonjour,

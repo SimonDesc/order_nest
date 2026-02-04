@@ -85,7 +85,7 @@ class AddProductsToOrder(ModelForm):
 
     class Meta:
         model = Product
-        
+
         fields = (
             "size",
             "label",
@@ -93,6 +93,10 @@ class AddProductsToOrder(ModelForm):
             "glass",
             "mat",
             "mesh",
+            "artwork_width",
+            "artwork_height",
+            "margin",
+            "frame",
             "selling_price_unit",
             "status",
         )
@@ -119,6 +123,10 @@ class AddProductForm(ModelForm):
             "glass",
             "mat",
             "mesh",
+            "artwork_width",
+            "artwork_height",
+            "margin",
+            "frame",
             "selling_price_unit",
             "status",
         )
