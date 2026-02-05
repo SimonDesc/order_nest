@@ -6,10 +6,68 @@
 
 {% block content %}
 
+<div class="min-h-screen flex flex-col items-center">
+	<!-- Widget Statistiques -->
+	<div class="w-full max-w-5xl mt-6 mb-6 px-4">
+		<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+			<!-- Commandes ce mois -->
+			<div class="bg-white rounded-xl shadow p-4 ring-1 ring-gray-900/5">
+				<div class="text-sm text-gray-500">Commandes ce mois</div>
+				<div class="flex items-end gap-2">
+					<span class="text-2xl font-bold text-gray-900">{{ stats.orders_this_month }}</span>
+					<span class="text-sm text-gray-400 mb-1">vs {{ stats.orders_last_month }} le mois dernier</span>
+				</div>
+				{% if stats.orders_month_diff > 0 %}
+				<div class="text-green-600 text-xs mt-1 font-medium">+{{ stats.orders_month_diff }}</div>
+				{% elif stats.orders_month_diff < 0 %}
+				<div class="text-red-600 text-xs mt-1 font-medium">{{ stats.orders_month_diff }}</div>
+				{% endif %}
+			</div>
 
-<div class="min-h-screen flex justify-items-center justify-center">
-	<div>
-		<div class="flex flex-wrap gap-5 pb-5 w-full max-w-5xl justify-center">
+			<!-- Commandes cette année -->
+			<div class="bg-white rounded-xl shadow p-4 ring-1 ring-gray-900/5">
+				<div class="text-sm text-gray-500">Commandes {{ stats.current_year }}</div>
+				<div class="flex items-end gap-2">
+					<span class="text-2xl font-bold text-gray-900">{{ stats.orders_this_year }}</span>
+					<span class="text-sm text-gray-400 mb-1">vs {{ stats.orders_last_year }} en {{ stats.last_year }}</span>
+				</div>
+				{% if stats.orders_year_diff > 0 %}
+				<div class="text-green-600 text-xs mt-1 font-medium">+{{ stats.orders_year_diff }}</div>
+				{% elif stats.orders_year_diff < 0 %}
+				<div class="text-red-600 text-xs mt-1 font-medium">{{ stats.orders_year_diff }}</div>
+				{% endif %}
+			</div>
+
+			<!-- Nouveaux clients -->
+			<div class="bg-white rounded-xl shadow p-4 ring-1 ring-gray-900/5">
+				<div class="text-sm text-gray-500">Nouveaux clients ce mois</div>
+				<div class="flex items-end gap-2">
+					<span class="text-2xl font-bold text-gray-900">{{ stats.customers_this_month }}</span>
+					<span class="text-sm text-gray-400 mb-1">vs {{ stats.customers_last_month }} le mois dernier</span>
+				</div>
+				{% if stats.customers_month_diff > 0 %}
+				<div class="text-green-600 text-xs mt-1 font-medium">+{{ stats.customers_month_diff }}</div>
+				{% elif stats.customers_month_diff < 0 %}
+				<div class="text-red-600 text-xs mt-1 font-medium">{{ stats.customers_month_diff }}</div>
+				{% endif %}
+			</div>
+
+			<!-- Statuts actuels -->
+			<div class="bg-white rounded-xl shadow p-4 ring-1 ring-gray-900/5">
+				<div class="text-sm text-gray-500">En ce moment</div>
+				<div class="flex flex-wrap gap-2 mt-1">
+					{% if stats.orders_urgent > 0 %}
+					<span class="status-urgent text-xs">{{ stats.orders_urgent }} urgent{{ stats.orders_urgent|pluralize }}</span>
+					{% endif %}
+					<span class="status-en-cours text-xs">{{ stats.orders_in_progress }} à faire</span>
+					<span class="status-terminee text-xs">{{ stats.orders_done }} terminée{{ stats.orders_done|pluralize }}</span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Cartes des commandes -->
+	<div class="flex flex-wrap gap-5 mt-6 pb-5 w-full max-w-5xl justify-center">
 			{% for order in orders %}
 
 
@@ -289,7 +347,6 @@
 			</div>
 
 			{% endfor %}
-		</div>
 	</div>
 </div>
 

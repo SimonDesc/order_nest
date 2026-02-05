@@ -21,28 +21,24 @@
 		</div>
 	</div>
 
-	<div class="grid grid-cols-12 gap-4 mb-4">
-		<!-- Oeuvre -->
-
-		<!-- Champ Largeur oeuvre -->
-		<div class="col-span-3">
+	<div class="grid grid-cols-12 gap-4 mb-4 items-end">
+		<!-- Ligne oeuvre et marges -->
+		<div class="col-span-2">
 			{{ form.artwork_width.label_tag }}
 			{{ form.artwork_width }}
 		</div>
-
-		<!-- Champ Longueur oeuvre -->
-		<div class="col-span-3">
+		<div class="col-span-2">
 			{{ form.artwork_height.label_tag }}
 			{{ form.artwork_height }}
 		</div>
-
-		<!-- Champ Marge -->
-		<div class="col-span-3">
+		<div class="col-span-2">
 			{{ form.margin.label_tag }}
 			{{ form.margin }}
 		</div>
-
-		<!-- Champ Cadre -->
+		<div class="col-span-2">
+			{{ form.margin_height.label_tag }}
+			{{ form.margin_height }}
+		</div>
 		<div class="col-span-3">
 			{{ form.frame.label_tag }}
 			{{ form.frame }}
@@ -50,7 +46,6 @@
 	</div>
 
 	<div class="grid grid-cols-12 gap-4 mb-4">
-		<!-- Deuxième ligne -->
 		<!-- Champ Baguette -->
 		<div class="col-span-3">
 			{{ form.wand.label_tag }}
@@ -100,6 +95,58 @@
 	
 	</div>
 
+	<!-- Représentation visuelle du cadre avec cotations -->
+	<div class="flex justify-center my-8">
+		<div class="relative" style="padding: 40px 60px 50px 50px;">
+			<!-- Cotation verticale gauche - CADRE -->
+			<div id="cot-cadre-v" class="absolute" style="display: none; left: 0; top: 40px; bottom: 50px; width: 40px;">
+				<div style="position: absolute; left: 15px; top: 0; bottom: 0; width: 1px; background: #666;"></div>
+				<div style="position: absolute; left: 10px; top: 0; width: 11px; height: 1px; background: #666;"></div>
+				<div style="position: absolute; left: 10px; bottom: 0; width: 11px; height: 1px; background: #666;"></div>
+				<div id="cot-cadre-v-val" style="position: absolute; left: 0; top: 50%; transform: translateY(-50%) rotate(-90deg); font-size: 11px; color: #c00; font-weight: 600; white-space: nowrap;"></div>
+			</div>
+
+			<!-- Cotation horizontale bas - CADRE -->
+			<div id="cot-cadre-h" class="absolute" style="display: none; left: 50px; right: 60px; bottom: 0; height: 40px;">
+				<div style="position: absolute; top: 15px; left: 0; right: 0; height: 1px; background: #666;"></div>
+				<div style="position: absolute; top: 10px; left: 0; width: 1px; height: 11px; background: #666;"></div>
+				<div style="position: absolute; top: 10px; right: 0; width: 1px; height: 11px; background: #666;"></div>
+				<div id="cot-cadre-h-val" style="position: absolute; top: 22px; left: 50%; transform: translateX(-50%); font-size: 11px; color: #c00; font-weight: 600; white-space: nowrap;"></div>
+			</div>
+
+			<!-- Container du visuel -->
+			<div id="visual-container" class="relative" style="transition: all 0.3s ease;">
+				<!-- Cadre extérieur -->
+				<div id="visual-cadre" style="display: block; padding: 0; background: transparent; border-radius: 3px;">
+					<!-- Passe-partout -->
+					<div id="visual-passe-partout" style="padding: 0; background: transparent;">
+						<!-- Filet -->
+						<div id="visual-filet" style="padding: 0; background: transparent;">
+							<!-- Oeuvre intérieur -->
+							<div id="visual-oeuvre" style="width: 150px; height: 120px; background: linear-gradient(135deg, #fff, #f0f0f0); border: 1px solid #ccc; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+								<span id="visual-oeuvre-label" style="font-size: 11px; color: #666; text-align: center; line-height: 1.3;"></span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Effet verre -->
+				<div id="visual-verre-reflet" style="display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; border-radius: 3px; overflow: hidden;">
+					<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.1) 30%, transparent 50%);"></div>
+					<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(200,220,240,0.08);"></div>
+					<div style="position: absolute; bottom: 10%; right: 10%; width: 20%; height: 15%; background: rgba(255,255,255,0.15); filter: blur(8px); border-radius: 50%;"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Légende des cotations -->
+	<div id="cot-legend" class="flex justify-center gap-6 text-xs mb-4" style="display: none;">
+		<div class="flex items-center gap-2">
+			<span style="width: 12px; height: 3px; background: #c00;"></span>
+			<span class="text-gray-600">Cadre (baguettes)</span>
+		</div>
+	</div>
+
 	<div class="modal-footer flex justify-end gap-4 mt-10">
 		<button style="background-color: #FF4E27; border-radius: 10px;" type="button" id="cancelButton" class="w-32 text-lg div-ombre-button-navbar-logout py-2 px-4 mr-5 mb-2 text-sm text-white 
 		focus:outline-none
@@ -115,22 +162,176 @@
 
 <script>
 (function() {
+	// Éléments du formulaire
 	const width = document.getElementById('id_artwork_width');
 	const height = document.getElementById('id_artwork_height');
-	const margin = document.getElementById('id_margin');
-	const frame = document.getElementById('id_frame');
+	const marginW = document.getElementById('id_margin');
+	const marginH = document.getElementById('id_margin_height');
+	const frameInput = document.getElementById('id_frame');
+	const glassSelect = document.getElementById('id_glass');
+	const matInput = document.getElementById('id_mat');
+	const meshInput = document.getElementById('id_mesh');
+	const wandInput = document.getElementById('id_wand');
 
-	function computeFrame() {
+	// Éléments visuels
+	const visualCadre = document.getElementById('visual-cadre');
+	const visualOeuvre = document.getElementById('visual-oeuvre');
+	const visualOeuvreLabel = document.getElementById('visual-oeuvre-label');
+	const visualPassePartout = document.getElementById('visual-passe-partout');
+	const visualFilet = document.getElementById('visual-filet');
+	const visualVerre = document.getElementById('visual-verre-reflet');
+
+	// Cotations
+	const cotCadreH = document.getElementById('cot-cadre-h');
+	const cotCadreV = document.getElementById('cot-cadre-v');
+	const cotCadreHVal = document.getElementById('cot-cadre-h-val');
+	const cotCadreVVal = document.getElementById('cot-cadre-v-val');
+	const cotLegend = document.getElementById('cot-legend');
+
+	// Échelle et limites
+	const SCALE = 2;
+	const MIN_SIZE = 100;
+	const MAX_SIZE = 220;
+	const MIN_MARGIN = 15;
+	const MAX_MARGIN = 50;
+
+	function clamp(val, min, max) {
+		return Math.max(min, Math.min(max, val));
+	}
+
+	function hasValue(input) {
+		return input && input.value && input.value.trim() !== '' && input.value !== 'Sans';
+	}
+
+	function updateVisual() {
 		const w = parseFloat(width.value);
 		const h = parseFloat(height.value);
-		const m = parseFloat(margin.value);
-		if (!isNaN(w) && !isNaN(h) && !isNaN(m)) {
-			frame.value = (w + m * 2) + ' * ' + (h + m * 2);
+		const mW = parseFloat(marginW.value);
+		const mH = parseFloat(marginH.value);
+
+		const hasMargins = !isNaN(mW) && !isNaN(mH) && mW > 0 && mH > 0;
+		const hasBaguette = hasValue(wandInput);
+		const hasVerre = hasValue(glassSelect);
+		const hasMat = hasValue(matInput);
+		const hasFilet = hasValue(meshInput);
+
+		// Calculer taille oeuvre proportionnelle
+		let oeuvreW = 150, oeuvreH = 120;
+		if (!isNaN(w) && !isNaN(h) && w > 0 && h > 0) {
+			const ratio = w / h;
+			if (ratio > 1) {
+				oeuvreW = clamp(w * SCALE, MIN_SIZE, MAX_SIZE);
+				oeuvreH = oeuvreW / ratio;
+			} else {
+				oeuvreH = clamp(h * SCALE, MIN_SIZE, MAX_SIZE);
+				oeuvreW = oeuvreH * ratio;
+			}
+		}
+
+		// Appliquer taille oeuvre
+		visualOeuvre.style.width = oeuvreW + 'px';
+		visualOeuvre.style.height = oeuvreH + 'px';
+
+		// Cadre visible si marges renseignées
+		if (hasMargins) {
+			visualCadre.style.display = 'block';
+			const padCadre = clamp(Math.max(mW, mH) * SCALE * 0.3, 6, 12);
+			visualCadre.style.padding = padCadre + 'px';
+
+			// Style baguette si renseignée
+			if (hasBaguette) {
+				visualCadre.style.background = 'linear-gradient(145deg, #8B7355, #6B5344)';
+				visualCadre.style.boxShadow = 'inset 0 0 8px rgba(0,0,0,0.3), 2px 2px 6px rgba(0,0,0,0.2)';
+			} else {
+				visualCadre.style.background = '#a08060';
+				visualCadre.style.boxShadow = '2px 2px 6px rgba(0,0,0,0.2)';
+			}
+		} else {
+			visualCadre.style.display = 'block';
+			visualCadre.style.padding = '0';
+			visualCadre.style.background = 'transparent';
+			visualCadre.style.boxShadow = 'none';
+		}
+
+		// Passe-partout (utilise les marges pour le padding)
+		if (hasMat && hasMargins) {
+			const padLR = clamp(mW * SCALE, MIN_MARGIN, MAX_MARGIN);
+			const padTB = clamp(mH * SCALE, MIN_MARGIN, MAX_MARGIN);
+			visualPassePartout.style.padding = padTB + 'px ' + padLR + 'px';
+			// Couleur basée sur le texte
+			const mat = matInput.value.toLowerCase();
+			if (mat.includes('noir')) {
+				visualPassePartout.style.background = '#2d2d2d';
+			} else if (mat.includes('blanc')) {
+				visualPassePartout.style.background = '#fafafa';
+			} else if (mat.includes('beige')) {
+				visualPassePartout.style.background = '#f5f5dc';
+			} else if (mat.includes('gris')) {
+				visualPassePartout.style.background = '#9ca3af';
+			} else {
+				visualPassePartout.style.background = '#f5f5f0';
+			}
+			visualPassePartout.style.boxShadow = 'inset 0 0 3px rgba(0,0,0,0.1)';
+		} else {
+			visualPassePartout.style.padding = '0';
+			visualPassePartout.style.background = 'transparent';
+			visualPassePartout.style.boxShadow = 'none';
+		}
+
+		// Filet
+		if (hasFilet) {
+			visualFilet.style.padding = '3px';
+			visualFilet.style.background = 'linear-gradient(145deg, #c9a227, #b8931f)';
+		} else {
+			visualFilet.style.padding = '0';
+			visualFilet.style.background = 'transparent';
+		}
+
+		// Verre (reflet)
+		visualVerre.style.display = hasVerre ? 'block' : 'none';
+
+		// Calculer dimensions
+		const frameW = !isNaN(w) && !isNaN(mW) ? w + mW * 2 : null;
+		const frameH = !isNaN(h) && !isNaN(mH) ? h + mH * 2 : null;
+
+		// Afficher dimension cadre dans le champ
+		if (frameW && frameH) {
+			frameInput.value = frameW + ' × ' + frameH;
+		}
+
+		// Cotations
+		if (hasMargins && frameW && frameH) {
+			cotCadreH.style.display = 'block';
+			cotCadreV.style.display = 'block';
+			cotCadreHVal.textContent = frameW + ' cm';
+			cotCadreVVal.textContent = frameH + ' cm';
+			cotLegend.style.display = 'flex';
+		} else {
+			cotCadreH.style.display = 'none';
+			cotCadreV.style.display = 'none';
+			cotLegend.style.display = 'none';
+		}
+
+		// Label oeuvre avec dimensions
+		if (!isNaN(w) && !isNaN(h)) {
+			visualOeuvreLabel.innerHTML = 'OEUVRE<br><span style="font-size:10px; color:#999;">' + w + ' × ' + h + '</span>';
+		} else {
+			visualOeuvreLabel.innerHTML = 'OEUVRE';
 		}
 	}
 
-	width.addEventListener('input', computeFrame);
-	height.addEventListener('input', computeFrame);
-	margin.addEventListener('input', computeFrame);
+	// Event listeners
+	width.addEventListener('input', updateVisual);
+	height.addEventListener('input', updateVisual);
+	marginW.addEventListener('input', updateVisual);
+	marginH.addEventListener('input', updateVisual);
+	if (wandInput) wandInput.addEventListener('input', updateVisual);
+	if (glassSelect) glassSelect.addEventListener('change', updateVisual);
+	if (matInput) matInput.addEventListener('input', updateVisual);
+	if (meshInput) meshInput.addEventListener('input', updateVisual);
+
+	// Init - appel immédiat + délai pour s'assurer que les valeurs sont chargées
+	updateVisual();
+	setTimeout(updateVisual, 100);
 })();
 </script>

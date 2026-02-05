@@ -29,8 +29,8 @@
 				{% if product.product.artwork_width and product.product.artwork_height %}
 				<div><span class="text-gray-500">Oeuvre:</span> {{ product.product.artwork_width }} × {{ product.product.artwork_height }}</div>
 				{% endif %}
-				{% if product.product.margin %}
-				<div><span class="text-gray-500">Marge:</span> {{ product.product.margin }}</div>
+				{% if product.product.margin or product.product.margin_height %}
+				<div><span class="text-gray-500">Marge:</span> {{ product.product.margin|default_if_none:"—" }} × {{ product.product.margin_height|default_if_none:"—" }}</div>
 				{% endif %}
 				{% if product.product.frame %}
 				<div><span class="text-gray-500">Cadre:</span> {{ product.product.frame }}</div>
