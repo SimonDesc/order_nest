@@ -1,11 +1,9 @@
-<div class="titre flex justify-left text-3xl font-bold mb-10">
-
+<div class="titre flex justify-left text-2xl font-bold mb-3">
 	<h1 class="title">Nouveau produit</h1>
-
 </div>
 <form hx-post="{{ request.path }}" class="modal-content">
 	{% csrf_token %}
-	<div class="grid grid-cols-12 gap-4 mb-4">
+	<div class="grid grid-cols-12 gap-3 mb-2">
 		<!-- Première ligne -->
 
 		<!-- Champ Descriptif -->
@@ -21,7 +19,7 @@
 		</div>
 	</div>
 
-	<div class="grid grid-cols-12 gap-4 mb-4 items-end">
+	<div class="grid grid-cols-12 gap-3 mb-2 items-end">
 		<!-- Ligne oeuvre et marges -->
 		<div class="col-span-2">
 			{{ form.artwork_width.label_tag }}
@@ -45,7 +43,7 @@
 		</div>
 	</div>
 
-	<div class="grid grid-cols-12 gap-4 mb-4">
+	<div class="grid grid-cols-12 gap-3 mb-2">
 		<!-- Champ Baguette -->
 		<div class="col-span-3">
 			{{ form.wand.label_tag }}
@@ -71,92 +69,80 @@
 		</div>
 	</div>
 
-	<div class="grid grid-cols-12 gap-4 mb-4">
-		<!-- Troisième ligne -->
-	
-		<!-- Champ Prix de vente -->
-		<div class="col-span-3">
-			{{ form.selling_price_unit.label_tag }}
-			{{ form.selling_price_unit }}
-		</div>
-		<div class="col-span-3">
+	<div class="flex gap-4 mb-2">
+		<!-- Colonne gauche: Visuel du cadre -->
+		<div class="flex-shrink-0">
+			<div class="relative" style="padding: 25px 35px 30px 30px;">
+				<!-- Cotation verticale gauche - CADRE -->
+				<div id="cot-cadre-v" class="absolute" style="display: none; left: 0; top: 25px; bottom: 30px; width: 25px;">
+					<div style="position: absolute; left: 10px; top: 0; bottom: 0; width: 1px; background: #666;"></div>
+					<div style="position: absolute; left: 6px; top: 0; width: 9px; height: 1px; background: #666;"></div>
+					<div style="position: absolute; left: 6px; bottom: 0; width: 9px; height: 1px; background: #666;"></div>
+					<div id="cot-cadre-v-val" style="position: absolute; left: -2px; top: 50%; transform: translateY(-50%) rotate(-90deg); font-size: 10px; color: #c00; font-weight: 600; white-space: nowrap;"></div>
+				</div>
 
-		</div>
-	
-		<!-- Champ Fait/oui/non -->
-		<div class="col-span-6 text-center">
-			Commande terminée
-			<div class="flex justify-center mt-3">
-				<div class="checkbox-wrapper-12">
-				{{ form.status }}
+				<!-- Cotation horizontale bas - CADRE -->
+				<div id="cot-cadre-h" class="absolute" style="display: none; left: 30px; right: 35px; bottom: 0; height: 25px;">
+					<div style="position: absolute; top: 10px; left: 0; right: 0; height: 1px; background: #666;"></div>
+					<div style="position: absolute; top: 6px; left: 0; width: 1px; height: 9px; background: #666;"></div>
+					<div style="position: absolute; top: 6px; right: 0; width: 1px; height: 9px; background: #666;"></div>
+					<div id="cot-cadre-h-val" style="position: absolute; top: 14px; left: 50%; transform: translateX(-50%); font-size: 10px; color: #c00; font-weight: 600; white-space: nowrap;"></div>
+				</div>
+
+				<!-- Container du visuel -->
+				<div id="visual-container" class="relative" style="transition: all 0.3s ease;">
+					<div id="visual-cadre" style="display: block; padding: 0; background: transparent; border-radius: 3px;">
+						<div id="visual-passe-partout" style="padding: 0; background: transparent;">
+							<div id="visual-filet" style="padding: 0; background: transparent;">
+								<div id="visual-oeuvre" style="width: 120px; height: 100px; background: linear-gradient(135deg, #fff, #f0f0f0); border: 1px solid #ccc; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+									<span id="visual-oeuvre-label" style="font-size: 10px; color: #666; text-align: center; line-height: 1.3;"></span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="visual-verre-reflet" style="display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; border-radius: 3px; overflow: hidden;">
+						<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.1) 30%, transparent 50%);"></div>
+						<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(200,220,240,0.08);"></div>
+						<div style="position: absolute; bottom: 10%; right: 10%; width: 20%; height: 15%; background: rgba(255,255,255,0.15); filter: blur(8px); border-radius: 50%;"></div>
+					</div>
+				</div>
+			</div>
+			<!-- Légende des cotations -->
+			<div id="cot-legend" class="flex justify-center gap-4 text-xs" style="display: none;">
+				<div class="flex items-center gap-1">
+					<span style="width: 10px; height: 2px; background: #c00;"></span>
+					<span class="text-gray-600">Cadre</span>
 				</div>
 			</div>
 		</div>
-	
-	</div>
 
-	<!-- Représentation visuelle du cadre avec cotations -->
-	<div class="flex justify-center my-8">
-		<div class="relative" style="padding: 40px 60px 50px 50px;">
-			<!-- Cotation verticale gauche - CADRE -->
-			<div id="cot-cadre-v" class="absolute" style="display: none; left: 0; top: 40px; bottom: 50px; width: 40px;">
-				<div style="position: absolute; left: 15px; top: 0; bottom: 0; width: 1px; background: #666;"></div>
-				<div style="position: absolute; left: 10px; top: 0; width: 11px; height: 1px; background: #666;"></div>
-				<div style="position: absolute; left: 10px; bottom: 0; width: 11px; height: 1px; background: #666;"></div>
-				<div id="cot-cadre-v-val" style="position: absolute; left: 0; top: 50%; transform: translateY(-50%) rotate(-90deg); font-size: 11px; color: #c00; font-weight: 600; white-space: nowrap;"></div>
-			</div>
-
-			<!-- Cotation horizontale bas - CADRE -->
-			<div id="cot-cadre-h" class="absolute" style="display: none; left: 50px; right: 60px; bottom: 0; height: 40px;">
-				<div style="position: absolute; top: 15px; left: 0; right: 0; height: 1px; background: #666;"></div>
-				<div style="position: absolute; top: 10px; left: 0; width: 1px; height: 11px; background: #666;"></div>
-				<div style="position: absolute; top: 10px; right: 0; width: 1px; height: 11px; background: #666;"></div>
-				<div id="cot-cadre-h-val" style="position: absolute; top: 22px; left: 50%; transform: translateX(-50%); font-size: 11px; color: #c00; font-weight: 600; white-space: nowrap;"></div>
-			</div>
-
-			<!-- Container du visuel -->
-			<div id="visual-container" class="relative" style="transition: all 0.3s ease;">
-				<!-- Cadre extérieur -->
-				<div id="visual-cadre" style="display: block; padding: 0; background: transparent; border-radius: 3px;">
-					<!-- Passe-partout -->
-					<div id="visual-passe-partout" style="padding: 0; background: transparent;">
-						<!-- Filet -->
-						<div id="visual-filet" style="padding: 0; background: transparent;">
-							<!-- Oeuvre intérieur -->
-							<div id="visual-oeuvre" style="width: 150px; height: 120px; background: linear-gradient(135deg, #fff, #f0f0f0); border: 1px solid #ccc; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-								<span id="visual-oeuvre-label" style="font-size: 11px; color: #666; text-align: center; line-height: 1.3;"></span>
+		<!-- Colonne droite: Prix, Terminée, Boutons -->
+		<div class="flex-1 flex flex-col justify-between">
+			<div>
+				<div class="grid grid-cols-2 gap-4 mb-3">
+					<div>
+						{{ form.selling_price_unit.label_tag }}
+						{{ form.selling_price_unit }}
+					</div>
+					<div class="text-center">
+						Commande terminée
+						<div class="flex justify-center mt-2">
+							<div class="checkbox-wrapper-12">
+							{{ form.status }}
 							</div>
 						</div>
 					</div>
 				</div>
-				<!-- Effet verre -->
-				<div id="visual-verre-reflet" style="display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; border-radius: 3px; overflow: hidden;">
-					<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.1) 30%, transparent 50%);"></div>
-					<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(200,220,240,0.08);"></div>
-					<div style="position: absolute; bottom: 10%; right: 10%; width: 20%; height: 15%; background: rgba(255,255,255,0.15); filter: blur(8px); border-radius: 50%;"></div>
-				</div>
+			</div>
+			<div class="flex justify-end gap-3">
+				<button style="background-color: #FF4E27; border-radius: 10px;" type="button" id="cancelButton" class="py-2 px-4 text-sm text-white focus:outline-none focus:z-10 focus:ring-4 focus:ring-gray-200">
+					Annuler
+				</button>
+				<button type="submit" class="blue-button py-2 px-5 text-sm text-white focus:outline-none rounded-xl focus:z-10 focus:ring-4 focus:ring-gray-200 cursor-pointer transition-all hover:-translate-y-[1px] active:border-b-[2px] active:brightness-90 active:translate-y-[2px]">
+					Enregistrer
+				</button>
 			</div>
 		</div>
-	</div>
-
-	<!-- Légende des cotations -->
-	<div id="cot-legend" class="flex justify-center gap-6 text-xs mb-4" style="display: none;">
-		<div class="flex items-center gap-2">
-			<span style="width: 12px; height: 3px; background: #c00;"></span>
-			<span class="text-gray-600">Cadre (baguettes)</span>
-		</div>
-	</div>
-
-	<div class="modal-footer flex justify-end gap-4 mt-10">
-		<button style="background-color: #FF4E27; border-radius: 10px;" type="button" id="cancelButton" class="w-32 text-lg div-ombre-button-navbar-logout py-2 px-4 mr-5 mb-2 text-sm text-white 
-		focus:outline-none
-	   focus:z-10 focus:ring-4 focus:ring-gray-200">
-			Annuler
-		</button>
-		<button type="submit" class="w-[122px] blue-button div-ombre-button-edit py-2 px-6 mb-2 text-sm text-white text-gray-900
-		focus:outline-none rounded-xl focus:z-10 focus:ring-4 focus:ring-gray-200
-		cursor-pointer transition-all   hover:-translate-y-[1px]  active:border-b-[2px]
-		active:brightness-90 active:translate-y-[2px]">Enregistrer</button>
 	</div>
 </form>
 
@@ -189,11 +175,11 @@
 	const cotLegend = document.getElementById('cot-legend');
 
 	// Échelle et limites
-	const SCALE = 2;
-	const MIN_SIZE = 100;
-	const MAX_SIZE = 220;
-	const MIN_MARGIN = 15;
-	const MAX_MARGIN = 50;
+	const SCALE = 1.5;
+	const MIN_SIZE = 80;
+	const MAX_SIZE = 160;
+	const MIN_MARGIN = 10;
+	const MAX_MARGIN = 35;
 
 	function clamp(val, min, max) {
 		return Math.max(min, Math.min(max, val));
@@ -216,7 +202,7 @@
 		const hasFilet = hasValue(meshInput);
 
 		// Calculer taille oeuvre proportionnelle
-		let oeuvreW = 150, oeuvreH = 120;
+		let oeuvreW = 120, oeuvreH = 100;
 		if (!isNaN(w) && !isNaN(h) && w > 0 && h > 0) {
 			const ratio = w / h;
 			if (ratio > 1) {
