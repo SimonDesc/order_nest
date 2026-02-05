@@ -1,11 +1,13 @@
 # Imports standard de Python
+from datetime import date
 from typing import Any
 
 # Imports Django
 from django.core.paginator import Paginator
-from django.db.models import Case, When, Value, IntegerField, Q, Prefetch, Count
+from django.db.models import Case, When, Value, IntegerField, Q, Prefetch, Count, Sum
 from django.urls import reverse_lazy
 from django.views.generic import ListView, UpdateView, CreateView, DeleteView, DetailView, FormView, View, TemplateView
+from django.utils import timezone
 
 # Imports relatifs à l'application
 from ..forms import NewCustomerForm
@@ -47,6 +49,58 @@ class WebappHome(ListView):
             for field in Customer._meta.get_fields()
             if hasattr(field, "verbose_name")
         }
+
+        # Statistiques temporelles
+        today = timezone.now()
+        current_month_start = today.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+        last_month_start = (current_month_start - timezone.timedelta(days=1)).replace(day=1)
+        current_year_start = today.replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0)
+        last_year_start = current_year_start.replace(year=today.year - 1)
+        last_year_end = current_year_start - timezone.timedelta(seconds=1)
+
+        # Commandes ce mois vs mois-1
+        orders_this_month = Order.objects.filter(created_at__gte=current_month_start).count()
+        orders_last_month = Order.objects.filter(
+            created_at__gte=last_month_start,
+            created_at__lt=current_month_start
+        ).count()
+
+        # Commandes cette année vs année-1
+        orders_this_year = Order.objects.filter(created_at__gte=current_year_start).count()
+        orders_last_year = Order.objects.filter(
+            created_at__gte=last_year_start,
+            created_at__lt=current_year_start
+        ).count()
+
+        # Nouveaux clients ce mois vs mois-1
+        customers_this_month = Customer.objects.filter(created_at__gte=current_month_start).count()
+        customers_last_month = Customer.objects.filter(
+            created_at__gte=last_month_start,
+            created_at__lt=current_month_start
+        ).count()
+
+        # Stats actuelles (commandes en cours)
+        orders_in_progress = Order.objects.filter(status="En cours").count()
+        orders_urgent = Order.objects.filter(status="Urgent").count()
+        orders_done = Order.objects.filter(status="Terminée").count()
+
+        context["stats"] = {
+            "orders_this_month": orders_this_month,
+            "orders_last_month": orders_last_month,
+            "orders_month_diff": orders_this_month - orders_last_month,
+            "orders_this_year": orders_this_year,
+            "orders_last_year": orders_last_year,
+            "orders_year_diff": orders_this_year - orders_last_year,
+            "customers_this_month": customers_this_month,
+            "customers_last_month": customers_last_month,
+            "customers_month_diff": customers_this_month - customers_last_month,
+            "orders_in_progress": orders_in_progress,
+            "orders_urgent": orders_urgent,
+            "orders_done": orders_done,
+            "current_year": today.year,
+            "last_year": today.year - 1,
+        }
+
         return context
 
     def get_queryset(self):
