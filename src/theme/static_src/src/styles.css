@@ -546,3 +546,11 @@ ul li a[onclick^="openTab"]:not(.blue-color-text):hover {
 #drawZone {
 	max-width: 100%;
 }
+
+/* Téléphone : petite marge latérale, les cartes ne collent plus aux bords */
+@media (max-width: 767px) {
+	#webapp {
+		padding-left: 12px;
+		padding-right: 12px;
+	}
+}
