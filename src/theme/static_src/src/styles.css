@@ -348,3 +348,23 @@ ul li a[onclick^="openTab"]:not(.blue-color-text):hover {
 	background-color: var(--cream-dark);
 }
 .red-color-text { background-color: var(--danger); }
+
+/* Petits écrans : le contenu ne déborde pas, la barre d'onglets défile */
+#webapp > * {
+	min-width: 0;
+	max-width: 100%;
+}
+
+.tab-bar {
+	overflow-x: auto;
+	scrollbar-width: none;
+	-webkit-overflow-scrolling: touch;
+}
+
+.tab-bar::-webkit-scrollbar {
+	display: none;
+}
+
+.tab-bar > li {
+	flex-shrink: 0;
+}
