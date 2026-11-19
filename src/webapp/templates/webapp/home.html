@@ -18,7 +18,7 @@
 				<div class="text-sm text-gray-500">Commandes ce mois</div>
 				<div class="flex flex-wrap items-baseline gap-x-2">
 					<span class="text-2xl font-bold text-gray-900">{{ stats.orders_this_month }}</span>
-					<span class="text-sm text-gray-500 whitespace-nowrap">vs {{ stats.orders_last_month }} le mois dernier</span>
+					<span class="text-sm text-gray-500">vs {{ stats.orders_last_month }} le mois dernier</span>
 				</div>
 				{% if stats.orders_month_diff > 0 %}
 				<div class="text-green-600 text-xs mt-1 font-medium">+{{ stats.orders_month_diff }}</div>
@@ -32,7 +32,7 @@
 				<div class="text-sm text-gray-500">Commandes {{ stats.current_year }}</div>
 				<div class="flex flex-wrap items-baseline gap-x-2">
 					<span class="text-2xl font-bold text-gray-900">{{ stats.orders_this_year }}</span>
-					<span class="text-sm text-gray-500 whitespace-nowrap">vs {{ stats.orders_last_year }} en {{ stats.last_year }}</span>
+					<span class="text-sm text-gray-500">vs {{ stats.orders_last_year }} en {{ stats.last_year }}</span>
 				</div>
 				{% if stats.orders_year_diff > 0 %}
 				<div class="text-green-600 text-xs mt-1 font-medium">+{{ stats.orders_year_diff }}</div>
@@ -46,7 +46,7 @@
 				<div class="text-sm text-gray-500">Nouveaux clients ce mois</div>
 				<div class="flex flex-wrap items-baseline gap-x-2">
 					<span class="text-2xl font-bold text-gray-900">{{ stats.customers_this_month }}</span>
-					<span class="text-sm text-gray-500 whitespace-nowrap">vs {{ stats.customers_last_month }} le mois dernier</span>
+					<span class="text-sm text-gray-500">vs {{ stats.customers_last_month }} le mois dernier</span>
 				</div>
 				{% if stats.customers_month_diff > 0 %}
 				<div class="text-green-600 text-xs mt-1 font-medium">+{{ stats.customers_month_diff }}</div>
