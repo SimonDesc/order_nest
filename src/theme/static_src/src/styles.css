@@ -452,3 +452,50 @@ ul li a[onclick^="openTab"]:not(.blue-color-text):hover {
 		gap: 0.5rem;
 	}
 }
+
+/* Tablette (Galaxy Tab A8 : 800 px en portrait) et téléphone */
+@media (max-width: 1023px) {
+	/* Tableaux Grid.js : marges intérieures réduites pour garder les colonnes lisibles */
+	#webapp .gridjs-th,
+	#webapp .gridjs-td {
+		padding: 10px 8px;
+		font-size: 14px;
+	}
+
+	#webapp .gridjs-th .gridjs-th-content {
+		width: auto;
+		padding-right: 14px;
+	}
+
+	#webapp .gridjs-sort {
+		width: 10px;
+		margin-left: 2px;
+	}
+}
+
+@media (min-width: 640px) and (max-width: 1023px) {
+	/* Fiche commande : commentaire sur toute la largeur, paiement et dates côte à côte */
+	.datesandpayment {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		grid-template-rows: none;
+		grid-auto-flow: row;
+		gap: 1rem 1.5rem;
+		margin-bottom: 1.5rem;
+	}
+
+	.datesandpayment > .comment {
+		grid-column: 1 / -1;
+	}
+
+	.datesandpayment > * {
+		margin-left: 0 !important;
+		justify-self: stretch !important;
+	}
+
+	.datesandpayment textarea,
+	.datesandpayment select,
+	.datesandpayment input {
+		width: 100%;
+	}
+}
