@@ -1,9 +1,9 @@
 # Bibliothèques standard
-import imghdr
 import os.path
 
 # Bibliothèques tierces
 import environ
+from PIL import Image, UnidentifiedImageError
 
 # Imports Django
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
@@ -18,6 +18,20 @@ from .utils import clean_filename, delete_file_from_s3, is_allowed_extension, un
 
 env = environ.Env()
 environ.Env.read_env()
+
+
+def _image_format(file):
+    """Format réel de l'image d'après son contenu (« JPEG », « PNG »…), ou None.
+
+    Remplace `imghdr`, supprimé en Python 3.13. Remet le fichier au début après lecture.
+    """
+    try:
+        with Image.open(file) as img:
+            return img.format
+    except (UnidentifiedImageError, OSError):
+        return None
+    finally:
+        file.seek(0)
 
 
 def _build_search_filter(search_query):
@@ -154,7 +168,7 @@ def save_attachment(request):
                 raise ValueError("Le fichier est trop volumineux.")
 
             # Vérification du type de fichier
-            if imghdr.what(file) not in ["jpeg", "jpg", "png", "gif"]:
+            if _image_format(file) not in ("JPEG", "PNG", "GIF"):
                 raise ValueError("Type de fichier non pris en charge.")
 
             # Vérifier l'extension autorisée

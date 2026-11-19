@@ -1,0 +1,18 @@
+# Dépendances directes, avec les bornes à respecter.
+# requirements.txt (versions figées) se régénère avec :
+#   pip install -r requirements.in && pip freeze > requirements.txt
+Django>=5.2,<5.3          # LTS, correctifs jusqu'en avril 2028
+django-environ
+django-tailwind<4         # le CSS compilé (theme/static/css/dist) vient de Tailwind 3
+django-phonenumber-field
+phonenumbers
+django-browser-reload
+django-storages[s3]
+boto3
+whitenoise
+gunicorn
+psycopg2-binary
+pillow
+reportlab
+requests
+tzdata
