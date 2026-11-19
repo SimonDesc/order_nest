@@ -1,6 +1,7 @@
 /* OrderNest — charte de la Galerie Libre Cours
    Navy #0f2d40 (light #1a4562, dark #091c2a), or #c9a227 (light #e3bc3d, dark #9e7d1a),
-   crème #faf8f5 / #f0ebe3. Titres : Playfair Display ; texte : Inter. */
+   crème #faf8f5 / #f0ebe3. Texte et titres : Inter (lisible toute la journée) ;
+   Playfair Display réservé au monogramme et au panneau de connexion. */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap');
 
 @tailwind base;
@@ -32,8 +33,13 @@ body {
 	-webkit-font-smoothing: antialiased;
 }
 
-h1, h2, h3, .font-display {
+.font-display {
 	font-family: 'Playfair Display', Georgia, serif;
+}
+
+/* Chiffres alignés dans les tableaux et montants */
+table, .tabular {
+	font-variant-numeric: tabular-nums;
 }
 
 /* Champs de formulaire : focus doré, partout (y compris les classes focus:ring-blue/primary existantes) */
@@ -86,9 +92,9 @@ input[type=radio]:checked {
 	margin: 0 8px;
 	border-radius: 10px;
 	color: rgba(250, 248, 245, 0.62);
-	font-size: 11px;
+	font-size: 12px;
 	font-weight: 500;
-	letter-spacing: 0.02em;
+	letter-spacing: 0.01em;
 	transition: color .2s, background-color .2s;
 }
 
@@ -115,10 +121,9 @@ input[type=radio]:checked {
 }
 
 .page-heading {
-	font-family: 'Playfair Display', Georgia, serif;
 	color: var(--navy);
-	font-weight: 600;
-	letter-spacing: -0.01em;
+	font-weight: 700;
+	letter-spacing: -0.02em;
 }
 
 .page-eyebrow {
@@ -294,7 +299,8 @@ input[type=radio]:checked {
 }
 
 .title {
-	font-family: 'Playfair Display', Georgia, serif;
+	font-weight: 700;
+	letter-spacing: -0.01em;
 }
 
 /* ---------- Tableaux ---------- */
