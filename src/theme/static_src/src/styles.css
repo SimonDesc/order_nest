@@ -499,3 +499,42 @@ ul li a[onclick^="openTab"]:not(.blue-color-text):hover {
 		width: 100%;
 	}
 }
+
+/* Fenêtres produit (nouveau / modifier) sur téléphone */
+@media (max-width: 639px) {
+	#dialog {
+		width: calc(100% - 24px) !important;
+		padding: 1rem !important;
+	}
+
+	.modal-content .grid.grid-cols-12 {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.modal-content .grid.grid-cols-12 > * {
+		grid-column: auto / span 1 !important;
+	}
+
+	.modal-content .grid.grid-cols-12 > .col-span-8 {
+		grid-column: 1 / -1 !important;
+	}
+
+	.modal-content .grid.grid-cols-12 input,
+	.modal-content .grid.grid-cols-12 select,
+	.modal-content .grid.grid-cols-12 textarea {
+		width: 100%;
+	}
+
+	.modal-content > .flex.gap-4 {
+		flex-direction: column;
+		align-items: stretch;
+	}
+
+	.modal-content > .flex.gap-4 > .flex-shrink-0 {
+		align-self: center;
+	}
+
+	.modal-content .flex.justify-end.gap-3 {
+		flex-wrap: wrap;
+	}
+}
