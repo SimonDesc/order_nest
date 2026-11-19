@@ -157,37 +157,6 @@ input[type=radio]:checked {
 	box-shadow: 0 10px 24px -10px rgba(15, 45, 64, 0.18), 0 0 0 1px var(--line);
 }
 
-/* Statut en pastille colorée sur les cartes */
-#card .status > span {
-	display: inline-flex;
-	align-items: center;
-	gap: 6px;
-	padding: 3px 12px;
-	border-radius: 999px;
-	font-size: 13px;
-	font-weight: 600;
-	background: var(--cream-dark);
-	color: var(--muted);
-}
-
-#card .status > span::before {
-	content: '';
-	width: 8px;
-	height: 8px;
-	border-radius: 50%;
-	background: currentColor;
-}
-
-#card .status > span.status-urgent {
-	background: #d63031;
-	color: #fff;
-}
-
-#card .status > span.status-en-cours {
-	background: #1e9e57;
-	color: #fff;
-}
-
 /* ---------- Fonds ---------- */
 
 .title-top {
