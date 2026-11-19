@@ -331,9 +331,11 @@ tr.status-active td {
 .blue-color-text { background-color: var(--navy); }
 
 /* Onglet actif (tableau de bord, historique client) : liseré doré */
-ul li a.blue-color-text {
+ul li a.blue-color-text,
+ul li a[onclick^="openTab"].blue-color-text {
 	box-shadow: inset 0 -3px 0 var(--gold);
 	border-color: var(--navy) !important;
+	color: var(--cream) !important;
 }
 
 ul li a[onclick^="openTab"] {
