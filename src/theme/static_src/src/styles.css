@@ -541,3 +541,8 @@ ul li a[onclick^="openTab"]:not(.blue-color-text):hover {
 		flex-wrap: wrap;
 	}
 }
+
+/* Zone de croquis : jamais plus large que la page (voir canva.js) */
+#drawZone {
+	max-width: 100%;
+}

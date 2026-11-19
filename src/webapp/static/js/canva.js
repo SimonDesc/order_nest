@@ -8,6 +8,26 @@ $(document).ready(function() {
     });
     background.sendToBack();
 
+    // paper.js fige la largeur du canvas au chargement : on la réajuste quand l'écran change
+    // (rotation de la tablette, fenêtre redimensionnée), sinon le canvas déborde et le
+    // navigateur dézoome toute la page.
+    const drawZone = $('#drawZone')[0];
+    function fitDrawZone() {
+        const width = Math.floor(drawZone.parentElement.clientWidth);
+        const size = paper.view.viewSize;
+        if (!width || Math.abs(size.width - width) < 2) return;
+        paper.view.viewSize = new paper.Size(width, size.height);
+        if (background.parent) {
+            background.bounds = paper.view.bounds;
+        }
+    }
+    let fitTimer;
+    $(window).on('resize orientationchange', function () {
+        clearTimeout(fitTimer);
+        fitTimer = setTimeout(fitDrawZone, 120);
+    });
+    fitDrawZone();
+
 
     let tool = new paper.Tool();
     let path;
