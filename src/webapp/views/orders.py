@@ -334,7 +334,7 @@ class EditOrder(UpdateView):
     def get(self, request, *args, **kwargs):
         # Sauvegarder le referer dans la session lors du premier chargement de la page
         self.request.session["referer"] = self.request.META.get(
-            "HTTP_REFERER", reverse_lazy("webapp:dashboard")
+            "HTTP_REFERER", str(reverse_lazy("webapp:dashboard"))
         )
         return super().get(request, *args, **kwargs)
 
