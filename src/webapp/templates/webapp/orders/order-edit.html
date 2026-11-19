@@ -38,6 +38,9 @@ function redirectToCustomerEdit(element) {
 </script>
 
 {% endblock %}
+{% block heading %}Commande n° {{ order_form.instance.id }}{% endblock %}
+{% block topbar_title %}Commande n° {{ order_form.instance.id }}{% endblock %}
+
 {% block content %}
 
 

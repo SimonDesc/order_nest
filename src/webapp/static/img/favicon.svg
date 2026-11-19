@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="12" fill="#091c2a"/>
+  <path d="M12 24V12h12" fill="none" stroke="#c9a227" stroke-width="3" stroke-linecap="square"/>
+  <path d="M52 40v12H40" fill="none" stroke="#c9a227" stroke-width="3" stroke-linecap="square"/>
+  <text x="32" y="41" text-anchor="middle" font-family="Georgia, 'Times New Roman', Times, serif" font-style="italic" font-size="26" fill="#c9a227">LC</text>
+</svg>

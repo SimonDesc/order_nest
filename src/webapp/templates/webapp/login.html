@@ -1,65 +1,73 @@
 {% load static tailwind_tags %}
-{% load static %}
-
 <!DOCTYPE html>
-
 <html lang="fr">
 
 <head>
 	<meta charset="UTF-8">
-	<title>Login</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="theme-color" content="#0f2d40">
+	<link rel="icon" type="image/svg+xml" href="{% static 'img/favicon.svg' %}">
+	<title>Connexion · OrderNest</title>
 	{% tailwind_css %}
 </head>
 
-<body style="background-color:#162B49">
-	<section id="webapp">
-		<form method="POST">
-			{% csrf_token %}
-			<div class="flex flex-col items-center px-6 py-8 mx-auto">
-				<div
-					class="bg-white rounded-lg shadow dark:border md:mt-10 dark:bg-gray-800 dark:border-gray-700 space-y-4 md:space-y-10 sm:p-8">
-					<h1
-						class="text-4xl font-extrabold leading-tight tracking-tight text-gray-900 md:text-5xl dark:text-white">
-						Se connecter sur OrderNest
-					</h1>
-					<form class="space-y-4 md:space-y-6" action="#">
-						<div>
-							<label for="{{ form.username.id_for_label }}"
-								class="block mb-2 text-xl font-medium text-gray-900 dark:text-white">Nom
-								d'utilisateur</label>
-							<input type="text" name="{{ form.username.name }}" id="{{ form.username.id_for_label }}"
-								class="text-xl bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 placeholder-xl dark:placeholder-xl"
-								placeholder="Votre nom d'utilisateur" required="">
-						</div>
-						<div>
-							<label for="password"
-								class="block mb-2 text-xl font-medium text-gray-900 dark:text-white">Mot de
-								passe</label>
-							<input type="password" name="password" id="password" placeholder="••••••••"
-								class="text-xl bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 placeholder-xl dark:placeholder-xl"
-								required="">
-						</div>
-						<div class="text-red-500 text-sm mt-4 whitespace-normal">
-							{% if form.errors %}
-							<h4>Erreurs :</h4>
-							<ul>
-								{% for field, errors in form.errors.items %}
-									{% for error in errors %}
-								<li>{{ error|truncatechars:60 }}</li>
-									{% endfor %}
-								{% endfor %}
-							</ul>
-							{% endif %}
-						</div>
-						<button type="submit"
-							class="w-full mb-4 mt-4 text-xl bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded">Connexion</button>
-						<div class="flex flex-col items-center mb-40">
-							<img src="{% static '/img/logo.svg' %}" alt="logo" width="100"></a>
-						</div>
-					</form>
-				</div>
+<body class="min-h-screen bg-cream">
+	<main class="min-h-screen grid lg:grid-cols-2">
+
+		<!-- Panneau de marque -->
+		<section class="app-sidebar relative hidden lg:flex flex-col justify-between p-12 text-cream">
+			<span class="app-monogram">LC</span>
+			<div>
+				<p class="page-eyebrow !text-gold">Revel · Slow Galerie</p>
+				<p class="font-display text-5xl leading-tight mt-4">Galerie<br><span class="italic text-gold">Libre Cours</span></p>
+				<p class="mt-6 max-w-sm text-cream/70">Commandes d'encadrement et de restauration, clients et suivi de l'atelier.</p>
 			</div>
-		</form>
-	</section>
+			<p class="text-xs text-cream/40">OrderNest</p>
+		</section>
+
+		<!-- Formulaire -->
+		<section class="flex items-center justify-center px-6 py-12">
+			<div class="w-full max-w-sm">
+				<div class="lg:hidden flex flex-col items-center mb-8">
+					<span class="app-monogram" style="background:#0f2d40">LC</span>
+					<p class="font-display text-2xl text-navy mt-3">Galerie <span class="italic text-gold-dark">Libre Cours</span></p>
+				</div>
+
+				<p class="page-eyebrow">OrderNest</p>
+				<h1 class="page-heading text-4xl mt-1 mb-8">Bonjour&nbsp;!</h1>
+
+				<form method="POST" class="space-y-5">
+					{% csrf_token %}
+					<div>
+						<label for="{{ form.username.id_for_label }}" class="block mb-1.5 text-sm font-medium text-navy">Nom d'utilisateur</label>
+						<input type="text" name="{{ form.username.name }}" id="{{ form.username.id_for_label }}"
+							autocomplete="username" autocapitalize="none" required
+							class="block w-full rounded-lg border border-[#e7e1d7] bg-white px-3.5 py-3 text-base text-navy placeholder:text-gray-400"
+							placeholder="Votre nom d'utilisateur">
+					</div>
+					<div>
+						<label for="password" class="block mb-1.5 text-sm font-medium text-navy">Mot de passe</label>
+						<input type="password" name="password" id="password" autocomplete="current-password" required
+							class="block w-full rounded-lg border border-[#e7e1d7] bg-white px-3.5 py-3 text-base text-navy placeholder:text-gray-400"
+							placeholder="••••••••">
+					</div>
+
+					{% if form.errors %}
+					<div class="rounded-lg border border-[#e7c3bb] bg-[#fbf1ee] px-3.5 py-3 text-sm text-[#8f3322]" role="alert">
+						<ul class="space-y-1">
+							{% for field, errors in form.errors.items %}
+								{% for error in errors %}
+							<li>{{ error|truncatechars:80 }}</li>
+								{% endfor %}
+							{% endfor %}
+						</ul>
+					</div>
+					{% endif %}
+
+					<button type="submit" class="blue-button w-full py-3 text-base">Se connecter</button>
+				</form>
+			</div>
+		</section>
+	</main>
 </body>
 </html>

@@ -44,9 +44,16 @@ module.exports = {
     ],
     theme: {
         extend: {
-            fontFamily:{
-				sans: ['Poppins', 'sans-serif'],
-            }
+            // Charte de la Galerie Libre Cours (même palette que galerielibrecours.fr)
+            colors: {
+                navy: { DEFAULT: '#0f2d40', light: '#1a4562', dark: '#091c2a' },
+                gold: { DEFAULT: '#c9a227', light: '#e3bc3d', dark: '#9e7d1a' },
+                cream: { DEFAULT: '#faf8f5', dark: '#f0ebe3' },
+            },
+            fontFamily: {
+                sans: ['Inter', ...defaultTheme.fontFamily.sans],
+                display: ['"Playfair Display"', 'Georgia', 'serif'],
+            },
         },
     },
 
