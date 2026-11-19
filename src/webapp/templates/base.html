@@ -20,19 +20,19 @@
 
 <body class="min-h-screen">
 
-	<!-- Barre du haut (écrans < 1024 px) : menu + monogramme -->
-	<div class="app-topbar fixed top-0 inset-x-0 z-30 flex items-center gap-3 h-14 px-3 lg:hidden">
+	<!-- Barre du haut (écrans < 768 px) : menu + monogramme -->
+	<div class="app-topbar fixed top-0 inset-x-0 z-30 flex items-center gap-3 h-14 px-3 md:hidden">
 		<button id="burger-btn" type="button" class="p-2 rounded-lg text-navy hover:bg-cream-dark" aria-label="Ouvrir le menu" aria-controls="default-sidebar" aria-expanded="false">
 			<svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h10"/></svg>
 		</button>
 		<span class="font-display italic text-gold-dark text-lg">LC</span>
 		<span class="font-semibold text-navy text-base truncate">{% block topbar_title %}OrderNest{% endblock %}</span>
 	</div>
-	<div id="sidebar-backdrop" class="fixed inset-0 z-30 bg-navy-dark/40 hidden lg:hidden"></div>
+	<div id="sidebar-backdrop" class="fixed inset-0 z-30 bg-navy-dark/40 hidden md:hidden"></div>
 
 	<!-- Menu latéral -->
 	<aside id="default-sidebar" aria-label="Menu principal"
-		class="app-sidebar fixed top-0 left-0 z-40 w-24 h-screen flex flex-col transition-transform -translate-x-full lg:translate-x-0">
+		class="app-sidebar fixed top-0 left-0 z-40 w-24 h-screen flex flex-col transition-transform -translate-x-full md:translate-x-0">
 
 		<a href="{{ home_url }}" class="flex flex-col items-center gap-1 pt-5 pb-6" title="Galerie Libre Cours · OrderNest">
 			<span class="app-monogram">LC</span>
@@ -120,9 +120,9 @@
 	</aside>
 
 	<!-- Contenu -->
-	<div class="flex flex-col min-h-screen pt-14 lg:pt-0 lg:pl-24">
+	<div class="flex flex-col min-h-screen pt-14 md:pt-0 md:pl-24">
 		{% block heading_wrapper %}
-		<header class="px-4 sm:px-8 pt-6 pb-2 hidden lg:block">
+		<header class="px-4 sm:px-8 pt-6 pb-2 hidden md:block">
 			<p class="page-eyebrow">Galerie Libre Cours</p>
 			<h1 class="page-heading text-3xl mt-1">{% block heading %}OrderNest{% endblock %}</h1>
 		</header>

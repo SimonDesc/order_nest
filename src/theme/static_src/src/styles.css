@@ -136,16 +136,56 @@ input[type=radio]:checked {
 
 /* ---------- Cartes de l'accueil ---------- */
 
+.shadow-urgent,
+.shadow-afaire,
+.shadow-normal {
+	border-top: 6px solid transparent;
+}
+
 .shadow-urgent {
-	box-shadow: 0 10px 24px -8px rgba(180, 68, 47, 0.35), 0 0 0 1px rgba(180, 68, 47, 0.35);
+	border-top-color: #d63031;
+	box-shadow: 0 14px 30px -10px rgba(214, 48, 49, 0.55), 0 0 0 2px rgba(214, 48, 49, 0.55);
 }
 
 .shadow-afaire {
-	box-shadow: 0 10px 24px -8px rgba(63, 125, 88, 0.28), 0 0 0 1px rgba(63, 125, 88, 0.28);
+	border-top-color: #1e9e57;
+	box-shadow: 0 14px 30px -10px rgba(30, 158, 87, 0.45), 0 0 0 2px rgba(30, 158, 87, 0.5);
 }
 
 .shadow-normal {
+	border-top-color: var(--line);
 	box-shadow: 0 10px 24px -10px rgba(15, 45, 64, 0.18), 0 0 0 1px var(--line);
+}
+
+/* Statut en pastille colorée sur les cartes */
+#card .status > span {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 3px 12px;
+	border-radius: 999px;
+	font-size: 13px;
+	font-weight: 600;
+	background: var(--cream-dark);
+	color: var(--muted);
+}
+
+#card .status > span::before {
+	content: '';
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: currentColor;
+}
+
+#card .status > span.status-urgent {
+	background: #d63031;
+	color: #fff;
+}
+
+#card .status > span.status-en-cours {
+	background: #1e9e57;
+	color: #fff;
 }
 
 /* ---------- Fonds ---------- */
@@ -184,11 +224,11 @@ input[type=radio]:checked {
 /* ---------- Statuts ---------- */
 
 .status-en-attente { color: var(--warning); }
-.status-en-cours { color: var(--success); }
+.status-en-cours { color: #1e9e57; font-weight: 600; }
 .status-terminée { color: var(--muted); }
 .status-facturée { color: var(--navy); }
 .status-annulée { color: var(--muted); }
-.status-urgent { color: var(--danger); }
+.status-urgent { color: #d63031; font-weight: 600; }
 
 /* ---------- Boutons ---------- */
 
