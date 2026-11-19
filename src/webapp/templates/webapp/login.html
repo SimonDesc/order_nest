@@ -54,13 +54,18 @@
 
 					{% if form.errors %}
 					<div class="rounded-lg border border-[#e7c3bb] bg-[#fbf1ee] px-3.5 py-3 text-sm text-[#8f3322]" role="alert">
+						{% if form.non_field_errors %}
+						<p>Nom d'utilisateur ou mot de passe incorrect.</p>
+						<p class="mt-1 text-[#8f3322]/80">Attention aux majuscules et minuscules.</p>
+						{% else %}
 						<ul class="space-y-1">
 							{% for field, errors in form.errors.items %}
 								{% for error in errors %}
-							<li>{{ error|truncatechars:80 }}</li>
+							<li>{{ error }}</li>
 								{% endfor %}
 							{% endfor %}
 						</ul>
+						{% endif %}
 					</div>
 					{% endif %}
 
