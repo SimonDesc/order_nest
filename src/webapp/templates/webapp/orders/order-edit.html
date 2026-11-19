@@ -317,7 +317,7 @@ function redirectToCustomerEdit(element) {
 					data-active-src="{% static 'img/eraser_active.svg' %}">
 			</button>
 			<button id="bt_eraseDrawing">
-				<img width="35" height="40" src="{% static '/img/delete.svg' %}">
+				<img width="35" height="40" src="{% static 'img/delete.svg' %}">
 			</button>
 		</div>
 
@@ -347,10 +347,10 @@ function redirectToCustomerEdit(element) {
 					<li class="border-2 border-gray-600 bg-white border-dashed">
 						<div class="flex justify-end mt-2">
 							<button class="edit_canvas mr-5" data-pk="{{ attachment.pk }}">
-								<img width="35" height="40" src="{% static '/img/edit.svg' %}">
+								<img width="35" height="40" src="{% static 'img/edit.svg' %}">
 							</button>
 							<button class="delete_canvas mr-2" data-pk="{{ attachment.pk }}">
-								<img width="35" height="40" src="{% static '/img/delete.svg' %}">
+								<img width="35" height="40" src="{% static 'img/delete.svg' %}">
 							</button>
 						</div>
 						<img src="{{ attachment.file_url }}" alt="{{ attachment.file_name }}">

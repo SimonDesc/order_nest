@@ -16,10 +16,10 @@
 				<div class="flex items-center gap-3">
 					<span class="font-semibold text-base">{{ product.product.selling_price_unit }} €</span>
 					<a hx-get="{% url 'webapp:product-edit' pk=product.product.id %}" hx-target="#dialog" class="cursor-pointer hover:opacity-75">
-						<img height="10" src="{% static '/img/edit.svg' %}">
+						<img height="10" src="{% static 'img/edit.svg' %}">
 					</a>
 					<a hx-get="{% url 'webapp:product-delete' pk=product.product.id %}" hx-target="#dialog" class="cursor-pointer hover:opacity-75">
-						<img height="10" src="{% static '/img/delete.svg' %}">
+						<img height="10" src="{% static 'img/delete.svg' %}">
 					</a>
 				</div>
 			</div>
