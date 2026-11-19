@@ -402,6 +402,9 @@ ul li a[onclick^="openTab"]:not(.blue-color-text):hover {
 }
 
 .tab-bar {
+	/* Le défilement horizontal coupe ce qui dépasse en hauteur : place pour les pastilles (-top-2) */
+	padding-top: 12px;
+	padding-right: 12px;
 	overflow-x: auto;
 	scrollbar-width: none;
 	-webkit-overflow-scrolling: touch;
