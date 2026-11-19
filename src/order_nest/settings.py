@@ -170,6 +170,10 @@ AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
 # (DEFAULT_FILE_STORAGE a été supprimé en Django 5.1 : remplacé par STORAGES.)
 STORAGES = {
     "default": {"BACKEND": "storages.backends.s3boto3.S3Boto3Storage"},
-    "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
+    # Noms de fichiers versionnés (styles.<hash>.css) : après chaque déploiement,
+    # le navigateur recharge le CSS au lieu de garder l'ancien en cache.
+    "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},
 }
+# Un fichier absent du manifeste garde son nom simple au lieu de provoquer une erreur 500.
+WHITENOISE_MANIFEST_STRICT = False
 
