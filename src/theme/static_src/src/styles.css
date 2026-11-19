@@ -368,3 +368,41 @@ ul li a[onclick^="openTab"]:not(.blue-color-text):hover {
 .tab-bar > li {
 	flex-shrink: 0;
 }
+
+/* Fiche commande et fiche client sur téléphone : champs empilés */
+@media (max-width: 639px) {
+	.labelstatus,
+	.client,
+	.mailadress {
+		flex-wrap: wrap;
+		gap: 0.75rem 1rem;
+	}
+
+	.labelstatus > *,
+	.client > *,
+	.mailadress > * {
+		width: 100% !important;
+		margin-left: 0 !important;
+		margin-right: 0 !important;
+	}
+
+	.datesandpayment {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	.datesandpayment > * {
+		margin-left: 0 !important;
+	}
+
+	.datesandpayment textarea {
+		width: 100%;
+	}
+
+	#webapp .flex.justify-end:has(> .btnok),
+	#webapp .flex.justify-between:has(> .btncnc) {
+		flex-wrap: wrap;
+		gap: 0.5rem;
+	}
+}
