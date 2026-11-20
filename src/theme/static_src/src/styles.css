@@ -1314,3 +1314,11 @@ ul li a[onclick^="openTab"]:not(.blue-color-text):hover {
 .campagne-inbox-from { flex: none; font-weight: 600; color: var(--ink); }
 .campagne-inbox-text { overflow: hidden; text-overflow: ellipsis; }
 .campagne-inbox-text strong { color: var(--ink); font-weight: 600; }
+
+.campagne-gauge { display: flex; align-items: center; gap: 0.6rem; margin-top: 0.5rem; font-size: 0.75rem; font-weight: 500; color: var(--success); }
+.campagne-gauge-track { flex: 1; max-width: 14rem; height: 6px; border-radius: 999px; background: var(--cream-dark); overflow: hidden; }
+.campagne-gauge-bar { height: 100%; border-radius: 999px; background: var(--success); transition: width 0.15s ease; }
+.campagne-gauge[data-level="warn"] { color: var(--warning); }
+.campagne-gauge[data-level="warn"] .campagne-gauge-bar { background: var(--warning); }
+.campagne-gauge[data-level="over"] { color: var(--danger); }
+.campagne-gauge[data-level="over"] .campagne-gauge-bar { background: var(--danger); }

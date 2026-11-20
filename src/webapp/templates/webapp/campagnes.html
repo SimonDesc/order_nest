@@ -93,6 +93,10 @@
 						Les variables se placent là où est le curseur, dans le texte<span data-only="email"> ou l'objet</span>. Si l'information manque (client sans prénom), elle disparaît : « Bonjour {prenom}, » devient « Bonjour, ».
 						<span data-only="email">Une ligne vide sépare deux paragraphes.</span>
 					</p>
+					<div class="campagne-gauge" data-only="sms" data-sms-gauge>
+						<div class="campagne-gauge-track"><div class="campagne-gauge-bar" data-sms-gauge-bar></div></div>
+						<span data-sms-gauge-label></span>
+					</div>
 					<p class="campagne-hint" data-only="sms">
 						<span data-sms-counter></span>
 						<button type="button" class="campagne-insert" data-simplify hidden>Remplacer ces caractères</button>

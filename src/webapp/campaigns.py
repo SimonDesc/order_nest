@@ -343,6 +343,23 @@ def send_sms_test(campaign, phone, session=None):
     }, session)
 
 
+GSM = set("@£$¥èéùìòÇ\nØø\rÅåΔ_ΦΓΛΩΠΨΣΘΞÆæßÉ !\"#¤%&'()*+,-./0123456789:;<=>?¡ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+          "ÄÖÑÜ§¿abcdefghijklmnopqrstuvwxyzäöñüà")
+GSM_EXT = set("^{}\\[~]|€")
+STOP_MENTION = " STOP au 36180"
+MAX_SMS_PARTS = 2  # au-delà, le client reçoit une rafale de SMS : envoi refusé
+
+
+def sms_parts(text):
+    """Nombre de SMS facturés pour un message, mention STOP comprise (même calcul que la page)."""
+    full = text + STOP_MENTION
+    if all(ch in GSM or ch in GSM_EXT for ch in full):
+        length, single, multi = sum(2 if ch in GSM_EXT else 1 for ch in full), 160, 153
+    else:
+        length, single, multi = len(full), 70, 67
+    return 1 if length <= single else -(-length // multi)
+
+
 def send_sms(campaign, session=None):
     if not sms_window_open():
         raise CampaignError("Les SMS commerciaux partent du lundi au samedi, entre 8 h et 20 h.")
@@ -351,6 +368,9 @@ def send_sms(campaign, session=None):
         raise CampaignError("Aucun client dans ce public.")
     messages = [{"phoneNumber": mobile_of(c), "message": personalize(campaign.message, values_of(c))}
                 for c in customers]
+    longest = max(sms_parts(m["message"]) for m in messages)
+    if longest > MAX_SMS_PARTS:
+        raise CampaignError(f"Message trop long : jusqu'à {longest} SMS par client. Visez un seul SMS (160 caractères).")
     sent = 0
     for start in range(0, len(messages), SMS_BATCH):
         _sms_post("/bulk-send", {

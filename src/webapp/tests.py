@@ -378,3 +378,19 @@ class RecipientsTests(TestCase):
         self.assertRegex(values["date_derniere_commande"], r"^\w+ \d{4}$")
         first_year = (timezone.now() - timedelta(days=500)).year  # première commande : il y a 500 jours
         self.assertEqual(campaigns.personalize("depuis {client_depuis}", values), f"depuis {first_year}")
+
+
+class SmsLengthTests(TestCase):
+    def test_sms_parts(self):
+        self.assertEqual(campaigns.sms_parts("a" * 146), 1)   # 146 + 14 (STOP) = 160
+        self.assertEqual(campaigns.sms_parts("a" * 147), 2)
+        self.assertEqual(campaigns.sms_parts("œ" * 10), 1)     # unicode : 70 caractères
+        self.assertEqual(campaigns.sms_parts("œ" * 60), 2)
+
+    def test_too_long_sms_is_refused(self):
+        customer = make_customer(first_name="Camille", phone_number="+33612345678")
+        make_order(customer, 50)
+        campaign = Campaign.objects.create(channel="sms", audience="tous", name="x", message="a" * 400)
+        with mock.patch.object(campaigns, "sms_window_open", return_value=True):
+            with self.assertRaises(campaigns.CampaignError):
+                campaigns.send_sms(campaign, session=FakeSms())

@@ -145,11 +145,24 @@
 		if (channel() === "sms") {
 			const info = smsInfo(personalize(message.value || message.placeholder));
 			const credits = info.parts * n;
-			let text = `${info.length} caractères · ${info.parts} SMS par client`;
-			if (n) text += ` · environ ${credits} crédit${credits > 1 ? "s" : ""} pour ${n} clients`;
-			if (info.odd.length) text += `. Caractères spéciaux (${info.odd.join(" ")}) : 70 caractères par SMS au lieu de 160`;
-			$("[data-sms-counter]").textContent = text + ".";
+			const limit = info.unicode ? 70 : 160;
+			// Jauge : un SMS de campagne doit tenir en un seul SMS, mention STOP comprise.
+			const gauge = $("[data-sms-gauge]");
+			gauge.dataset.level = info.parts === 1 ? "ok" : info.parts === 2 ? "warn" : "over";
+			$("[data-sms-gauge-bar]").style.width = `${Math.min(100, (info.length / limit) * 100)}%`;
+			$("[data-sms-gauge-label]").textContent = info.parts === 1
+				? `${info.length} / ${limit} caractères · 1 SMS par client`
+				: `${info.length} caractères · ${info.parts} SMS par client`;
+			let text = n ? `Environ ${credits} crédit${credits > 1 ? "s" : ""} pour ${n} clients. ` : "";
+			if (info.parts === 2) text += "Le client recevra 2 SMS à la suite : raccourcissez pour tenir en un seul. ";
+			if (info.parts > 2) text += `Trop long : ${info.parts} SMS à la suite, c'est pénible pour le client. Visez 160 caractères : une phrase, un lien. `;
+			if (info.odd.length) text += `Caractères spéciaux (${info.odd.join(" ")}) : 70 caractères par SMS au lieu de 160. `;
+			$("[data-sms-counter]").textContent = text;
 			$("[data-simplify]").hidden = !info.odd.length;
+			if (info.parts > 2) {
+				go.disabled = true;
+				go.textContent = "Message trop long pour un SMS";
+			}
 			$("[data-preview-sms]").textContent = `${personalize(message.value || message.placeholder)}\n${STOP}`;
 		} else {
 			const subject = personalize(form.elements.subject.value || form.elements.subject.placeholder);
@@ -195,9 +208,14 @@
 
 	const DRAFT_FIELDS = ["channel", "audience", "subject", "preheader", "message", "button_label", "button_url", "test_to"];
 
+	// Texte du message par canal (e-mail long, SMS court).
+	const texts = { email: "", sms: "" };
+	let shownChannel = channel();
+
 	function saveDraft() {
 		const draft = {};
 		DRAFT_FIELDS.forEach((name) => (draft[name] = form.elements[name].value));
+		draft.texts = { ...texts, [channel()]: message.value };
 		try { localStorage.setItem(DRAFT_KEY, JSON.stringify(draft)); } catch (e) { /* stockage indisponible */ }
 	}
 
@@ -215,6 +233,9 @@
 				field.value = draft[name];
 			}
 		});
+		if (draft.texts) Object.assign(texts, draft.texts);
+		shownChannel = channel();
+		texts[shownChannel] = message.value;
 	}
 
 	function clearDraft() {
@@ -318,6 +339,10 @@
 	form.addEventListener("input", update);
 	form.addEventListener("change", (event) => {
 		if (event.target.name === "channel") {
+			// Chaque canal garde son propre texte : un e-mail ne devient pas un SMS de 7 morceaux.
+			texts[shownChannel] = message.value;
+			shownChannel = channel();
+			message.value = texts[shownChannel] || "";
 			form.elements.id.value = "";
 			updateChannel();
 			fillTemplates();
