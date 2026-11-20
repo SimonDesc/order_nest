@@ -146,3 +146,31 @@ class OrderAttachment(models.Model):
         if self.file:
             return self.file.url
         return None
+
+
+class FollowUp(models.Model):
+    """Une relance faite auprès d'un client (devis, commande à retirer, ancien client)."""
+    KIND = (
+        ('devis', 'Devis en attente'),
+        ('retrait', 'Commande à retirer'),
+        ('reactivation', 'Ancien client'),
+    )
+    CHANNEL = (
+        ('sms', 'SMS'),
+        ('appel', 'Appel'),
+        ('autre', 'Autre'),
+    )
+
+    kind = models.CharField(max_length=16, choices=KIND, verbose_name="type")
+    channel = models.CharField(max_length=16, choices=CHANNEL, default='appel', verbose_name="moyen")
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name="follow_ups")
+    order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True, blank=True, related_name="follow_ups")
+    note = models.CharField(max_length=300, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = "relance"
+
+    def __str__(self):
+        return f'{self.get_kind_display()} · {self.customer} · {self.created_at:%d/%m/%Y}'

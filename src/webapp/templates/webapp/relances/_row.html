@@ -1,0 +1,30 @@
+<li class="relance-row{% if row.snoozed %} is-done{% endif %}"
+	data-kind="{{ row.kind }}" data-customer="{{ row.customer.pk }}" data-order="{{ row.order.pk|default:'' }}"
+	data-phone="{{ row.phone }}" data-name="{{ row.customer_name }}" data-sms="{{ row.sms }}">
+	<div class="relance-who">
+		<a class="relance-name" href="{% url 'webapp:customer-edit' pk=row.customer.pk %}">{{ row.customer_name|default:"Client sans nom" }}</a>
+		{% if row.phone %}<a class="relance-phone" href="tel:{{ row.phone|cut:'.'|cut:' ' }}">{{ row.phone }}</a>{% endif %}
+	</div>
+	<div class="relance-what">
+		{% if row.order %}
+		<a href="{% url 'webapp:order-edit' pk=row.order.pk %}">{{ row.order.label }}</a>
+		<small>{{ row.date }} · {{ row.age_label }}</small>
+		{% endif %}
+	</div>
+	<div class="relance-amount">
+		{% if row.due_display %}<strong>{{ row.due_display }}</strong> <small>dû</small>
+		{% elif row.paid %}<small>payée</small>
+		{% elif row.amount_display %}{{ row.amount_display }}{% endif %}
+	</div>
+	<div class="relance-status" data-status>
+		{% if row.last %}Relancé {{ row.last_label }} <small>({{ row.last.get_channel_display|lower }})</small>{% endif %}
+	</div>
+	<div class="relance-actions">
+		{% if row.phone %}<button type="button" class="relance-btn" data-action="sms">SMS</button>{% endif %}
+		{% if row.snoozed %}
+		<button type="button" class="relance-btn relance-btn-ghost" data-action="undo" data-follow-up="{{ row.last.pk }}" title="Annuler cette relance">Annuler</button>
+		{% else %}
+		<button type="button" class="relance-btn relance-btn-ghost" data-action="called" title="Je l'ai appelé ou prévenu autrement">Appelé ✓</button>
+		{% endif %}
+	</div>
+</li>

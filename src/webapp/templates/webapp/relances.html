@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+<title>Relances</title>
+{% endblock %}
+{% block heading %}Relances{% endblock %}
+{% block topbar_title %}Relances{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex flex-col items-center w-full">
+	<section class="home-stats relances w-full max-w-5xl mt-6 mb-10 px-4">
+		{% csrf_token %}
+
+		<div class="relance-tabs" role="tablist">
+			<button type="button" role="tab" aria-selected="true" data-tab="retrait">
+				Commandes à retirer <span class="relance-count">{{ pickup_todo|length }}</span>
+			</button>
+			<button type="button" role="tab" aria-selected="false" data-tab="devis">
+				Devis en attente <span class="relance-count">{{ quote_todo|length }}</span>
+			</button>
+			<button type="button" role="tab" aria-selected="false" data-tab="reactivation">
+				Anciens clients <span class="relance-count">{{ dormant_todo|length }}</span>
+			</button>
+		</div>
+
+		<!-- Commandes prêtes, pas encore retirées -->
+		<div class="chart-card" data-panel="retrait">
+			<h2 class="chart-title">Commandes prêtes, pas encore retirées</h2>
+			<p class="chart-subtitle">Les plus anciennes en premier. Un client relancé repasse en haut de liste au bout de {{ remind_again.retrait }} jours.</p>
+			<ul class="relance-list">
+				{% for row in pickup_todo %}{% include "webapp/relances/_row.html" %}{% empty %}<li class="relance-empty">Aucune commande à relancer.</li>{% endfor %}
+			</ul>
+			{% if pickup_done %}
+			<details class="relance-done">
+				<summary>Déjà relancés récemment ({{ pickup_done|length }})</summary>
+				<ul class="relance-list">{% for row in pickup_done %}{% include "webapp/relances/_row.html" %}{% endfor %}</ul>
+			</details>
+			{% endif %}
+		</div>
+
+		<!-- Devis en attente -->
+		<div class="chart-card" data-panel="devis" hidden>
+			<h2 class="chart-title">Devis de moins de 3 mois</h2>
+			<p class="chart-subtitle">Les plus anciens en premier : ce sont ceux qu'il faut relancer avant qu'ils ne refroidissent.</p>
+			<ul class="relance-list">
+				{% for row in quote_todo %}{% include "webapp/relances/_row.html" %}{% empty %}<li class="relance-empty">Aucun devis à relancer.</li>{% endfor %}
+			</ul>
+			{% if quote_done %}
+			<details class="relance-done">
+				<summary>Déjà relancés récemment ({{ quote_done|length }})</summary>
+				<ul class="relance-list">{% for row in quote_done %}{% include "webapp/relances/_row.html" %}{% endfor %}</ul>
+			</details>
+			{% endif %}
+			{% if quote_old %}
+			<details class="relance-done">
+				<summary>Devis de plus de 3 mois ({{ quote_old|length }}) : à classer sans suite ?</summary>
+				<ul class="relance-list">
+					{% for row in quote_old %}
+					<li class="relance-row relance-row-old">
+						<div class="relance-who"><span class="relance-name">{{ row.customer_name|default:"Client sans nom" }}</span></div>
+						<div class="relance-what"><a href="{% url 'webapp:order-edit' pk=row.order.pk %}">{{ row.order.label }}</a><small>{{ row.date }} · {{ row.age_label }}</small></div>
+						<div class="relance-amount">{{ row.amount_display }}</div>
+						<div class="relance-status" data-status></div>
+						<div class="relance-actions">
+							<button type="button" class="relance-btn relance-btn-ghost" data-close-quote="{% url 'webapp:quote-close' pk=row.order.pk %}">Classer sans suite</button>
+						</div>
+					</li>
+					{% endfor %}
+				</ul>
+			</details>
+			{% endif %}
+		</div>
+
+		<!-- Anciens clients -->
+		<div class="chart-card" data-panel="reactivation" hidden>
+			<h2 class="chart-title">Venus une seule fois, il y a 6 mois à 2 ans</h2>
+			<p class="chart-subtitle">Les plus gros paniers en premier. Un client relancé ne réapparaît pas avant 6 mois.</p>
+			<ul class="relance-list">
+				{% for row in dormant_todo|slice:":25" %}{% include "webapp/relances/_row.html" %}{% empty %}<li class="relance-empty">Aucun ancien client à recontacter.</li>{% endfor %}
+			</ul>
+			{% if dormant_todo|length > 25 %}
+			<details class="relance-done">
+				<summary>Voir les {{ dormant_todo|length|add:"-25" }} suivants</summary>
+				<ul class="relance-list">{% for row in dormant_todo|slice:"25:" %}{% include "webapp/relances/_row.html" %}{% endfor %}</ul>
+			</details>
+			{% endif %}
+			{% if dormant_done %}
+			<details class="relance-done">
+				<summary>Déjà recontactés ({{ dormant_done|length }})</summary>
+				<ul class="relance-list">{% for row in dormant_done %}{% include "webapp/relances/_row.html" %}{% endfor %}</ul>
+			</details>
+			{% endif %}
+		</div>
+	</section>
+</div>
+
+<!-- Envoi d'un SMS -->
+<dialog id="sms-dialog" class="relance-dialog">
+	<form method="dialog">
+		<h2 class="chart-title">SMS à <span data-sms-name></span></h2>
+		<label class="relance-label" for="sms-phone">Téléphone</label>
+		<input id="sms-phone" type="text" class="relance-input">
+		<label class="relance-label" for="sms-text">Message</label>
+		<textarea id="sms-text" rows="5" class="relance-input"></textarea>
+		<p class="hbar-note"><span data-sms-length></span> caractères · 2 SMS maximum (306 caractères). « STOP SMS » est ajouté automatiquement.</p>
+		<p class="relance-error" data-sms-error hidden></p>
+		<div class="relance-dialog-actions">
+			<button type="button" class="relance-btn relance-btn-ghost" data-sms-cancel>Annuler</button>
+			<button type="button" class="relance-btn" data-sms-send>Envoyer le SMS</button>
+		</div>
+	</form>
+</dialog>
+
+<script>
+	window.RELANCES = {
+		followUpUrl: "{% url 'webapp:follow-up-create' %}",
+		undoUrl: "{% url 'webapp:follow-up-delete' pk=0 %}",
+		smsUrl: "{% url 'webapp:send_sms' %}",
+	};
+</script>
+<script src="{% static 'js/relances.js' %}" defer></script>
+{% endblock %}

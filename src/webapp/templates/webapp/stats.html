@@ -1,0 +1,232 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+<title>Statistiques</title>
+{% endblock %}
+{% block heading %}Statistiques{% endblock %}
+{% block topbar_title %}Statistiques{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex flex-col items-center w-full">
+	<section class="home-stats w-full max-w-5xl mt-6 mb-10 px-4" aria-label="Statistiques">
+
+		<!-- Chiffres clés de l'année -->
+		<h2 class="stats-section">Depuis le 1<sup>er</sup> janvier <small>comparé {{ stats.headline_compare }}</small></h2>
+		<div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+			{% for h in stats.headlines %}
+			<div class="stat-tile">
+				<div class="stat-label">{{ h.label }}</div>
+				<div class="stat-value">{{ h.display }}</div>
+				<div class="stat-delta stat-delta-{{ h.trend }}">
+					{% if h.delta_pct is not None %}<span class="stat-delta-value">{% if h.trend == 'up' %}▲{% elif h.trend == 'down' %}▼{% else %}={% endif %} {{ h.delta_abs }}&nbsp;%</span>{% endif %}
+					<span class="stat-compare">vs {{ h.previous_display }}</span>
+				</div>
+			</div>
+			{% endfor %}
+		</div>
+
+		<!-- Activité : une courbe par année -->
+		<div class="chart-card mt-4" data-chart-card>
+			<div class="flex flex-wrap items-start justify-between gap-3">
+				<div>
+					<h2 class="chart-title">Activité mois par mois, année par année</h2>
+				</div>
+				<div class="chart-toggle" role="group" aria-label="Mesure affichée">
+					<button type="button" data-metric="orders" aria-pressed="true">Commandes</button>
+					<button type="button" data-metric="revenue" aria-pressed="false">Chiffre d'affaires</button>
+					<button type="button" data-metric="customers" aria-pressed="false">Nouveaux clients</button>
+				</div>
+			</div>
+			<div class="chart-legend" data-years-legend></div>
+			<div id="years-chart" class="activity-chart history-chart"></div>
+			<p class="hbar-note">Pointillé : mois en cours.<span data-metric-note="revenue" hidden> Commandes non chiffrées exclues.</span></p>
+			{% with t=stats.years_table %}
+			<details class="chart-table">
+				<summary>Voir le tableau</summary>
+				<table data-metric-table="orders">
+					<thead><tr><th>Commandes</th>{% for y in t.years %}<th>{{ y }}</th>{% endfor %}</tr></thead>
+					<tbody>{% for r in t.rows %}<tr><td>{{ r.label }}</td>{% for c in r.cells %}<td>{% if c %}{{ c.orders }}{% if c.partial %}*{% endif %}{% else %}–{% endif %}</td>{% endfor %}</tr>{% endfor %}</tbody>
+				</table>
+				<table data-metric-table="revenue" hidden>
+					<thead><tr><th>Chiffre d'affaires</th>{% for y in t.years %}<th>{{ y }}</th>{% endfor %}</tr></thead>
+					<tbody>{% for r in t.rows %}<tr><td>{{ r.label }}</td>{% for c in r.cells %}<td>{% if c %}{{ c.revenue }}{% if c.partial %}*{% endif %}{% else %}–{% endif %}</td>{% endfor %}</tr>{% endfor %}</tbody>
+				</table>
+				<table data-metric-table="customers" hidden>
+					<thead><tr><th>Nouveaux clients</th>{% for y in t.years %}<th>{{ y }}</th>{% endfor %}</tr></thead>
+					<tbody>{% for r in t.rows %}<tr><td>{{ r.label }}</td>{% for c in r.cells %}<td>{% if c %}{{ c.customers }}{% if c.partial %}*{% endif %}{% else %}–{% endif %}</td>{% endfor %}</tr>{% endfor %}</tbody>
+				</table>
+				<p class="hbar-note">* mois en cours.</p>
+			</details>
+			{% endwith %}
+		</div>
+
+		<!-- Bilan par année -->
+		<div class="chart-card mt-4">
+			<h2 class="chart-title">Bilan par année</h2>
+			<div class="overflow-x-auto">
+				<table class="year-table">
+					<thead>
+						<tr>
+							<th>Année</th>
+							<th>Commandes</th>
+							<th>Chiffre d'affaires</th>
+							<th>Panier moyen</th>
+							<th>Nouveaux clients</th>
+							<th>Clients fidèles</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for y in stats.years reversed %}
+						<tr>
+							<td>{{ y.year }}{% if y.partial %} <small>en cours</small>{% endif %}</td>
+							<td>{{ y.orders }}{% if y.orders_pct is not None %} <span class="stat-delta-{{ y.orders_trend }} year-delta">{% if y.orders_pct > 0 %}+{% endif %}{{ y.orders_pct }}&nbsp;%</span>{% endif %}</td>
+							<td>{{ y.revenue_display }}{% if y.revenue_pct is not None %} <span class="stat-delta-{{ y.revenue_trend }} year-delta">{% if y.revenue_pct > 0 %}+{% endif %}{{ y.revenue_pct }}&nbsp;%</span>{% endif %}</td>
+							<td>{{ y.basket_display }}</td>
+							<td>{{ y.customers }}</td>
+							<td>{% if y.loyalty is None %}–{% else %}{{ y.loyalty }}&nbsp;%{% endif %}</td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+			<p class="hbar-note">Panier moyen hors commandes non chiffrées. Clients fidèles : part des commandes de clients déjà venus.</p>
+		</div>
+
+		<!-- Suivi en cours : ce qui demande une action -->
+		{% with p=stats.pickup a=stats.actions w=stats.workshop %}
+		<h2 class="stats-section mt-8">Suivi en cours</h2>
+		<div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+			<a class="stat-tile todo-tile" href="#a-relancer">
+				<div class="stat-label">Prêtes, pas encore retirées</div>
+				<div class="stat-value">{{ p.count }}</div>
+				<div class="stat-delta">{% if p.to_remind_count %}<span class="stat-warn">dont {{ p.to_remind_count }} à relancer</span>{% else %}aucune à relancer{% endif %}</div>
+			</a>
+			<a class="stat-tile todo-tile" href="#a-relancer">
+				<div class="stat-label">Argent à récupérer</div>
+				<div class="stat-value">{{ a.to_collect_display }}</div>
+				<div class="stat-delta">{{ a.unpaid_count }} commande{{ a.unpaid_count|pluralize }} prête{{ a.unpaid_count|pluralize }} non payée{{ a.unpaid_count|pluralize }}</div>
+			</a>
+			<div class="stat-tile">
+				<div class="stat-label">À réaliser à l'atelier</div>
+				<div class="stat-value">{{ w.open }}</div>
+				<div class="stat-delta">{% if w.urgent %}<span class="stat-urgent">dont {{ w.urgent }} urgente{{ w.urgent|pluralize }}</span>{% else %}aucune urgente{% endif %}</div>
+			</div>
+			<div class="stat-tile">
+				<div class="stat-label">Sans prix</div>
+				<div class="stat-value">{{ a.unpriced_count }}</div>
+				<div class="stat-delta">commande{{ a.unpriced_count|pluralize }} à chiffrer</div>
+			</div>
+		</div>
+
+		<div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-4">
+			<div id="a-relancer" class="chart-card lg:col-span-2">
+				<h2 class="chart-title">À relancer : prêtes depuis plus d'un mois</h2>
+				{% if p.to_remind %}
+				<p class="chart-subtitle"><strong>{{ p.to_remind_count }}</strong> client{{ p.to_remind_count|pluralize }} à prévenir · <strong>{{ p.to_remind_due_display }}</strong> restant à payer</p>
+				<div class="overflow-x-auto">
+					<table class="remind-table">
+						<thead>
+							<tr><th>Commande</th><th>Client</th><th>Téléphone</th><th>Commandée le</th><th>Reste à payer</th></tr>
+						</thead>
+						<tbody>
+							{% for o in p.to_remind %}
+							<tr{% if forloop.counter > 8 %} class="remind-more" hidden{% endif %}>
+								<td><a href="{% url 'webapp:order-edit' pk=o.pk %}">{{ o.label }}</a></td>
+								<td>{{ o.customer }}</td>
+								<td class="num">{% if o.phone %}<a href="tel:{{ o.phone|cut:' ' }}">{{ o.phone }}</a>{% endif %}</td>
+								<td class="num">{{ o.date }} <small>({{ o.age_label }})</small></td>
+								<td class="num">{% if o.payment == 'En attente' %}<strong>{{ o.due_display }}</strong>{% else %}<small>payée</small>{% endif %}</td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+				{% if p.to_remind_count > 8 %}
+				<button type="button" class="table-more" onclick="document.querySelectorAll('.remind-more').forEach(r => r.hidden = !r.hidden); this.textContent = this.textContent.startsWith('Voir') ? 'Réduire' : 'Voir les {{ p.to_remind_count }}';">Voir les {{ p.to_remind_count }}</button>
+				{% endif %}
+				{% else %}
+				<p class="chart-subtitle">Aucune commande prête depuis plus d'un mois.</p>
+				{% endif %}
+			</div>
+
+			<div class="chart-card flex flex-col">
+				<h2 class="chart-title">Atelier</h2>
+				{% if w.total %}
+				<div class="segment-bar" role="img" aria-label="{{ w.urgent }} urgentes, {{ w.todo }} à faire, {{ w.done }} prêtes à retirer">
+					{% if w.urgent %}<span class="seg seg-urgent" style="flex-grow: {{ w.urgent }}" title="{{ w.urgent }} urgente{{ w.urgent|pluralize }}"></span>{% endif %}
+					{% if w.todo %}<span class="seg seg-todo" style="flex-grow: {{ w.todo }}" title="{{ w.todo }} à faire"></span>{% endif %}
+					{% if w.done %}<span class="seg seg-done" style="flex-grow: {{ w.done }}" title="{{ w.done }} prêtes à retirer"></span>{% endif %}
+				</div>
+				{% endif %}
+				<ul class="segment-legend">
+					<li><i class="legend-swatch seg-urgent"></i>Urgentes<span>{{ w.urgent }}</span></li>
+					<li><i class="legend-swatch seg-todo"></i>À faire<span>{{ w.todo }}</span></li>
+					<li><i class="legend-swatch seg-done"></i>Prêtes, à retirer<span>{{ w.done }}</span></li>
+				</ul>
+				<ul class="workshop-alerts">
+					<li class="{% if w.late %}alert-critical{% endif %}"><span>{% if w.late %}⚠ {% endif %}Date de livraison dépassée</span><strong>{{ w.late }}</strong></li>
+					<li><span>À livrer dans les 7 jours</span><strong>{{ w.due_soon }}</strong></li>
+					<li class="{% if w.stale_open %}alert-warning{% endif %}"><span>Commandées il y a plus d'un mois, pas finies</span><strong>{{ w.stale_open }}</strong></li>
+					<li><span>Devis de moins d'un mois</span><strong>{{ w.recent_quotes }}</strong></li>
+				</ul>
+			</div>
+		</div>
+		{% endwith %}
+
+		<!-- Tendances : grandes catégories par période -->
+		<div class="trends-head mt-8">
+			<h2 class="stats-section">Tendances</h2>
+			<div class="flex flex-wrap gap-2">
+				<div class="chart-toggle" role="group" aria-label="Période" data-trend-period>
+					<button type="button" data-value="month" aria-pressed="false">Mois</button>
+					<button type="button" data-value="quarter" aria-pressed="true">Trimestre</button>
+					<button type="button" data-value="year" aria-pressed="false">Année</button>
+				</div>
+				<div class="chart-toggle" role="group" aria-label="Affichage" data-trend-mode>
+					<button type="button" data-value="count" aria-pressed="true">Quantité</button>
+					<button type="button" data-value="share" aria-pressed="false">Part en %</button>
+				</div>
+			</div>
+		</div>
+
+		{% with c=stats.trends.components %}
+		<div class="chart-card" data-components>
+			<div class="flex flex-wrap items-start justify-between gap-3">
+				<h2 class="chart-title">{{ c.title }}</h2>
+				<div class="chart-toggle" role="group" aria-label="Détail" data-components-view>
+					<button type="button" data-value="all" aria-pressed="true">Ensemble</button>
+					<button type="button" data-value="finish" aria-pressed="false">Baguettes</button>
+					<button type="button" data-value="glass" aria-pressed="false">Verres</button>
+					<button type="button" data-value="mat" aria-pressed="false">Passe-partout</button>
+				</div>
+			</div>
+			<div data-view="all">
+				<div class="chart-legend" data-legend></div>
+				<div class="activity-chart trend-chart trend-chart-wide" data-chart></div>
+			</div>
+			{% for d in c.details %}
+			<div data-view="{{ d.id }}" hidden>
+				<div class="chart-legend" data-legend></div>
+				<div class="activity-chart trend-chart trend-chart-wide" data-chart></div>
+			</div>
+			{% endfor %}
+		</div>
+		{% endwith %}
+
+		<div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-4">
+			{% for chart in stats.trends.charts %}
+			<div class="chart-card">
+				<h2 class="chart-title">{{ chart.title }}</h2>
+				<div class="chart-legend" data-trend-legend="{{ chart.id }}"></div>
+				<div class="activity-chart trend-chart" data-trend-chart="{{ chart.id }}"></div>
+			</div>
+			{% endfor %}
+		</div>
+
+		{{ stats.history|json_script:"history-data" }}
+		{{ stats.trends|json_script:"trends-data" }}
+			</section>
+</div>
+<script src="{% static 'js/home_charts.js' %}" defer></script>
+{% endblock %}

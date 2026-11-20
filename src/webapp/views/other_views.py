@@ -12,6 +12,7 @@ from django.utils import timezone
 # Imports relatifs à l'application
 from ..forms import NewCustomerForm
 from ..models import Order, Customer, OrderAttachment
+from .home_stats import build_home_stats, build_stats_page
 
 
 class WebappHome(ListView):
@@ -50,56 +51,7 @@ class WebappHome(ListView):
             if hasattr(field, "verbose_name")
         }
 
-        # Statistiques temporelles
-        today = timezone.now()
-        current_month_start = today.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
-        last_month_start = (current_month_start - timezone.timedelta(days=1)).replace(day=1)
-        current_year_start = today.replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0)
-        last_year_start = current_year_start.replace(year=today.year - 1)
-        last_year_end = current_year_start - timezone.timedelta(seconds=1)
-
-        # Commandes ce mois vs mois-1
-        orders_this_month = Order.objects.filter(created_at__gte=current_month_start).count()
-        orders_last_month = Order.objects.filter(
-            created_at__gte=last_month_start,
-            created_at__lt=current_month_start
-        ).count()
-
-        # Commandes cette année vs année-1
-        orders_this_year = Order.objects.filter(created_at__gte=current_year_start).count()
-        orders_last_year = Order.objects.filter(
-            created_at__gte=last_year_start,
-            created_at__lt=current_year_start
-        ).count()
-
-        # Nouveaux clients ce mois vs mois-1
-        customers_this_month = Customer.objects.filter(created_at__gte=current_month_start).count()
-        customers_last_month = Customer.objects.filter(
-            created_at__gte=last_month_start,
-            created_at__lt=current_month_start
-        ).count()
-
-        # Stats actuelles (commandes en cours)
-        orders_in_progress = Order.objects.filter(status="En cours").count()
-        orders_urgent = Order.objects.filter(status="Urgent").count()
-        orders_done = Order.objects.filter(status="Terminée").count()
-
-        context["stats"] = {
-            "orders_this_month": orders_this_month,
-            "orders_last_month": orders_last_month,
-            "orders_month_diff": orders_this_month - orders_last_month,
-            "orders_this_year": orders_this_year,
-            "orders_last_year": orders_last_year,
-            "orders_year_diff": orders_this_year - orders_last_year,
-            "customers_this_month": customers_this_month,
-            "customers_last_month": customers_last_month,
-            "customers_month_diff": customers_this_month - customers_last_month,
-            "orders_in_progress": orders_in_progress,
-            "orders_urgent": orders_urgent,
-            "orders_done": orders_done,
-            "current_year": today.year,
-            "last_year": today.year - 1,
-        }
+        context["home_stats"] = build_home_stats()
 
         return context
 
@@ -128,6 +80,16 @@ class WebappHome(ListView):
             .order_by("priority", "-created_at")[:99]
         )
         return queryset
+
+
+class StatsView(TemplateView):
+    """Page Statistiques : activité depuis le début, bilan par année, suivi de l'atelier."""
+    template_name = "webapp/stats.html"
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["stats"] = build_stats_page()
+        return context
 
 
 class CustomerView(ListView):

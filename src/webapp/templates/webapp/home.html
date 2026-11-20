@@ -8,66 +8,63 @@
 
 
 {% block content %}
+{% load static %}
 
 <div class="min-h-screen flex flex-col items-center">
-	<!-- Widget Statistiques -->
-	<div class="w-full max-w-5xl mt-6 mb-6 px-4">
-		<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-			<!-- Commandes ce mois -->
-			<div class="bg-white rounded-xl shadow p-4 ring-1 ring-gray-900/5">
-				<div class="text-sm text-gray-500">Commandes ce mois</div>
-				<div class="flex flex-wrap items-baseline gap-x-2">
-					<span class="text-2xl font-bold text-gray-900">{{ stats.orders_this_month }}</span>
-					<span class="text-sm text-gray-500">vs {{ stats.orders_last_month }} le mois dernier</span>
-				</div>
-				{% if stats.orders_month_diff > 0 %}
-				<div class="text-green-600 text-xs mt-1 font-medium">+{{ stats.orders_month_diff }}</div>
-				{% elif stats.orders_month_diff < 0 %}
-				<div class="text-red-600 text-xs mt-1 font-medium">{{ stats.orders_month_diff }}</div>
-				{% endif %}
-			</div>
-
-			<!-- Commandes cette année -->
-			<div class="bg-white rounded-xl shadow p-4 ring-1 ring-gray-900/5">
-				<div class="text-sm text-gray-500">Commandes {{ stats.current_year }}</div>
-				<div class="flex flex-wrap items-baseline gap-x-2">
-					<span class="text-2xl font-bold text-gray-900">{{ stats.orders_this_year }}</span>
-					<span class="text-sm text-gray-500">vs {{ stats.orders_last_year }} en {{ stats.last_year }}</span>
-				</div>
-				{% if stats.orders_year_diff > 0 %}
-				<div class="text-green-600 text-xs mt-1 font-medium">+{{ stats.orders_year_diff }}</div>
-				{% elif stats.orders_year_diff < 0 %}
-				<div class="text-red-600 text-xs mt-1 font-medium">{{ stats.orders_year_diff }}</div>
-				{% endif %}
-			</div>
-
-			<!-- Nouveaux clients -->
-			<div class="bg-white rounded-xl shadow p-4 ring-1 ring-gray-900/5">
-				<div class="text-sm text-gray-500">Nouveaux clients ce mois</div>
-				<div class="flex flex-wrap items-baseline gap-x-2">
-					<span class="text-2xl font-bold text-gray-900">{{ stats.customers_this_month }}</span>
-					<span class="text-sm text-gray-500">vs {{ stats.customers_last_month }} le mois dernier</span>
-				</div>
-				{% if stats.customers_month_diff > 0 %}
-				<div class="text-green-600 text-xs mt-1 font-medium">+{{ stats.customers_month_diff }}</div>
-				{% elif stats.customers_month_diff < 0 %}
-				<div class="text-red-600 text-xs mt-1 font-medium">{{ stats.customers_month_diff }}</div>
-				{% endif %}
-			</div>
-
-			<!-- Statuts actuels -->
-			<div class="bg-white rounded-xl shadow p-4 ring-1 ring-gray-900/5">
-				<div class="text-sm text-gray-500">En ce moment</div>
-				<div class="flex flex-wrap gap-2 mt-1">
-					{% if stats.orders_urgent > 0 %}
-					<span class="status-urgent text-sm">{{ stats.orders_urgent }} urgent{{ stats.orders_urgent|pluralize }}</span>
+	<!-- Statistiques -->
+	<section class="home-stats w-full max-w-5xl mt-6 mb-6 px-4" aria-label="Statistiques">
+		<!-- Indicateurs du mois -->
+		<div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+			{% for kpi in home_stats.kpis %}
+			<div class="stat-tile">
+				<div class="stat-label">{{ kpi.label }}</div>
+				<div class="stat-value">{{ kpi.display }}</div>
+				<div class="stat-delta stat-delta-{{ kpi.trend }}">
+					{% if kpi.delta_pct is None %}
+					<span class="stat-compare">{{ kpi.previous_display }} {{ kpi.compare }}</span>
+					{% else %}
+					<span class="stat-delta-value">{% if kpi.trend == 'up' %}▲{% elif kpi.trend == 'down' %}▼{% else %}={% endif %} {{ kpi.delta_abs }}&nbsp;%</span>
+					<span class="stat-compare">vs {{ kpi.previous_display }} {{ kpi.compare }}</span>
 					{% endif %}
-					<span class="status-en-cours text-sm">{{ stats.orders_in_progress }} à faire</span>
-					<span class="status-terminee text-sm">{{ stats.orders_done }} terminée{{ stats.orders_done|pluralize }}</span>
 				</div>
+				<div class="sparkline" data-spark="{{ kpi.id }}" aria-hidden="true"></div>
 			</div>
+			{% endfor %}
+
+			{% with a=home_stats.actions %}
+			<!-- À chiffrer -->
+			<div class="stat-tile">
+				<div class="stat-label">À chiffrer</div>
+				<div class="stat-value">{{ a.unpriced_count }}</div>
+				<div class="stat-delta">
+					commande{{ a.unpriced_count|pluralize }} sans prix{% if a.unpriced_count %} ({{ a.unpriced_open }} en cours{% if a.unpriced_done %}, {{ a.unpriced_done }} terminée{{ a.unpriced_done|pluralize }}{% endif %}){% endif %}
+				</div>
+				{% if a.unpriced %}
+				<details class="stat-more">
+					<summary>Voir les plus anciennes</summary>
+					<ul>
+						{% for o in a.unpriced %}
+						<li><a href="{% url 'webapp:order-edit' pk=o.pk %}">{{ o.label }}</a><span>{{ o.age_label }}</span></li>
+						{% endfor %}
+					</ul>
+				</details>
+				{% endif %}
+			</div>
+
+			<!-- À encaisser -->
+			<div class="stat-tile">
+				<div class="stat-label">À encaisser</div>
+				<div class="stat-value">{{ a.to_collect_display }}</div>
+				<div class="stat-delta">
+					sur {{ a.unpaid_count }} commande{{ a.unpaid_count|pluralize }} terminée{{ a.unpaid_count|pluralize }} non réglée{{ a.unpaid_count|pluralize }}{% if a.has_stale_collect %}, <span class="stat-warn">dont {{ a.stale_collect_display }} depuis plus d'un mois</span>{% endif %}
+				</div>
+				<a class="stat-more" href="{% url 'webapp:stats' %}#a-relancer">Voir les retraits en attente →</a>
+			</div>
+			{% endwith %}
 		</div>
-	</div>
+		<p class="stats-link"><a href="{% url 'webapp:stats' %}">Toutes les statistiques →</a></p>
+		{{ home_stats.kpis|json_script:"kpi-data" }}
+	</section>
 
 	<!-- Cartes des commandes -->
 	<div class="flex flex-wrap gap-5 mt-6 pb-5 w-full max-w-5xl justify-center">
@@ -353,6 +350,7 @@
 	</div>
 </div>
 
+<script src="{% static 'js/home_charts.js' %}" defer></script>
 <script>
 	function openPopup(popupId) {
 		var popup = document.getElementById(popupId);
