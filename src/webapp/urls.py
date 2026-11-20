@@ -10,6 +10,7 @@ from .views.customers import autocomplete, get_customers, CreateCustomer
 from .views.other_views import WebappHome, Dashboard, CustomerView, EditCustomer, StatsView
 from .views.api import DeleteOrderAttachment, get_canvas, get_orders, get_orders_count, save_attachment, deactivate_customer
 from .views.relances import RelancesView, brevo_sync, follow_up_create, follow_up_delete, quote_close
+from .views.campagnes import CampagnesView, campaign_action, campaign_credits, campaign_preview, campaign_recipients, campaign_stats, template_delete, template_save
 from .views.sms import modal_sms, modal_sms_customer, send_sms, get_credit_sms
 from .views.export import export_orders_csv, export_orders_csv_filtered
 
@@ -30,6 +31,14 @@ urlpatterns = [
     path('relances/relance/<int:pk>/annuler/', follow_up_delete, name='follow-up-delete'),
     path('relances/devis/<int:pk>/sans-suite/', quote_close, name='quote-close'),
     path('relances/brevo/synchroniser/', brevo_sync, name='brevo-sync'),
+    path('campagnes/', CampagnesView.as_view(), name='campagnes'),
+    path('campagnes/envoyer/', campaign_action, name='campaign-action'),
+    path('campagnes/apercu/', campaign_preview, name='campaign-preview'),
+    path('campagnes/credits/', campaign_credits, name='campaign-credits'),
+    path('campagnes/<int:pk>/stats/', campaign_stats, name='campaign-stats'),
+    path('campagnes/destinataires/', campaign_recipients, name='campaign-recipients'),
+    path('campagnes/modeles/', template_save, name='campaign-template-save'),
+    path('campagnes/modeles/<int:pk>/supprimer/', template_delete, name='campaign-template-delete'),
 
     # Commandes
     path('orders/create/', CreateOrder.as_view(), name='order-create'),

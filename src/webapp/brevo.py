@@ -25,9 +25,10 @@ import logging
 
 import environ
 import requests
-from django.db.models import Count, Max, Min, Q, Sum
+from django.db.models import Q, Sum
 
 from .models import Customer
+from .variables import BREVO_TEXT_ATTRIBUTES, VARIABLES, values_of, with_variables
 
 logger = logging.getLogger(__name__)
 env = environ.Env()
@@ -44,6 +45,8 @@ ATTRIBUTES = {
     "PREMIERE_COMMANDE": "date",
     "TOTAL_DEPENSE": "float",
     "CLIENT_FIDELE": "boolean",
+    # Variables des campagnes (texte prêt à afficher : « mars 2025 », « Aquarelle de Venise »…)
+    **{name: "text" for name in BREVO_TEXT_ATTRIBUTES},
 }
 
 # Commandes qui comptent : ni les devis, ni les commandes annulées.
@@ -133,6 +136,10 @@ def contact_payload(customer):
         attributes["DERNIERE_COMMANDE"] = customer.last_order.date().isoformat()
     if customer.first_order:
         attributes["PREMIERE_COMMANDE"] = customer.first_order.date().isoformat()
+    values = values_of(customer)
+    for key, var in VARIABLES.items():
+        if var["brevo"] in BREVO_TEXT_ATTRIBUTES:
+            attributes[var["brevo"]] = values[key]
     phone = str(customer.phone_number or "")
     if customer.marketing_sms and phone.startswith("+"):
         attributes["SMS"] = phone
@@ -147,13 +154,8 @@ def contact_payload(customer):
 
 def customers_to_sync():
     return (
-        Customer.objects.exclude(mail="")
-        .annotate(
-            nb_orders=Count("order", filter=COUNTED, distinct=True),
-            last_order=Max("order__created_at", filter=COUNTED),
-            first_order=Min("order__created_at", filter=COUNTED),
-            total_spent=Sum("order__products__selling_price_unit", filter=COUNTED),
-        )
+        with_variables(Customer.objects.exclude(mail=""))
+        .annotate(total_spent=Sum("order__products__selling_price_unit", filter=COUNTED))
         .order_by("pk")
     )
 

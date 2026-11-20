@@ -1,0 +1,260 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+<title>Campagnes</title>
+{% endblock %}
+{% block heading %}Campagnes{% endblock %}
+{% block topbar_title %}Campagnes{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex flex-col items-center w-full">
+	<section class="home-stats campagnes w-full max-w-6xl mt-6 mb-10 px-4">
+		{% csrf_token %}
+
+		<div class="brevo-bar">
+			<div>
+				<strong>Envoyer un message à vos clients</strong>
+				<span>Seuls les clients qui acceptent les e-mails ou les SMS (fiche client) le reçoivent.</span>
+			</div>
+			<div class="brevo-status campagne-credits" data-credits-url="{% url 'webapp:campaign-credits' %}">
+				<span data-credit="email">E-mails : …</span>
+				<span data-credit="sms">SMS : …</span>
+			</div>
+		</div>
+
+		{% if not brevo_configured %}
+		<p class="campagne-alert">Brevo n'est pas relié : les e-mails ne peuvent pas partir (clé <code>BREVO_API_KEY</code> absente).</p>
+		{% endif %}
+
+		<form class="campagne-layout" id="campagne-form" novalidate>
+			<input type="hidden" name="id" value="">
+
+			<div class="chart-card campagne-compose">
+				<!-- 1. Canal -->
+				<div class="campagne-step">
+					<h2 class="chart-title"><span class="campagne-num">1</span> Canal</h2>
+					<div class="chart-toggle campagne-channel" role="radiogroup" aria-label="Canal">
+						<label><input type="radio" name="channel" value="email" checked> E-mail</label>
+						<label><input type="radio" name="channel" value="sms"> SMS</label>
+					</div>
+				</div>
+
+				<!-- 2. Public -->
+				<div class="campagne-step">
+					<h2 class="chart-title"><span class="campagne-num">2</span> Public</h2>
+					<div class="campagne-audiences">
+						{% for a in audiences %}
+						<label class="campagne-audience">
+							<input type="radio" name="audience" value="{{ a.key }}" {% if forloop.first %}checked{% endif %}
+								data-email="{{ a.email }}" data-sms="{{ a.sms }}">
+							<span class="campagne-audience-label">{{ a.label }}</span>
+							<span class="campagne-audience-count" data-count></span>
+							<small>{{ a.hint }}</small>
+						</label>
+						{% endfor %}
+					</div>
+					<div class="campagne-who">
+						<span data-who-summary></span>
+						<button type="button" class="relance-btn relance-btn-ghost" data-open-recipients>Voir les destinataires</button>
+					</div>
+				</div>
+
+				<!-- 3. Message -->
+				<div class="campagne-step">
+					<h2 class="chart-title"><span class="campagne-num">3</span> Message</h2>
+					<div class="campagne-templates">
+						<select class="relance-input" data-template-select aria-label="Modèles enregistrés">
+							<option value="">Partir d'un modèle…</option>
+						</select>
+						<button type="button" class="relance-btn relance-btn-ghost" data-template-save>Enregistrer comme modèle</button>
+						<button type="button" class="campagne-link campagne-danger" data-template-delete hidden>Supprimer le modèle</button>
+					</div>
+					<p class="campagne-hint" data-template-result role="status"></p>
+					<div data-only="email">
+						<label class="relance-label" for="c-subject">Objet de l'e-mail</label>
+						<input class="relance-input" id="c-subject" name="subject" maxlength="200" placeholder="{{ examples.email.subject }}">
+					</div>
+					<label class="relance-label" for="c-message">Texte</label>
+					<div class="campagne-vars" role="group" aria-label="Insérer une variable">
+						<span>Insérer :</span>
+						{% for v in variables %}
+						<button type="button" class="campagne-var" data-insert="{{ '{' }}{{ v.key }}{{ '}' }}" title="Remplacé par {{ v.hint }}, ex. « {{ v.sample }} »">{{ v.label }}</button>
+						{% endfor %}
+					</div>
+					<textarea class="relance-input campagne-message" id="c-message" name="message" rows="8"
+						data-example-email="{{ examples.email.message }}" data-example-sms="{{ examples.sms.message }}"></textarea>
+					<p class="relance-error" data-unknown-vars hidden></p>
+					<p class="campagne-todo" data-todo hidden></p>
+					<p class="campagne-hint">
+						Les variables se placent là où est le curseur, dans le texte<span data-only="email"> ou l'objet</span>. Si l'information manque (client sans prénom), elle disparaît : « Bonjour {prenom}, » devient « Bonjour, ».
+						<span data-only="email">Une ligne vide sépare deux paragraphes.</span>
+					</p>
+					<p class="campagne-hint" data-only="sms">
+						<span data-sms-counter></span>
+						<button type="button" class="campagne-insert" data-simplify hidden>Remplacer ces caractères</button>
+						La mention « STOP au 36180 » est ajoutée automatiquement (obligatoire).
+					</p>
+
+					<div class="campagne-row" data-only="email">
+						<div>
+							<label class="relance-label" for="c-btn-label">Bouton (facultatif)</label>
+							<input class="relance-input" id="c-btn-label" name="button_label" maxlength="60" placeholder="Voir la galerie">
+						</div>
+						<div>
+							<label class="relance-label" for="c-btn-url">Lien du bouton</label>
+							<input class="relance-input" id="c-btn-url" name="button_url" type="url" placeholder="https://galerielibrecours.fr">
+						</div>
+					</div>
+				</div>
+
+				<!-- 4. Test -->
+				<div class="campagne-step">
+					<h2 class="chart-title"><span class="campagne-num">4</span> Vérifier</h2>
+					<div class="campagne-test">
+						<input class="relance-input" name="test_to" data-placeholder-email="votre adresse e-mail" data-placeholder-sms="votre portable (06…)">
+						<button type="button" class="relance-btn relance-btn-ghost" data-action="test">M'envoyer un test</button>
+					</div>
+				</div>
+
+				<!-- 5. Envoi -->
+				<div class="campagne-step campagne-send">
+					<h2 class="chart-title"><span class="campagne-num">5</span> Envoyer</h2>
+					<div data-only="email" class="campagne-when">
+						<label><input type="radio" name="when" value="now" checked> Maintenant</label>
+						<label><input type="radio" name="when" value="later"> Programmer le</label>
+						<input type="datetime-local" class="relance-input" name="scheduled_at">
+					</div>
+					<p class="campagne-hint" data-only="sms">
+						{% if sms_window_open %}Les SMS partent immédiatement.{% else %}<strong>Hors horaires :</strong> les SMS commerciaux ne partent que du lundi au samedi, de 8 h à 20 h.{% endif %}
+					</p>
+					<button type="button" class="relance-btn campagne-go" data-action="send">Envoyer</button>
+					<p class="campagne-result" data-result role="status"></p>
+				</div>
+			</div>
+
+			<!-- Aperçu -->
+			<div class="chart-card campagne-preview">
+				<div class="campagne-preview-head">
+					<h2 class="chart-title">Aperçu en direct</h2>
+					<div class="chart-toggle" role="group" aria-label="Taille de l'aperçu" data-only="email">
+						<button type="button" data-device="desktop" aria-pressed="true">Ordinateur</button>
+						<button type="button" data-device="mobile" aria-pressed="false">Mobile</button>
+					</div>
+				</div>
+				<div data-only="email">
+					<dl class="campagne-envelope">
+						<dt>De</dt><dd>{{ sender.name }} &lt;{{ sender.email }}&gt;</dd>
+						<dt>Objet</dt><dd data-preview-subject></dd>
+					</dl>
+					<iframe class="campagne-frame" title="Aperçu de l'e-mail" data-preview-url="{% url 'webapp:campaign-preview' %}" sandbox="allow-same-origin"></iframe>
+				</div>
+				<div data-only="sms" class="campagne-phone">
+					<div class="campagne-phone-sender">{{ "LibreCours" }}</div>
+					<div class="campagne-bubble" data-preview-sms></div>
+				</div>
+				<p class="campagne-hint">Aperçu avec le prénom « Camille ».</p>
+			</div>
+		</form>
+
+		<!-- Historique -->
+		<div class="chart-card campagne-history">
+			<h2 class="chart-title">Campagnes envoyées</h2>
+			{% if campaigns %}
+			<div class="campagne-table-wrap">
+			<table class="campagne-table">
+				<thead>
+					<tr><th>Date</th><th>Canal</th><th>Campagne</th><th>Public</th><th class="num">Destinataires</th><th>Statut</th><th>Résultats</th></tr>
+				</thead>
+				<tbody>
+					{% for c in campaigns %}
+					<tr>
+						<td>{% if c.sent_at %}{{ c.sent_at|date:"d/m/Y H:i" }}{% elif c.scheduled_at %}{{ c.scheduled_at|date:"d/m/Y H:i" }}{% else %}{{ c.created_at|date:"d/m/Y" }}{% endif %}</td>
+						<td>{{ c.get_channel_display }}</td>
+						<td class="campagne-name" title="{{ c.message }}">{{ c.name }}</td>
+						<td>{% for key, label in audience_labels.items %}{% if key == c.audience %}{{ label }}{% endif %}{% endfor %}</td>
+						<td class="num">{% if c.recipients %}{{ c.recipients }}{% else %}–{% endif %}</td>
+						<td><span class="campagne-status is-{{ c.status }}">{{ c.get_status_display }}</span>{% if c.error and c.status == "brouillon" %}<small class="relance-error" title="{{ c.error }}"> · échec</small>{% endif %}</td>
+						<td>{% if c.channel == "email" and c.brevo_id and c.status != "brouillon" %}<button type="button" class="campagne-link" data-stats="{% url 'webapp:campaign-stats' c.pk %}">Ouvertures et clics</button>{% endif %}</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+			</div>
+			{% else %}
+			<p class="relance-empty">Aucune campagne pour l'instant.</p>
+			{% endif %}
+		</div>
+
+		<dialog class="relance-dialog campagne-recipients" id="campagne-recipients" data-url="{% url 'webapp:campaign-recipients' %}">
+			<div class="campagne-recipients-head">
+				<div>
+					<h2 class="chart-title" data-recipients-title>Destinataires</h2>
+					<p class="campagne-hint" data-recipients-count></p>
+				</div>
+				<button type="button" class="campagne-recipients-close" value="close" aria-label="Fermer">&times;</button>
+			</div>
+			<div class="campagne-recipients-tools">
+				<input type="search" class="relance-input" placeholder="Rechercher un nom, un e-mail, un numéro…" data-recipients-search>
+				<button type="button" class="campagne-link" data-recipients-all>Tout cocher</button>
+			</div>
+			<div class="campagne-recipients-body">
+				<table class="campagne-table">
+					<thead>
+						<tr>
+							<th class="check"><span class="sr-only">Inclus</span></th>
+							<th data-sort="name">Client</th>
+							<th data-sort="contact">Contact</th>
+							<th data-sort="orders" class="num">Commandes</th>
+							<th data-sort="last_order_sort">Dernière</th>
+							<th data-sort="spent" class="num">Dépensé</th>
+							<th><span class="sr-only">Fiche</span></th>
+						</tr>
+					</thead>
+					<tbody data-recipients-rows></tbody>
+				</table>
+			</div>
+			<p class="campagne-hint">Décochez un client pour qu'il ne reçoive pas cette campagne. Les clients qui refusent les e-mails ou les SMS (fiche client) ne sont jamais dans la liste.</p>
+			<div class="relance-dialog-actions">
+				<button type="button" class="relance-btn" value="close">Valider</button>
+			</div>
+		</dialog>
+
+		<dialog class="relance-dialog" id="campagne-template-dialog">
+			<form method="dialog">
+				<h2 class="chart-title">Enregistrer comme modèle</h2>
+				<label class="relance-label" for="template-name">Nom du modèle</label>
+				<input class="relance-input" id="template-name" maxlength="80" placeholder="Ex. Vœux de fin d'année" required>
+				<p class="campagne-hint">Un modèle du même nom est remplacé. L'objet, le texte et le bouton sont enregistrés, pas le public.</p>
+				<p class="relance-error" data-template-error></p>
+				<div class="relance-dialog-actions">
+					<button type="button" class="relance-btn relance-btn-ghost" value="cancel">Annuler</button>
+					<button type="submit" class="relance-btn" value="ok">Enregistrer</button>
+				</div>
+			</form>
+		</dialog>
+
+		<dialog class="relance-dialog" id="campagne-confirm">
+			<h2 class="chart-title" data-confirm-title></h2>
+			<p class="campagne-hint" data-confirm-text></p>
+			<div class="relance-dialog-actions">
+				<button type="button" class="relance-btn relance-btn-ghost" value="cancel">Annuler</button>
+				<button type="button" class="relance-btn" value="ok">Confirmer l'envoi</button>
+			</div>
+		</dialog>
+	</section>
+</div>
+
+<script>
+	window.CAMPAGNES = {
+		actionUrl: "{% url 'webapp:campaign-action' %}",
+		templateSaveUrl: "{% url 'webapp:campaign-template-save' %}",
+		templateDeleteUrl: "{% url 'webapp:campaign-template-delete' pk=0 %}",
+		smsWindowOpen: {{ sms_window_open|yesno:"true,false" }},
+	};
+</script>
+{{ templates|json_script:"campagne-templates" }}
+{{ variables|json_script:"campagne-variables" }}
+{{ suggestions|json_script:"campagne-suggestions" }}
+<script src="{% static 'js/campagnes.js' %}"></script>
+{% endblock %}

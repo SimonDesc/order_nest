@@ -195,3 +195,65 @@ class BrevoSync(models.Model):
     class Meta:
         ordering = ['-created_at']
         verbose_name = "synchronisation Brevo"
+
+
+
+class Campaign(models.Model):
+    """Campagne d'information envoyée à un groupe de clients (e-mail via Brevo, SMS via SMSPartner)."""
+    CHANNEL = (('email', 'E-mail'), ('sms', 'SMS'))
+    STATUS = (
+        ('brouillon', 'Brouillon'),
+        ('programmee', 'Programmée'),
+        ('envoyee', 'Envoyée'),
+        ('echec', 'Échec'),
+    )
+
+    name = models.CharField(max_length=120, verbose_name="nom")
+    channel = models.CharField(max_length=8, choices=CHANNEL, verbose_name="canal")
+    audience = models.CharField(max_length=32, verbose_name="public")
+    subject = models.CharField(max_length=200, blank=True, verbose_name="objet")
+    message = models.TextField(verbose_name="message")
+    button_label = models.CharField(max_length=60, blank=True, verbose_name="texte du bouton")
+    button_url = models.URLField(blank=True, verbose_name="lien du bouton")
+    status = models.CharField(max_length=12, choices=STATUS, default='brouillon', verbose_name="statut")
+    recipients = models.PositiveIntegerField(default=0, verbose_name="destinataires")
+    # Clients retirés à la main de la liste des destinataires (identifiants).
+    excluded = models.JSONField(default=list, blank=True, verbose_name="clients exclus")
+    failed = models.PositiveIntegerField(default=0, verbose_name="échecs")
+    brevo_id = models.PositiveIntegerField(null=True, blank=True)
+    error = models.CharField(max_length=500, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    scheduled_at = models.DateTimeField(null=True, blank=True, verbose_name="programmée pour")
+    sent_at = models.DateTimeField(null=True, blank=True, verbose_name="envoyée le")
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = "campagne"
+
+    def __str__(self):
+        return f'{self.name} ({self.get_channel_display()})'
+
+
+class CampaignTemplate(models.Model):
+    """Modèle de message réutilisable pour les campagnes (vœux, soldes, nouvelle collection…)."""
+    name = models.CharField(max_length=80, verbose_name="nom")
+    channel = models.CharField(max_length=8, choices=Campaign.CHANNEL, verbose_name="canal")
+    subject = models.CharField(max_length=200, blank=True, verbose_name="objet")
+    message = models.TextField(verbose_name="message")
+    button_label = models.CharField(max_length=60, blank=True, verbose_name="texte du bouton")
+    button_url = models.URLField(blank=True, verbose_name="lien du bouton")
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['name']
+        verbose_name = "modèle de campagne"
+        constraints = [models.UniqueConstraint(fields=['channel', 'name'], name='unique_campaign_template_name')]
+
+    def __str__(self):
+        return self.name
+
+    def as_dict(self):
+        return {
+            "id": self.pk, "name": self.name, "channel": self.channel, "subject": self.subject,
+            "message": self.message, "button_label": self.button_label, "button_url": self.button_url,
+        }
