@@ -100,10 +100,11 @@ def _campaign_from(data):
     campaign = campaign or Campaign(channel=channel)
     campaign.audience = data["audience"]
     campaign.subject = subject[:200] if channel == "email" else ""
+    campaign.preheader = (data.get("preheader") or "").strip()[:200] if channel == "email" else ""
     campaign.message = message
     campaign.button_label = (data.get("button_label") or "").strip()[:60] if channel == "email" else ""
     campaign.button_url = button_url if channel == "email" else ""
-    unknown = campaigns.unknown_variables(subject, message)
+    unknown = campaigns.unknown_variables(subject, message, data.get("preheader"))
     if unknown:
         raise campaigns.CampaignError(
             f"Variable inconnue : {', '.join(unknown)}. Variables possibles : "
@@ -139,7 +140,7 @@ def campaign_action(request):
         return _error("Action inconnue.")
 
     try:
-        todo = campaigns.unfilled(data.get("subject"), data.get("message"), data.get("button_label"))
+        todo = campaigns.unfilled(data.get("subject"), data.get("preheader"), data.get("message"), data.get("button_label"))
         if todo and action != "test":
             raise campaigns.CampaignError(f"À compléter avant l'envoi : {', '.join(todo)}.")
         campaign = _campaign_from(data)
@@ -183,6 +184,7 @@ def campaign_preview(request):
     campaign = Campaign(
         channel="email",
         subject=data.get("subject") or "",
+        preheader=data.get("preheader") or "",
         message=data.get("message") or "",
         button_label=data.get("button_label") or "",
         button_url=data.get("button_url") or "",
@@ -242,6 +244,7 @@ def template_save(request):
         channel=channel, name=name,
         defaults={
             "subject": (data.get("subject") or "").strip()[:200] if channel == "email" else "",
+            "preheader": (data.get("preheader") or "").strip()[:200] if channel == "email" else "",
             "message": message,
             "button_label": (data.get("button_label") or "").strip()[:60] if channel == "email" else "",
             "button_url": button_url if channel == "email" else "",

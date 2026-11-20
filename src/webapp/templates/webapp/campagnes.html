@@ -74,6 +74,9 @@
 					<div data-only="email">
 						<label class="relance-label" for="c-subject">Objet de l'e-mail</label>
 						<input class="relance-input" id="c-subject" name="subject" maxlength="200" placeholder="{{ examples.email.subject }}">
+						<label class="relance-label" for="c-preheader">Texte d'aperçu <span class="campagne-optional">· facultatif</span></label>
+						<input class="relance-input" id="c-preheader" name="preheader" maxlength="200" placeholder="Laissé vide : le début du message">
+						<p class="campagne-hint">La phrase affichée après l'objet dans la boîte de réception. Environ 90 caractères visibles.</p>
 					</div>
 					<label class="relance-label" for="c-message">Texte</label>
 					<div class="campagne-vars" role="group" aria-label="Insérer une variable">
@@ -147,6 +150,10 @@
 						<dt>De</dt><dd>{{ sender.name }} &lt;{{ sender.email }}&gt;</dd>
 						<dt>Objet</dt><dd data-preview-subject></dd>
 					</dl>
+					<div class="campagne-inbox" aria-label="Dans la boîte de réception">
+						<span class="campagne-inbox-from">{{ sender.name }}</span>
+						<span class="campagne-inbox-text"><strong data-inbox-subject></strong> – <span data-inbox-preheader></span></span>
+					</div>
 					<iframe class="campagne-frame" title="Aperçu de l'e-mail" data-preview-url="{% url 'webapp:campaign-preview' %}" sandbox="allow-same-origin"></iframe>
 				</div>
 				<div data-only="sms" class="campagne-phone">

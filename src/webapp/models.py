@@ -212,6 +212,7 @@ class Campaign(models.Model):
     channel = models.CharField(max_length=8, choices=CHANNEL, verbose_name="canal")
     audience = models.CharField(max_length=32, verbose_name="public")
     subject = models.CharField(max_length=200, blank=True, verbose_name="objet")
+    preheader = models.CharField(max_length=200, blank=True, verbose_name="texte d'aperçu")
     message = models.TextField(verbose_name="message")
     button_label = models.CharField(max_length=60, blank=True, verbose_name="texte du bouton")
     button_url = models.URLField(blank=True, verbose_name="lien du bouton")
@@ -239,6 +240,7 @@ class CampaignTemplate(models.Model):
     name = models.CharField(max_length=80, verbose_name="nom")
     channel = models.CharField(max_length=8, choices=Campaign.CHANNEL, verbose_name="canal")
     subject = models.CharField(max_length=200, blank=True, verbose_name="objet")
+    preheader = models.CharField(max_length=200, blank=True, verbose_name="texte d'aperçu")
     message = models.TextField(verbose_name="message")
     button_label = models.CharField(max_length=60, blank=True, verbose_name="texte du bouton")
     button_url = models.URLField(blank=True, verbose_name="lien du bouton")
@@ -254,6 +256,6 @@ class CampaignTemplate(models.Model):
 
     def as_dict(self):
         return {
-            "id": self.pk, "name": self.name, "channel": self.channel, "subject": self.subject,
+            "id": self.pk, "name": self.name, "channel": self.channel, "subject": self.subject, "preheader": self.preheader,
             "message": self.message, "button_label": self.button_label, "button_url": self.button_url,
         }

@@ -213,7 +213,7 @@ def as_list():
     return [
         {
             "id": f"s:{s['key']}", "suggested": True, "name": s["name"], "channel": s["channel"],
-            "audience": s["audience"], "subject": s.get("subject", ""), "message": s["message"],
+            "audience": s["audience"], "subject": s.get("subject", ""), "preheader": s.get("preheader", ""), "message": s["message"],
             "button_label": s.get("button_label", ""), "button_url": s.get("button_url", ""),
         }
         for s in SUGGESTIONS

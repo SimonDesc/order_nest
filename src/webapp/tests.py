@@ -310,6 +310,20 @@ class CampaignTemplateTests(TestCase):
         self.assertFalse(self.save(button_url="gege")["ok"])
 
 
+class PreheaderTests(TestCase):
+    def test_default_skips_greeting_and_is_hidden_first(self):
+        c = Campaign(channel="email", subject="Noël", message="Bonjour {prenom},\n\nUne œuvre à offrir ?\n\nÀ bientôt")
+        self.assertEqual(campaigns.preheader_of(c), "Une œuvre à offrir ? À bientôt")
+        html = campaigns.email_html(c)
+        # Le texte d'aperçu vient avant le logo « LC », sinon Gmail affiche « LC Galerie Libre Cours… »
+        self.assertLess(html.index("Une œuvre à offrir"), html.index(">LC<"))
+
+    def test_typed_preheader_is_sent_to_brevo(self):
+        c = Campaign(channel="email", subject="x", message="x", preheader="Pour {prenom} : -10 %")
+        self.assertEqual(campaigns._email_payload(c)["previewText"],
+                         "Pour{% if contact.FIRSTNAME %} {{ contact.FIRSTNAME }}{% endif %} : -10 %")
+
+
 class SuggestionTests(TestCase):
     GSM = set("@£$¥èéùìòÇ\nØø\rÅåΔ_ΦΓΛΩΠΨΣΘΞÆæßÉ !\"#¤%&'()*+,-./0123456789:;<=>?¡ABCDEFGHIJKLMNOPQRSTUVWXYZ"
               "ÄÖÑÜ§¿abcdefghijklmnopqrstuvwxyzäöñüà^{}\\[~]|€")

@@ -175,6 +175,21 @@ def brevo_tags(text):
     return VARIABLE_RE.sub(replace, text or "")
 
 
+GREETING = re.compile(r"^\s*(bonjour|bonsoir|cher|chère|chers|hello|salut)\b", re.IGNORECASE)
+
+
+def preheader_of(campaign):
+    """Le texte d'aperçu affiché après l'objet dans la boîte de réception.
+    S'il n'est pas rempli : le début du message, sans la formule « Bonjour {prenom}, »."""
+    if campaign.preheader.strip():
+        return campaign.preheader.strip()
+    paragraphs = [p.strip() for p in re.split(r"\n\s*\n", campaign.message or "") if p.strip()]
+    if paragraphs and GREETING.match(paragraphs[0]) and len(paragraphs[0]) < 40:
+        paragraphs = paragraphs[1:]
+    text = re.sub(r"\s+", " ", " ".join(paragraphs))
+    return text if len(text) <= 140 else text[:140].rsplit(" ", 1)[0] + "…"
+
+
 def email_html(campaign, sample=False):
     """Le corps HTML de l'e-mail : balises Brevo, ou valeurs d'exemple pour l'aperçu."""
     fill = (lambda text: personalize(text, SAMPLE)) if sample else brevo_tags
@@ -184,6 +199,7 @@ def email_html(campaign, sample=False):
     ]
     return render_to_string("webapp/campagnes/email.html", {
         "campaign": campaign,
+        "preheader": fill(escape(preheader_of(campaign))),
         "paragraphs": paragraphs,
         "sender_name": sender()["name"],
     })
@@ -207,6 +223,7 @@ def _email_payload(campaign):
     return {
         "name": f"OrderNest · {campaign.name}",
         "subject": brevo_tags(campaign.subject),
+        "previewText": brevo_tags(preheader_of(campaign)),
         "sender": sender(),
         "htmlContent": email_html(campaign),
         "inlineImageActivation": False,

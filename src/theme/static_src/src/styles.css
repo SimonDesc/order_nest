@@ -1295,3 +1295,22 @@ ul li a[onclick^="openTab"]:not(.blue-color-text):hover {
 .campagne-recipients tr.is-out td:last-child { text-decoration: none; }
 
 .campagne-todo { margin-top: 0.4rem; padding: 0.45rem 0.7rem; border-radius: 0.5rem; background: #fbf3dc; color: var(--gold-dark); font-size: 0.8125rem; }
+
+.campagne-optional { font-weight: 400; color: var(--muted); }
+.campagne-inbox {
+	display: flex;
+	gap: 0.75rem;
+	align-items: baseline;
+	margin-bottom: 0.75rem;
+	padding: 0.55rem 0.75rem;
+	border-radius: 0.5rem;
+	background: #fff;
+	box-shadow: 0 0 0 1px var(--line);
+	font-size: 0.8125rem;
+	color: var(--muted);
+	white-space: nowrap;
+	overflow: hidden;
+}
+.campagne-inbox-from { flex: none; font-weight: 600; color: var(--ink); }
+.campagne-inbox-text { overflow: hidden; text-overflow: ellipsis; }
+.campagne-inbox-text strong { color: var(--ink); font-weight: 600; }

@@ -71,6 +71,16 @@
 		});
 	}
 
+	// Même règle que le serveur : texte d'aperçu saisi, sinon le début du message sans « Bonjour {prenom}, ».
+	function preheaderOf() {
+		const typed = form.elements.preheader.value.trim();
+		if (typed) return typed;
+		let parts = (message.value || message.placeholder).split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
+		if (parts.length && /^\s*(bonjour|bonsoir|cher|chère|chers|hello|salut)\b/i.test(parts[0]) && parts[0].length < 40) parts = parts.slice(1);
+		const text = parts.join(" ").replace(/\s+/g, " ");
+		return text.length <= 140 ? text : `${text.slice(0, 140).replace(/\s+\S*$/, "")}…`;
+	}
+
 	function unknownVariables(...texts) {
 		const found = new Set();
 		texts.forEach((t) => (t.match(/\{[^{}\s]{1,30}\}/g) || []).forEach((m) => {
@@ -81,7 +91,7 @@
 
 	// Champ où insérer une variable : le dernier utilisé (texte ou objet).
 	let lastField = message;
-	[message, form.elements.subject].forEach((field) => field.addEventListener("focus", () => (lastField = field)));
+	[message, form.elements.subject, form.elements.preheader].forEach((field) => field.addEventListener("focus", () => (lastField = field)));
 
 	// --- Affichage selon le canal ------------------------------------------------------
 
@@ -114,7 +124,7 @@
 
 		// Passages [à compléter] d'un modèle : l'envoi attend qu'ils soient remplacés.
 		const todo = [...new Set(
-			[message.value, channel() === "email" ? `${form.elements.subject.value} ${form.elements.button_label.value}` : ""]
+			[message.value, channel() === "email" ? `${form.elements.subject.value} ${form.elements.preheader.value} ${form.elements.button_label.value}` : ""]
 				.join("\n").match(/\[[^\[\]\n]{2,80}\]/g) || [],
 		)];
 		const todoBox = $("[data-todo]");
@@ -125,7 +135,7 @@
 			go.textContent = "Complétez les passages [entre crochets]";
 		}
 
-		const unknown = unknownVariables(message.value, channel() === "email" ? form.elements.subject.value : "");
+		const unknown = unknownVariables(message.value, channel() === "email" ? `${form.elements.subject.value} ${form.elements.preheader.value}` : "");
 		const warn = $("[data-unknown-vars]");
 		warn.hidden = !unknown.length;
 		warn.textContent = unknown.length
@@ -142,7 +152,10 @@
 			$("[data-simplify]").hidden = !info.odd.length;
 			$("[data-preview-sms]").textContent = `${personalize(message.value || message.placeholder)}\n${STOP}`;
 		} else {
-			$("[data-preview-subject]").textContent = personalize(form.elements.subject.value || form.elements.subject.placeholder);
+			const subject = personalize(form.elements.subject.value || form.elements.subject.placeholder);
+			$("[data-preview-subject]").textContent = subject;
+			$("[data-inbox-subject]").textContent = subject;
+			$("[data-inbox-preheader]").textContent = personalize(preheaderOf());
 			schedulePreview();
 		}
 		summarize();
@@ -161,6 +174,7 @@
 		const frame = $(".campagne-frame");
 		const body = {
 			subject: form.elements.subject.value,
+			preheader: form.elements.preheader.value,
 			message: message.value || message.placeholder,
 			button_label: form.elements.button_label.value,
 			button_url: form.elements.button_url.value || "#",
@@ -179,7 +193,7 @@
 
 	// --- Brouillon local ---------------------------------------------------------------
 
-	const DRAFT_FIELDS = ["channel", "audience", "subject", "message", "button_label", "button_url", "test_to"];
+	const DRAFT_FIELDS = ["channel", "audience", "subject", "preheader", "message", "button_label", "button_url", "test_to"];
 
 	function saveDraft() {
 		const draft = {};
@@ -216,7 +230,7 @@
 
 	function payload(action) {
 		const data = { action };
-		["id", "channel", "audience", "subject", "message", "button_label", "button_url", "test_to", "scheduled_at"]
+		["id", "channel", "audience", "subject", "preheader", "message", "button_label", "button_url", "test_to", "scheduled_at"]
 			.forEach((name) => (data[name] = form.elements[name].value));
 		if (!data.message.trim()) data.message = message.placeholder;
 		if (data.channel === "email" && !data.subject.trim()) data.subject = form.elements.subject.placeholder;
@@ -356,7 +370,7 @@
 	const deleteBtn = $("[data-template-delete]");
 	const templateResult = $("[data-template-result]");
 	const templateDialog = $("#campagne-template-dialog");
-	const TEMPLATE_FIELDS = ["subject", "message", "button_label", "button_url"];
+	const TEMPLATE_FIELDS = ["subject", "preheader", "message", "button_label", "button_url"];
 
 	const suggestions = JSON.parse($("#campagne-suggestions").textContent || "[]");
 
