@@ -279,7 +279,7 @@ function redirectToCustomerEdit(element) {
 										d="M6 18L18 6M6 6l12 12" />
 								</svg>
 							</button>
-							<a target="_blank" href="{{ picture.url }}" class="mr-10">
+							<a data-lightbox="photos" href="{{ picture.url }}" class="mr-10">
 								<img class="max-h-60 max-w-full rounded-lg" src="{{ picture.url }}"
 									alt="{{ picture.filename|truncatechars:30 }}">
 

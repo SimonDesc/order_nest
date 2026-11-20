@@ -88,7 +88,7 @@ $(document).ready(function () {
 					${result.filename.name} <!-- Nom du fichier -->
 					<button class="delete_picture" data-pk="${result.filename.pk}">
 					</button>
-					<a target="_blank" href="${result.filename.url}">
+					<a data-lightbox="photos" href="${result.filename.url}">
 						<img class="max-h-60 max-w-full rounded-lg" src="${result.filename.url}" alt="${result.filename.name}">
 					</a>
 				</div>
