@@ -9,7 +9,7 @@ from .views.products import AddProductsToOrder, DeleteProduct, EditProduct, prod
 from .views.customers import autocomplete, get_customers, CreateCustomer
 from .views.other_views import WebappHome, Dashboard, CustomerView, EditCustomer, StatsView
 from .views.api import DeleteOrderAttachment, get_canvas, get_orders, get_orders_count, save_attachment, deactivate_customer
-from .views.relances import RelancesView, follow_up_create, follow_up_delete, quote_close
+from .views.relances import RelancesView, brevo_sync, follow_up_create, follow_up_delete, quote_close
 from .views.sms import modal_sms, modal_sms_customer, send_sms, get_credit_sms
 from .views.export import export_orders_csv, export_orders_csv_filtered
 
@@ -29,6 +29,7 @@ urlpatterns = [
     path('relances/relance/', follow_up_create, name='follow-up-create'),
     path('relances/relance/<int:pk>/annuler/', follow_up_delete, name='follow-up-delete'),
     path('relances/devis/<int:pk>/sans-suite/', quote_close, name='quote-close'),
+    path('relances/brevo/synchroniser/', brevo_sync, name='brevo-sync'),
 
     # Commandes
     path('orders/create/', CreateOrder.as_view(), name='order-create'),

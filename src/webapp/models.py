@@ -15,6 +15,12 @@ class Customer(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     comments = models.TextField(max_length=2000, blank=True, verbose_name="commentaire")
     active = models.BooleanField(default=True)
+    # Communication commerciale (newsletters, promotions). Oui par défaut : un client
+    # peut recevoir des informations sur des services similaires à ceux qu'il a achetés
+    # tant qu'il ne s'y oppose pas. Décocher dès qu'un client refuse.
+    marketing_email = models.BooleanField(default=True, verbose_name="accepte les e-mails d'information")
+    marketing_sms = models.BooleanField(default=True, verbose_name="accepte les SMS d'information")
+    marketing_updated_at = models.DateTimeField(null=True, blank=True, verbose_name="consentement modifié le")
 
     def __str__(self):
         return f'{self.first_name} {self.last_name} {self.phone_number}'
@@ -174,3 +180,18 @@ class FollowUp(models.Model):
 
     def __str__(self):
         return f'{self.get_kind_display()} · {self.customer} · {self.created_at:%d/%m/%Y}'
+
+
+
+class BrevoSync(models.Model):
+    """Trace de chaque synchronisation des clients vers Brevo."""
+    created_at = models.DateTimeField(auto_now_add=True)
+    success = models.BooleanField(default=False)
+    contacts = models.PositiveIntegerField(default=0)
+    unsubscribed = models.PositiveIntegerField(default=0)
+    message = models.CharField(max_length=500, blank=True)
+    trigger = models.CharField(max_length=16, default="manuel")
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = "synchronisation Brevo"

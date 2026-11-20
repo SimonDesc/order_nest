@@ -17,7 +17,7 @@ from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import letter
 
 # Imports relatifs à l'application
-from ..forms import NewOrderForm, NewCustomerForm
+from ..forms import NewOrderForm, OrderCustomerForm as NewCustomerForm
 from ..models import Customer, Order, OrderHasProduct, OrderAttachment, Product
 from .api import DeleteOrderAttachment
 import re

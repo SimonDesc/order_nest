@@ -4,6 +4,7 @@ from django.core.files.base import File
 from django.db.models.base import Model
 from django.forms import ModelForm, CharField, Textarea, TextInput, DateField, DateInput, NumberInput
 from django.forms.utils import ErrorList
+from django.utils import timezone
 from .models import *
 
 
@@ -45,13 +46,23 @@ class NewOrderForm(ModelForm):
 
 class NewCustomerForm(ModelForm):
     phone_number = PhoneNumberField(region="FR")
+    CONSENT_FIELDS = ("marketing_email", "marketing_sms")
 
     def __init__(self, *args, **kwargs):
         super(NewCustomerForm, self).__init__(*args, **kwargs)
         self.label_suffix = ""
         tailwind_class = "resize-y block p-2.5 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'"
         for field_name, field in self.fields.items():
-            field.widget.attrs.update({"class": tailwind_class})
+            if field_name in self.CONSENT_FIELDS:
+                field.widget.attrs.update({"class": "consent-checkbox"})
+            else:
+                field.widget.attrs.update({"class": tailwind_class})
+
+    def save(self, commit=True):
+        # On date chaque changement de consentement (utile en cas de réclamation).
+        if any(name in self.changed_data for name in self.CONSENT_FIELDS):
+            self.instance.marketing_updated_at = timezone.now()
+        return super().save(commit)
 
     class Meta:
         model = Customer
@@ -63,8 +74,18 @@ class NewCustomerForm(ModelForm):
             "address",
             "mail",
             "comments",
+            "marketing_email",
+            "marketing_sms",
         )
         
+
+
+class OrderCustomerForm(NewCustomerForm):
+    """Fiche client dans la page de commande : sans les cases de consentement, qui
+    n'y sont pas affichées (sinon chaque enregistrement les décocherait)."""
+
+    class Meta(NewCustomerForm.Meta):
+        fields = tuple(f for f in NewCustomerForm.Meta.fields if f not in NewCustomerForm.CONSENT_FIELDS)
 
 
 class AddProductsToOrder(ModelForm):

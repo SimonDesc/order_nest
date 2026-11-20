@@ -17,7 +17,8 @@ from django.utils import timezone
 from django.views.decorators.http import require_POST
 from django.views.generic import TemplateView
 
-from ..models import Customer, FollowUp, Order
+from .. import brevo
+from ..models import BrevoSync, Customer, FollowUp, Order
 from .home_stats import EXCLUDED_STATUSES, _age_label, _money, fr_number
 
 # Délai avant qu'un client relancé réapparaisse en haut de liste.
@@ -128,7 +129,7 @@ class RelancesView(TemplateView):
         last = _last_follow_ups("reactivation")
         counted = Q(order__status__in=["En cours", "Urgent", "Terminée", "Archivée", "Facturée"])
         dormant = (
-            Customer.objects.filter(active=True)
+            Customer.objects.filter(active=True, marketing_sms=True)
             .annotate(n=Count("order", filter=counted), last_order=Max("order__created_at", filter=counted))
             .filter(
                 n=1,
@@ -165,6 +166,12 @@ class RelancesView(TemplateView):
             "dormant_todo": dormant_todo,
             "dormant_done": dormant_done,
             "remind_again": REMIND_AGAIN_DAYS,
+            "brevo": {
+                "configured": brevo.is_configured(),
+                "last": BrevoSync.objects.first(),
+                "with_email": Customer.objects.exclude(mail="").count(),
+                "email_ok": Customer.objects.exclude(mail="").filter(active=True, marketing_email=True).count(),
+            },
         })
         return context
 
@@ -192,6 +199,20 @@ def follow_up_delete(request, pk):
     """Annule une relance enregistrée par erreur (le SMS éventuel, lui, est parti)."""
     get_object_or_404(FollowUp, pk=pk).delete()
     return JsonResponse({"success": True})
+
+
+@require_POST
+def brevo_sync(request):
+    """Bouton « Synchroniser maintenant » vers Brevo."""
+    if not brevo.is_configured():
+        return JsonResponse({"success": False, "error": "Brevo n'est pas relié (clé d'API absente)."}, status=400)
+    sync = brevo.run_sync(trigger="manuel")
+    return JsonResponse({
+        "success": sync.success,
+        "contacts": sync.contacts,
+        "message": sync.message,
+        "date": timezone.localtime(sync.created_at).strftime("%d/%m/%Y à %H:%M"),
+    })
 
 
 @require_POST

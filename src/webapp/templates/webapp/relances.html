@@ -12,6 +12,24 @@
 	<section class="home-stats relances w-full max-w-5xl mt-6 mb-10 px-4">
 		{% csrf_token %}
 
+		<!-- Brevo : e-mailing -->
+		{% with b=brevo %}
+		<div class="brevo-bar">
+			<div>
+				<strong>Brevo (e-mailing)</strong>
+				<span>{{ b.email_ok }} client{{ b.email_ok|pluralize }} joignable{{ b.email_ok|pluralize }} par e-mail sur {{ b.with_email }} avec une adresse</span>
+			</div>
+			{% if b.configured %}
+			<div class="brevo-status" data-brevo-status>
+				{% if b.last %}{% if b.last.success %}Synchronisé le {{ b.last.created_at|date:"d/m/Y à H:i" }} · {{ b.last.contacts }} contacts{% else %}<span class="relance-error">Dernière synchro en échec le {{ b.last.created_at|date:"d/m/Y à H:i" }} : {{ b.last.message }}</span>{% endif %}{% else %}Jamais synchronisé{% endif %}
+			</div>
+			<button type="button" class="relance-btn" data-brevo-sync="{% url 'webapp:brevo-sync' %}">Synchroniser maintenant</button>
+			{% else %}
+			<div class="brevo-status">Pas encore relié : ajouter la clé d'API Brevo (<code>BREVO_API_KEY</code>) dans Coolify.</div>
+			{% endif %}
+		</div>
+		{% endwith %}
+
 		<div class="relance-tabs" role="tablist">
 			<button type="button" role="tab" aria-selected="true" data-tab="retrait">
 				Commandes à retirer <span class="relance-count">{{ pickup_todo|length }}</span>

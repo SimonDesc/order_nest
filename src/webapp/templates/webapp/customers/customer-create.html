@@ -56,6 +56,14 @@
 					</div>
 				</div>
 
+				<!-- Consentement : communication commerciale -->
+				<fieldset class="consent-box">
+					<legend>Informations et promotions</legend>
+					<label>{{ form.marketing_email }} Accepte de recevoir nos e-mails</label>
+					<label>{{ form.marketing_sms }} Accepte de recevoir nos SMS</label>
+					<p>À décocher si le client refuse. Les messages liés à ses commandes (commande prête, devis) restent envoyés.{% if form.instance.marketing_updated_at %} Modifié le {{ form.instance.marketing_updated_at|date:"d/m/Y" }}.{% endif %}</p>
+				</fieldset>
+
 				<div class="border-b mb-5 mt-5"></div>
 
 				{% if form.errors %}

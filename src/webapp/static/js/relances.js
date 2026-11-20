@@ -113,6 +113,24 @@
 		});
 	});
 
+	// --- Brevo : synchronisation à la demande ---------------------------------------------
+	const syncButton = document.querySelector("[data-brevo-sync]");
+	if (syncButton) {
+		syncButton.addEventListener("click", () => {
+			const status = document.querySelector("[data-brevo-status]");
+			syncButton.disabled = true;
+			syncButton.textContent = "Synchronisation…";
+			post(syncButton.dataset.brevoSync, {}).then((data) => {
+				status.textContent = data.success
+					? `Synchronisé le ${data.date} · ${data.contacts} contacts`
+					: `Échec : ${data.error || data.message || "erreur inconnue"}`;
+				status.classList.toggle("relance-error", !data.success);
+				syncButton.disabled = false;
+				syncButton.textContent = "Synchroniser maintenant";
+			});
+		});
+	}
+
 	// --- SMS ------------------------------------------------------------------------------
 	const dialog = document.getElementById("sms-dialog");
 	const phone = document.getElementById("sms-phone");
